@@ -8,34 +8,33 @@ export default {
     getVideoId(videoPath) {
       return this.$store.getters.videos.find({path: videoPath}).value().id
     },
-    performerLink(itemName) {
-      return `/performer/:${this.getPerformerId(itemName)}?tabId=default`
+    creatorLink(itemName) {
+      return `/creator/:${this.getCreatorId(itemName)}?tabId=default`
     },
-    getPerformerId(itemName) {
-      return this.$store.getters.performers.find({name: itemName}).value().id
-      // TODO fix open new tab with performer from performers tab, not from page with perfs
+    getCreatorId(itemName) {
+      return this.$store.getters.creators.find({name: itemName}).value().id
     },
-    addNewTabPerformer(performerName) {
+    addNewTabCreator(creatorName) {
       let tabId, tabName
-      if (performerName) {
-        tabId = this.getPerformerId(performerName)
-        tabName = performerName
-      } else if (this.performer) {
-        tabId = this.performer.id
-        tabName = this.performer.name
+      if (creatorName) {
+        tabId = this.getCreatorId(creatorName)
+        tabName = creatorName
+      } else if (this.creator) {
+        tabId = this.creator.id
+        tabName = this.creator.name
       } else return
       
       if (this.$store.getters.tabsDb.find({id: tabId}).value()) {
         this.$store.dispatch('setNotification', {
           type: 'error',
-          text: `Tab with performer "${tabName}" already exists`
+          text: `Tab with creator "${tabName}" already exists`
         })
         return
       }
 
       let tab = { 
         name: tabName,
-        link: `/performer/:${tabId}?tabId=${tabId}`,
+        link: `/creator/:${tabId}?tabId=${tabId}`,
         id: tabId,
         icon: 'account-details'
       }

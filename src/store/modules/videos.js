@@ -216,7 +216,7 @@ const Videos = {
       const sortDirection = rootState.Settings.videoSortDirection
       const sortBy = rootState.Settings.videoSortBy
       const page = rootState.Settings.videoPage
-      const pagesWithVideos = ['/performer/:','/website/:']
+      const pagesWithVideos = ['/creator/:','/website/:']
 
       if (route.path.includes('/videos/:')) {
         if (route.query.tabId === 'default') {

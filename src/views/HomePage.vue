@@ -385,7 +385,7 @@ export default {
       this.dialogAddMetaCardsTemplate = false
       this.$store.dispatch('setNotification', {
         type: 'info',
-        text: 'To automatically fill in information about performers, go to the performers page, then right-click on the card and select "Scrape info for performers"'
+        text: 'Scraping not yet supported'
       })
     },
     getImgMetaCard(metaId, cardId) {

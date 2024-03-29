@@ -75,28 +75,7 @@ export default {
         const card = this.getCard(id)
         let success = false
         let pName = card.meta.name.replace(' ', '-').toLowerCase()
-        let queryPPage = `https://www.freeones.com/${pName}/bio`
-        await axios.get(queryPPage).then(async (response) => {
-          if (response.status !== 200) return
-          await this.scrapeInfo(response, id)
-          success = true
-        }, async (error) => { 
-          if (error.response.status!==404) return
-          let nameUrl = card.meta.name.replace(' ', '%20').toLowerCase()
-          let querySearch = `https://www.freeones.com/babes?q=${nameUrl}&s=rank.currentRank&o=asc&l=12&p=1&v=grid`
-          await axios.get(querySearch).then(async (response) => {
-            const html = response.data
-            const $ = cheerio.load(html)
-            let link = $('.grid-item > a').first().attr('href')
-            if (!link) return
-            link = link.replace('feed','bio')
-            let queryFPage = `https://www.freeones.com${link}`
-            await axios.get(queryFPage).then(async (response) => {
-              await this.scrapeInfo(response, id)
-              success = true
-            }, (error) => {  })
-          }, (error) => {  })
-        })
+        
         this.found.push({
           name: card.meta.name,
           success,
@@ -111,7 +90,6 @@ export default {
       return new Promise(async resolve => {
         const html = response.data
         const $ = cheerio.load(html)
-        await this.freeonesMeta($, id)
         await this.applyFoundValues(id)
         this.$store.getters.metaCards.find({id}).assign({edit: Date.now()}).get('meta').assign(this.transfer.current).write()
         resolve()

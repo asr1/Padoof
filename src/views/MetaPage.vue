@@ -124,20 +124,6 @@
             <div v-for="(m,i) in selectedMeta" :key="i">{{i+1}}) {{getCard(m).meta.name}}</div>
           </v-card-text>
         </vuescroll>
-        <!-- <v-card-actions class="mx-4">
-          <v-checkbox v-model="deleteVideos" color="red" hide-details class="mr-6"> 
-            <template v-slot:label>
-              <span class="red--text">Delete videos with this performer from database</span>
-            </template>
-          </v-checkbox>
-          <v-spacer></v-spacer>
-          <v-checkbox v-model="$store.state.Videos.deleteFile" color="red" hide-details 
-            :disabled="!deleteVideos"> 
-            <template v-slot:label>
-              <span class="red--text">Also delete files</span>
-            </template>
-          </v-checkbox>
-        </v-card-actions> -->
       </v-card>
     </v-dialog>
   </vuescroll>

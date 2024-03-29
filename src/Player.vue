@@ -53,8 +53,8 @@ export default {
     },
     getHoveredImage() {
       let imgType = this.$store.state.hoveredImageType
-      if (imgType === 'performer') {
-        return this.getImgPerformersUrl(this.hoveredImageId)
+      if (imgType === 'creator') {
+        return this.getImgCreatorsUrl(this.hoveredImageId)
       }
       if (imgType === 'tag') {
         return this.getImgTagsUrl(this.hoveredImageId)

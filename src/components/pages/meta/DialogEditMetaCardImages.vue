@@ -8,7 +8,7 @@
           <div class="font-weight-bold headline" style="cursor:pointer;">
             <v-tooltip v-model="tooltipCopyName" bottom>
               <template v-slot:activator="{ click }">
-                <div v-on="click" @click="copyPerformerNameToClipboard" title="Copy name to clipboard">{{card.meta.name}}</div>
+                <div v-on="click" @click="copyCreatorNameToClipboard" title="Copy name to clipboard">{{card.meta.name}}</div>
               </template>
               <span>Name copied to clipboard!</span>
             </v-tooltip>
@@ -313,7 +313,7 @@ export default {
     imgAvatarLoading: null,
     imgHeaderLoading: null,
     tooltipCopyName: false,
-    tooltipCopyPerformerName: false,
+    tooltipCopyCreatorName: false,
     uploadedImageError: null,
     uploadedImage: null,
     dialogAddImage: false,
@@ -376,12 +376,12 @@ export default {
       this.images[imgType].file = imgBase64
       setTimeout(()=>{ this.dialogAddImage = false }, 300)
     },
-    copyPerformerNameToClipboard(dialog) {
-      if(dialog == 'find') this.tooltipCopyPerformerName = true
+    copyCreatorNameToClipboard(dialog) {
+      if(dialog == 'find') this.tooltipCopyCreatorName = true
       else this.tooltipCopyName = true
       setTimeout(() => {
         this.tooltipCopyName = false
-        this.tooltipCopyPerformerName = false
+        this.tooltipCopyCreatorName = false
       }, 3000)
       clipboard.writeText(this.card.meta.name)
     },

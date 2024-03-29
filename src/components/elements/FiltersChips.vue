@@ -54,7 +54,7 @@ export default {
   }),
   methods: {
     removeAllFilters() {
-      if (['Performer','Website','Meta'].includes(this.$route.name)) {
+      if (['Creator','Website','Meta'].includes(this.$route.name)) {
         this.$emit('removeAllFilters')
         return
       }

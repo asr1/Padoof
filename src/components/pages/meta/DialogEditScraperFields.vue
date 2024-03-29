@@ -81,21 +81,6 @@ export default {
     metaForScraper: [],
     scraperFields: [],
     defaultScraperFields: [
-      {name: 'birthday', type: 'date'},
-      {name: 'career_start', type: 'number'}, // TODO change it to one word
-      {name: 'career_end', type: 'number'}, // TODO change it to one word
-      {name: 'ethnicity', type: 'array'},
-      {name: 'eyes', type: 'array'},
-      {name: 'hair', type: 'array'},
-      {name: 'height', type: 'number'},
-      {name: 'weight', type: 'number'},
-      {name: 'bra', type: 'number'},
-      {name: 'waist', type: 'number'},
-      {name: 'hip', type: 'number'},
-      {name: 'cups', type: 'array'},
-      {name: 'boobs', type: 'array'},
-      {name: 'category', type: 'array'},
-      {name: 'tatoo', type: 'string'},
     ],
   }),
   computed: {

@@ -453,7 +453,6 @@ export default {
       let value
       if (this.profile.length) value = true
       else value = false
-      // this.$store.dispatch('updateSettingsState', {key:'performerProfile', value: value})
     },
     copyCardNameToClipboard() { clipboard.writeText(this.card.meta.name) },
     scrollToTop() { this.$refs.mainContainer.scrollTo({y: 0},500,"easeInQuad") },

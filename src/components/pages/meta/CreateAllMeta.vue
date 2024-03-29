@@ -44,7 +44,7 @@ export default {
         let pId = shortid.generate()
         let tagsId = shortid.generate()
 
-        await this.createPerformersNonAdult(pId, tagsId)
+        await this.createCreators(pId, tagsId)
         await this.createTags(tagsId)
      
         this.$store.getters.settings.get('metaAssignedToVideos')
@@ -69,7 +69,7 @@ export default {
       this.$emit('finish') 
     },
     parseItems(items) { return items.map(i=>{ if (i.length) return{ id:shortid.generate(), name:i } }) },
-    async createPerformers(performersId, tagsId) {
+    async createCreators(creatorsId, tagsId) {
       return new Promise(resolve => {
         let newMetaArr = []
 
@@ -107,140 +107,13 @@ export default {
             icon: 'calendar',
           },
         },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'number',
-          scraperField: 'height',
-          settings: { 
-            name: 'Height', 
-            hint: 'cm', 
-            icon: 'human-male-height',
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'number',
-          scraperField: 'weight',
-          settings: { 
-            name: 'Weight', 
-            hint: 'kg', 
-            icon: 'weight',
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'number',
-          scraperField: 'bra',
-          settings: { 
-            name: 'Bra', 
-            hint: 'inch', 
-            icon: 'tape-measure',
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'number',
-          scraperField: 'waist',
-          settings: { 
-            name: 'Waist', 
-            hint: 'inch', 
-            icon: 'tape-measure',
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'number',
-          scraperField: 'hip',
-          settings: { 
-            name: 'Hip', 
-            hint: 'inch', 
-            icon: 'tape-measure',
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'array',
-          scraperField: 'ethnicity',
-          settings: { 
-            name: 'Ethnicity', 
-            hint: '', 
-            icon: 'account-group',
-            items: this.parseItems(['Asian','Black','Caucasian','Ebony','Hispanic','Latin','White']),
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'array',
-          scraperField: 'hair',
-          settings: { 
-            name: 'Hair', 
-            hint: '', 
-            icon: 'face-woman-shimmer-outline',
-            items: this.parseItems(['Black','Blond','Brown','Grey','Red']),
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'array',
-          scraperField: 'eyes',
-          settings: { 
-            name: 'Eyes', 
-            hint: '', 
-            icon: 'eye',
-            items: this.parseItems(['Blue','Brown','Green','Grey','Hazel']),
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'array',
-          scraperField: 'cups',
-          settings: { 
-            name: 'Cups', 
-            hint: '', 
-            icon: 'coffee',
-            items: this.parseItems(['A','AA','B','C','D','DD','DDD','E','EE','EEE','F','FF','G','GG','H','HH','I','J','K','L','M','N']),
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'array',
-          scraperField: 'boobs',
-          settings: { 
-            name: 'Boobs',
-            hint: '', 
-            icon: 'circle',
-            items: this.parseItems(['Real','Fake']),
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'array',
-          scraperField: 'category',
-          settings: { 
-            name: 'Category',
-            hint: 'Profession',  
-            icon: 'shape',
-            items: this.parseItems(['Pornstar','Amateur','Erotic model']),
-          },
-        },
       )
 
         resolve(newMetaArr)
       })
       .then(newMetaArr=>{
         //-parsing meta in card
-        let metaInCardForPerformers = [{ id: tagsId, type: 'complex' }]
+        let metaInCardForCreators = [{ id: tagsId, type: 'complex' }]
 
         for (let i = 0; i < newMetaArr.length; i++) {
           const e = newMetaArr[i]
@@ -249,17 +122,17 @@ export default {
             mc.scraperField = e.scraperField
             delete e.scraperField
           }
-          metaInCardForPerformers.push(mc)
+          metaInCardForCreators.push(mc)
           this.$store.dispatch('addSimpleMeta', e)
         }
         
-        let complexMetaPerformers = {
-          id: performersId,
+        let complexMetaCreators = {
+          id: creatorsId,
           type: 'complex',
           settings: { 
-            name: 'Performers',
-            nameSingular: 'Performer',
-            hint: 'People in the video',  
+            name: 'Creators',
+            nameSingular: 'Creator',
+            hint: 'Authors and illustrators on the game',  
             icon: 'account-outline',
             hidden: false,
             parser: true,
@@ -277,7 +150,7 @@ export default {
             bookmark: true,
             nested: false,
             markers: true,
-            metaInCard: _.cloneDeep(metaInCardForPerformers),
+            metaInCard: _.cloneDeep(metaInCardForCreators),
           },
           state: {
             visibility: {
@@ -286,172 +159,7 @@ export default {
             },
           },
         }
-        this.$store.dispatch('addComplexMeta', complexMetaPerformers)
-        return newMetaArr
-      })
-    },
-    // TODO replace this with create creators
-    async createPerformersNonAdult(performersId, tagsId) {
-      return new Promise(resolve => {
-        let newMetaArr = []
-
-        newMetaArr.push(
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'array',
-          scraperField: 'category',
-          settings: { 
-            name: 'Profession',
-            hint: '',  
-            icon: 'account-hard-hat',
-            items: this.parseItems(['Actress', 'Musician', 'Supermodel']),
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'date',
-          scraperField: 'birthday',
-          settings: { 
-            name: 'Birthday', 
-            hint: 'YYYY-MM-DD', 
-            icon: 'cake-variant',
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'number',
-          scraperField: 'career_start',
-          settings: { 
-            name: 'Career start', 
-            hint: 'YYYY', 
-            icon: 'calendar',
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'number',
-          scraperField: 'career_end',
-          settings: { 
-            name: 'Career end', 
-            hint: 'YYYY', 
-            icon: 'calendar',
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'number',
-          scraperField: 'height',
-          settings: { 
-            name: 'Height', 
-            hint: 'cm', 
-            icon: 'human-male-height',
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'number',
-          scraperField: 'weight',
-          settings: { 
-            name: 'Weight', 
-            hint: 'kg', 
-            icon: 'weight',
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'array',
-          scraperField: 'ethnicity',
-          settings: { 
-            name: 'Ethnicity', 
-            hint: '', 
-            icon: 'account-group',
-            items: this.parseItems(['Asian','Black','Caucasian','Ebony','Hispanic','Latin','White']),
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'array',
-          scraperField: 'hair',
-          settings: { 
-            name: 'Hair', 
-            hint: '', 
-            icon: 'face-woman-shimmer-outline',
-            items: this.parseItems(['Black','Blond','Brown','Grey','Red']),
-          },
-        },
-        {
-          id: shortid.generate(),
-          type: 'simple',
-          dataType: 'array',
-          scraperField: 'eyes',
-          settings: { 
-            name: 'Eyes', 
-            hint: '', 
-            icon: 'eye',
-            items: this.parseItems(['Blue','Brown','Green','Grey','Hazel']),
-          },
-        },
-      )
-
-        resolve(newMetaArr)
-      })
-      .then(newMetaArr=>{
-        //-parsing meta in card
-        let metaInCardForPerformers = [{ id: tagsId, type: 'complex' }]
-
-        for (let i = 0; i < newMetaArr.length; i++) {
-          const e = newMetaArr[i]
-          let mc = {id: e.id, type: 'simple'}
-          if (e.scraperField) {
-            mc.scraperField = e.scraperField
-            delete e.scraperField
-          }
-          metaInCardForPerformers.push(mc)
-          this.$store.dispatch('addSimpleMeta', e)
-        }
-        
-        let complexMetaPerformers = {
-          id: performersId,
-          type: 'complex',
-          settings: { 
-            name: 'Performers',
-            nameSingular: 'Performer',
-            hint: 'People in the video',  
-            icon: 'account-outline',
-            hidden: false,
-            parser: true,
-            imageAspectRatio: 0.625,
-            imageTypes: [ 'main', 'alt', 'custom1', 'custom2', 'avatar', 'header' ],
-            chipLabel: false,
-            chipOutlined: false,
-            color: false,
-            synonyms: true,
-            rating: true,
-            favorite: true,
-            country: true,
-            career: true,
-            scraper: true,
-            bookmark: true,
-            nested: false,
-            markers: true,
-            metaInCard: _.cloneDeep(metaInCardForPerformers),
-          },
-          state: {
-            visibility: {
-              name: true,
-              cardSize: 3,
-            },
-          },
-        }
-        this.$store.dispatch('addComplexMeta', complexMetaPerformers)
+        this.$store.dispatch('addComplexMeta', complexMetaCreators)
         return newMetaArr
       })
     },

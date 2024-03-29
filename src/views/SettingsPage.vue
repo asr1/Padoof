@@ -144,14 +144,7 @@
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon v-bind="attrs" v-on="on" left>mdi-help-circle-outline</v-icon>
                 </template>
-                <div>Data scrapers for performers, specific meta</div>
               </v-tooltip>
-              <span class="mr-6">Show adult content:</span>
-              <v-switch v-model="showAdultContent" :label="showAdultContent?'Yes':'No'" inset class="d-inline mt-0 pt-0" hide-details/>
-            </div>
-            <div v-if="showAdultContent" class="d-flex align-center mt-6">
-              <v-btn @click="dialogAddMetaCardsTemplate=true" block rounded color="secondary">
-                <v-icon left>mdi-plus</v-icon> Add most popular tags, performers, websites </v-btn>
             </div>
           </v-card>
         </v-card>
@@ -779,10 +772,6 @@ export default {
     showExperimentalFeatures: {
       get() {return this.$store.state.Settings.showExperimentalFeatures},
       set(value) {this.$store.dispatch('updateSettingsState', {key:'showExperimentalFeatures', value})},
-    },
-    showAdultContent: {
-      get() {return this.$store.state.Settings.showAdultContent},
-      set(value) {this.$store.dispatch('updateSettingsState', {key:'showAdultContent', value})},
     },
     countNumberOfViews: {
       get() {return this.$store.state.Settings.countNumberOfViews},

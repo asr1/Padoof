@@ -20,19 +20,15 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-text-field v-model="queryString" hide-details dense outlined
-                  placeholder="Performer name or alias" :disabled="searchInProgress"
+                  placeholder="Creator name or alias" :disabled="searchInProgress"
                   @click:append-outer="pasteQueryString" 
                   append-outer-icon="mdi-clipboard-text-outline"/>
               </v-col>
               <v-col cols="6" md="3">
-                <v-btn @click="findMeta('iafd')" :loading="searchInProgress"
-                  color="secondary" block :disabled="searchInProgress"
-                > <v-icon left>mdi-magnify</v-icon> iafd.com </v-btn>
+
               </v-col>
               <v-col cols="6" md="3">
-                <v-btn @click="findMeta('freeonce')" :loading="searchInProgress"
-                  color="secondary" block :disabled="searchInProgress"
-                > <v-icon left>mdi-magnify</v-icon> freeones.com </v-btn>
+
               </v-col>
             </v-row>
           </v-container>
@@ -66,10 +62,8 @@
                             </v-card-text>
                             <v-fade-transition>
                               <v-overlay v-if="hover" absolute color="secondary">
-                                <v-btn v-if="resultFromFreeones" @click="getInfo(f.link, 'freeonce', f.name)" color="primary" :loading="searchInProgress">
-                                  <v-icon left>mdi-information-variant</v-icon> Get info </v-btn>
-                                <v-btn v-else @click="getInfo(f.link, 'iafd', f.name)" color="primary" :loading="searchInProgress">
-                                  <v-icon left>mdi-information-variant</v-icon> Get info </v-btn>
+             
+                 
                               </v-overlay>
                             </v-fade-transition>
                           </v-card>
@@ -207,7 +201,6 @@ export default {
     queryString: '',
     searchInProgress: false,
     notFound: false,
-    resultFromFreeones: false,
     found: [],
     tooltipCopyName: false,
     dialogTransferInfo: false,

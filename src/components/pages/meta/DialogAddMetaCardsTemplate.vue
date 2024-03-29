@@ -6,7 +6,7 @@
         <div class="headline">Adding meta cards </div>
         <v-spacer></v-spacer>
         <v-btn @click="close" :disabled="isProcessRunning" class="mr-4" outlined><v-icon left>mdi-cancel</v-icon>Cancel</v-btn>
-        <v-btn @click="start" :disabled="isProcessRunning||!valid||(!settings.performers.value&&!settings.tags.value&&!settings.websites.value)" outlined><v-icon left>mdi-plus</v-icon>Add</v-btn>
+        <v-btn @click="start" :disabled="isProcessRunning||!valid||(!settings.creators.value&&!settings.tags.value&&!settings.websites.value)" outlined><v-icon left>mdi-plus</v-icon>Add</v-btn>
       </v-toolbar>
       <vuescroll>
         <v-card-text>
@@ -38,8 +38,8 @@ export default {
   mixins: [MetaGetters], 
   mounted() {
     this.$nextTick(function () {
-      let performers = this.$store.getters.meta.find(i=>i.settings.name==='Performers').cloneDeep().value()
-      if (performers) this.settings.performers.meta = performers.id 
+      let creators = this.$store.getters.meta.find(i=>i.settings.name==='Creators').cloneDeep().value()
+      if (creators) this.settings.creators.meta = creators.id 
       let tags = this.$store.getters.meta.find(i=>i.settings.name==='Tags').cloneDeep().value()
       if (tags) this.settings.tags.meta = tags.id 
       let publishers = this.$store.getters.meta.find(i=>i.settings.name==='Publishers').cloneDeep().value()
@@ -48,7 +48,7 @@ export default {
   },
   data: () => ({
     settings: {
-      performers: {
+      creators: {
         value: true,
         meta: null,
       },
@@ -61,7 +61,7 @@ export default {
         meta: null,
       },
     },
-    numberPerformers: 288,
+    numberCreators: 288,
     isProcessRunning: false,
     months: ['january','february','march','april','may','june','july','august','september','october','november','december'],
     found: [],
@@ -76,13 +76,11 @@ export default {
       this.$refs.form.validate()
       if (!this.valid) return
       this.isProcessRunning = true
-      let pages = this.numberPerformers/96
-      if (this.settings.performers.value) {
+      let pages = this.numberCreators/96
+      if (this.settings.creators.value) {
         for (let i=1; i<=pages; i++) {
-          let query = 'https://www.freeones.com/babes?s=rank.currentRank&o=asc&l=96&v=grid&f%5Bprofessions%5D=porn_stars&p='+i
-          await this.getPerformers(query)
         }
-        await this.createPerformers()
+        await this.createCreators()
       }
       if (this.settings.tags.value) await this.createTags()
       if (this.settings.websites.value) await this.createWebsites()
@@ -91,7 +89,7 @@ export default {
     },
     close() { this.$emit('close') },
     sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)) },
-    async getPerformers(query) {
+    async getCreators(query) {
       return new Promise(resolve => {
         axios.get(query).then((response) => {
           if (response.status !== 200) return
@@ -111,9 +109,9 @@ export default {
         }, (error) => { console.log(error) })
       })
     },
-    async createPerformers() {
+    async createCreators() {
       return new Promise(async resolve => {
-        const metaId = this.settings.performers.meta
+        const metaId = this.settings.creators.meta
         for (const p of this.found) {
           let card = {
             id: p.id,
