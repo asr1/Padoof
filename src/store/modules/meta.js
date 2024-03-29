@@ -66,7 +66,7 @@ const Meta = {
   mutations: {
     updateMetaCards(state, ids) {
       if (ids === undefined) state.updateCardIds = []
-      else state.updateCardIds = ids // TODO make update function
+      else state.updateCardIds = ids 
     },
     updateComplexMetaListFromDb(state) {
       state.complexMetaList = _.cloneDeep(dbMeta.get('meta').filter({type:'complex'}).value())

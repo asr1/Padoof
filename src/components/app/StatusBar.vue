@@ -80,10 +80,10 @@
         </div>
       </div>
       <div class="mt-2">
-        <div class="overline text-center">Total videos</div>
+        <div class="overline text-center">Total PDFs</div>
         <div class="d-flex align-center">
           <v-icon size="20" left dark>mdi-video</v-icon> Number: 
-          <span class="ml-1" v-text="$store.getters.videosTotal"/>
+          <span class="ml-1" v-text="$store.getters.pdfTotal"/>
         </div>
         <div class="d-flex align-center">
           <v-icon size="20" left dark>mdi-harddisk</v-icon> Size:

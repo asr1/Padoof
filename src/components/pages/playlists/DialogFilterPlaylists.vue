@@ -138,7 +138,7 @@ export default {
     },
   },
   methods: {
-    // TODO: add paste from clipboard function for all input's type
+
     applyFilters() {
       let filters = this.filters.filter(f=>f.by)
       this.$store.state.Settings.playlistFilters = _.cloneDeep(filters)

@@ -134,7 +134,7 @@ export default {
         }
         return all.join(', ')
       } else return ''
-      // TODO add option for select join delimiter for copied text
+
     },
     deleteVideos() {
       this.$store.dispatch('deleteVideos')

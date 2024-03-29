@@ -28,7 +28,7 @@ export default new Vuex.Store({
     hoveredImageType: '',
     hoveredImageTime: 0,
     hoveredImageX: 0,
-    hoveredImageY: 0, // TODO create object for hovered values
+    hoveredImageY: 0, 
     x: 0,
     y: 0,
     contextMenu: false,

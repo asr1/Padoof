@@ -9,4 +9,10 @@ See if you can scrape from RPG Geek instead of the current place
 
 
 Remove scrape
-Keys.vue is the registration. Can we cut this out entirely?
+
+
+Remove referenes to videos,
+
+make parse actually take PDFs on import
+
+Change AppPlayer.vue to read PDFs instead

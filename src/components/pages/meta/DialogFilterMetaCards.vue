@@ -238,7 +238,7 @@ export default {
         else if (meta.dataType=='array') this.metaType.array.push(meta.id)
         else if (meta.dataType=='boolean') this.metaType.boolean.push(meta.id)
         else if (meta.dataType=='date') this.metaType.date.push(meta.id)
-        // TODO fix number type in meta db. some meta cards has wrong type number with string
+
       }
     },
     applyFilters() {

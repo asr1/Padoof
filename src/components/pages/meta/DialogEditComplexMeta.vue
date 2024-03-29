@@ -231,7 +231,7 @@
           <v-card-text class="px-4">
             <v-autocomplete v-model="selectedMetaForCard" label="Meta name" :items="metaForCard"
               :rules="[value => !!value || 'Meta is required']" item-value="id" autofocus :filter="filterMeta">
-              <!-- TODO remake it with draggable and allow multiple meta -->
+
               <template v-slot:selection="data">
                 <v-icon left small>mdi-{{data.item.settings.icon}}</v-icon>
                 <span>{{data.item.settings.name}}</span>

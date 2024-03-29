@@ -3,28 +3,28 @@
     <div @dragover="showDrop">
       <div class="py-4"/>
       <v-container class="text-center">
-        <v-row v-if="videosNumber==0">
+        <v-row v-if="pdfNumber==0">
           <v-col cols="12">
             <img alt="Padoof" width="200" height="200" :src="logoPath">
             <h2 class="my-8">Welcome to Padoof application!</h2>
         
             <div v-if="metaNumber==0" cols="12">
-              <div class="mb-4"> First, create a meta for your videos. 
+              <div class="mb-4"> First, create a meta for your PDFss. 
                 You can view and customize the meta in the settings </div>
               <v-btn @click="createAllMeta=true" :disabled="isAllMetaCreated" class="mb-4" color="primary" x-large rounded block>
                 <v-icon left>mdi-auto-fix</v-icon> Create all meta </v-btn>
             </div>
 
-            <div class="mb-4 mt-10">Then add videos from your computer by selecting folders. You can also drag and drop videos</div>
+            <div class="mb-4 mt-10">Then add PDFs from your computer by selecting folders. You can also drag and drop videos</div>
             <v-btn @click="$store.state.Settings.dialogScanVideos=true" color="primary" class="mb-6" x-large rounded block>
-              <v-icon left>mdi-plus</v-icon> Add videos </v-btn>
+              <v-icon left>mdi-plus</v-icon> Add PDFs </v-btn>
           </v-col>
         </v-row>
 
         <v-row v-else>
           <v-col cols="12" class="pt-0 d-flex justify-space-between">
             <v-btn @click="$store.state.Settings.dialogScanVideos=true" rounded color="primary">
-              <v-icon left>mdi-plus</v-icon> Add new videos
+              <v-icon left>mdi-plus</v-icon> Add new PDFs
             </v-btn>
             <v-btn @click="customization=!customization" rounded color="primary"> 
               <v-icon left>mdi-cog</v-icon> {{customization?'Finish Customization':'Customize widgets'}} </v-btn>
@@ -39,7 +39,7 @@
           <v-col v-if="customization" cols="12">
             <v-card outlined>
               <v-card-actions>
-                <div>Graph with number of videos added and edited per days</div>
+                <div>Graph with number of PDFs added and edited per days</div> 
                 <v-spacer></v-spacer>
                 <v-switch v-model="widgets.graphVideos" @change="updateWidget($event, 'graphVideos')" inset hide-details class="ma-2 pt-0"
                   :append-icon="`mdi-${widgets.graphVideos?'eye':'eye-off'}`"/>
@@ -49,7 +49,7 @@
           <v-col v-if="customization||widgets.graphVideos" cols="12">
             <v-card outlined>
               <v-toolbar color="secondary">
-                <div class="headline">Number of videos added and edited per days</div>
+                <div class="headline">Number of PDFs added and edited per days</div>
                 <v-spacer></v-spacer>
                 <v-btn @click="initVideosStat(daysBefore)" outlined>All time</v-btn>
                 <v-btn @click="initVideosStat(30)" outlined class="ml-4">Last Month</v-btn>
@@ -62,7 +62,7 @@
           <v-col v-if="customization" cols="12">
             <v-card outlined>
               <v-card-actions>
-                <div>Total values of all videos</div>
+                <div>Total values of all PDFs</div>
                 <v-spacer></v-spacer>
                 <v-switch v-model="widgets.numberVideos" @change="updateWidget($event, 'numberVideos')" inset hide-details class="ma-2 pt-0"
                   :append-icon="`mdi-${widgets.numberVideos?'eye':'eye-off'}`"/>
@@ -72,16 +72,12 @@
           <v-col v-if="customization||widgets.numberVideos" cols="12">
             <div class="d-flex flex-wrap justify-space-around">
               <v-card outlined class="pa-2">
-                <v-icon>mdi-database</v-icon> Total Number of Videos:
-                <b v-text="$store.getters.videosTotal"/>
+                <v-icon>mdi-database</v-icon> Total Number of PDFs:
+                <b v-text="$store.getters.pdfTotal"/>
               </v-card>
               <v-card outlined class="pa-2">
                 <v-icon>mdi-harddisk</v-icon> Total File Size:
                 <b v-text="$store.getters.videosTotalSize"/>
-              </v-card>
-              <v-card outlined class="pa-2">
-                <v-icon>mdi-clock</v-icon> Total Duration:
-                <b v-text="$store.getters.videosTotalDuration"/>
               </v-card>
             </div>
           </v-col>
@@ -89,7 +85,7 @@
           <v-col v-if="customization" cols="12">
             <v-card outlined>
               <v-card-actions>
-                <div>Recently added videos</div>
+                <div>Recently added PDFs</div>
                 <v-spacer></v-spacer>
                 <v-switch v-model="widgets.recentVideos" @change="updateWidget($event, 'recentVideos')" inset hide-details class="ma-2 pt-0"
                   :append-icon="`mdi-${widgets.recentVideos?'eye':'eye-off'}`"/>
@@ -99,10 +95,10 @@
           <v-col v-if="customization||widgets.recentVideos" cols="12">
             <v-card outlined>
               <v-toolbar color="secondary">
-                <div class="headline">{{numberRecentVideos}} recently added videos</div>
+                <div class="headline">{{numberRecentVideos}} recently added PDFs</div>
                 <v-spacer></v-spacer>
                 <v-btn to="/videos/:default?tabId=default" draggable="false" outlined>
-                  <v-icon left>mdi-video</v-icon> Show All Videos</v-btn>
+                  <v-icon left>mdi-video</v-icon> Show All PDFs</v-btn>
               </v-toolbar>
               <div class="previews-grid" @mousedown="stopSmoothScroll($event)"> 
                 <v-hover v-for="video in recentVideos" :key="video.id">
@@ -125,7 +121,7 @@
           <v-col v-if="customization" cols="12">
             <v-card outlined>
               <v-card-actions>
-                <div>Most viewed videos</div>
+                <div>Most viewed PDFs</div>
                 <v-spacer></v-spacer>
                 <v-switch v-model="widgets.topViewedVideos" @change="updateWidget($event, 'topViewedVideos')" inset hide-details class="ma-2 pt-0"
                   :append-icon="`mdi-${widgets.topViewedVideos?'eye':'eye-off'}`"/>
@@ -135,10 +131,10 @@
           <v-col v-if="customization||widgets.topViewedVideos" cols="12">
             <v-card outlined>
               <v-toolbar color="secondary">
-                <div class="headline">Top 10 most viewed videos ({{videosViewedLastWeek}} viewed in the past week)</div>
+                <div class="headline">Top 10 most viewed PDFs ({{videosViewedLastWeek}} viewed in the past week)</div>
                 <v-spacer></v-spacer>
                 <v-btn to="/videos/:default?tabId=default" draggable="false" outlined>
-                  <v-icon left>mdi-video</v-icon> Show All Videos</v-btn>
+                  <v-icon left>mdi-video</v-icon> Show All PDFs</v-btn>
               </v-toolbar>
               <div class="previews-grid" @mousedown="stopSmoothScroll($event)"> 
                 <v-hover v-for="video in topViewedVideos" :key="video.id+1">
@@ -206,8 +202,8 @@
           </v-col>
         </v-row>
 
-        <div v-if="$store.state.Settings.videosTotal==0">
-          <h2>First of all add videos in settings</h2>
+        <div v-if="$store.state.Settings.pdfTotal==0">
+          <h2>First of all add PDFs in settings</h2>
           <v-btn class="ma-2" color="secondary" to="/settings" draggable="false">Open settings</v-btn>
         </div>
       </v-container>
@@ -230,7 +226,7 @@
         @dragenter.prevent 
         @dragover.prevent 
         class="dropzone">
-        <div class="text">Drop video or folder to add them</div>
+        <div class="text">Drop PDF or folder to add them</div>
       </v-card>
     </div>
   </vuescroll>
@@ -286,7 +282,7 @@ export default {
     },
     pathToUserData() { return this.$store.getters.getPathToUserData },
     logoPath() { return path.join('file://', __static, '/icons/icon.png') },
-    videosNumber() { return this.$store.getters.videos.value().length },
+    pdfNumber() { return this.$store.getters.videos.value().length },
     metaNumber() { return this.$store.getters.meta.filter(i=>i.type!=='specific').value().length },
     complexMetaAssignedToVideo() { return this.$store.getters.settings.get('metaAssignedToVideos').filter({type:'complex'}).value() },
     daysBefore() { 

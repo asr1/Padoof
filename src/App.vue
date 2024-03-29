@@ -191,7 +191,7 @@ export default {
       if (this.watchFolders) this.watchDir(this.folders.map(f=>f.path)) // watch folders for new videos, deleted videos
       setInterval(() => { this.createBackup() }, 1000 * 60 * 30) // every 30 minutes
       // ipcRenderer.on('getPlugin', (event, data) => { console.log(data) })
-    }) // TODO: disable shift+enter and shift+click because that add new window
+    }) 
   },
   beforeDestroy() {
     clearInterval(this.intervalUpdateDataFromVideos)
@@ -333,8 +333,6 @@ export default {
         })
       }
       this.foldersUpdated = true
-      // --this.$store.state.backgroundProcesses
-      // TODO fix number of background process for watched folders
     },
     runAutoUpdateDataFromVideos() {
       if (this.autoUpdateDataFromVideos) {

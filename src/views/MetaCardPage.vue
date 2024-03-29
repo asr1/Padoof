@@ -356,7 +356,7 @@ export default {
         else return false
       }).value().length 
     },
-    // TODO after deleting meta not updated menu
+
     filteredVideosNumber() { return this.$store.state.Videos.filteredVideos.length },
     cardSize() { return `card-size-${this.$store.state.Settings.videoCardSize}` },
     pathToUserData() { return this.$store.getters.getPathToUserData },
@@ -445,7 +445,6 @@ export default {
       return ageString
     },
     removeAllFilters() {
-      // TODO fix this
       this.$store.state.Meta.filters = []
       this.$store.dispatch('filterMetaCards') 
     },
@@ -483,7 +482,7 @@ export default {
         this.$store.state.Settings.videoSortDirection = this.tab.sortDirection || 'asc'
         this.$store.state.Settings.videoPage = this.tab.page || 1
       }
-      // TODO save tab filters 
+
       this.$store.dispatch('filterVideos', true)
     },
     initVideoFilters() { 

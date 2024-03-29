@@ -8,7 +8,7 @@
       <v-tab href="#app-settings" draggable="false">App<v-icon>mdi-application</v-icon></v-tab>
       <v-tab href="#appearance-settings" draggable="false">Appearance<v-icon>mdi-palette</v-icon></v-tab>
       <v-tab href="#meta-settings" draggable="false">Meta<v-icon>mdi-shape</v-icon></v-tab>
-      <v-tab href="#videos-settings" draggable="false">Videos<v-icon>mdi-video</v-icon></v-tab>
+      <v-tab href="#videos-settings" draggable="false">PDFs<v-icon>mdi-video</v-icon></v-tab>
       <v-tab href="#privacy-settings" draggable="false">Privacy<v-icon>mdi-key</v-icon></v-tab>
       <v-tab href="#database-settings" draggable="false">Database<v-icon>mdi-database</v-icon></v-tab>
       <v-tab href="#about-settings" draggable="false">About<v-icon>mdi-information-variant</v-icon></v-tab>
@@ -23,12 +23,12 @@
           <WatchedFolders/>
           
           <v-card outlined class="mt-10 pb-4 px-4">
-            <div class="headline text-center my-4"> Updating data from videos
+            <div class="headline text-center my-4"> Updating data from PDFs
               <v-tooltip right>
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon v-bind="attrs" v-on="on" right>mdi-help-circle-outline</v-icon>
                 </template>
-                <span>Will be updated number of videos for meta cards</span>
+                <span>Will be updated number of PDFs for meta cards</span>
               </v-tooltip>
             </div>
 
@@ -68,7 +68,7 @@
                     </template>
                     <span>Disable this option if stuttering occurs at the end of the process of adding new videos</span>
                   </v-tooltip>
-                  <span class="mr-6">Update data after adding new videos:</span>
+                  <span class="mr-6">Update data after adding new PDFs:</span>
                   <v-switch v-model="updateDataAfterAddingNewVideos" :label="updateDataAfterAddingNewVideos?'Yes':'No'" inset class="d-inline mt-0 pt-0" hide-details/>
                 </div>
               </v-col>
@@ -76,11 +76,11 @@
           </v-card>
 
           <v-card outlined class="mt-10 pa-4">
-            <div class="headline text-center"> Serving video files and database </div>
+            <div class="headline text-center"> Serving PDF files and database </div>
             <v-btn @click="dialogUpdatePath=true" block rounded color="secondary" class="mt-4">
-              <v-icon left>mdi-pencil</v-icon> Update path manually in multiple videos </v-btn>
+              <v-icon left>mdi-pencil</v-icon> Update path manually in multiple PDFs </v-btn>
             <v-btn @click="findVideoDuplicates" block rounded color="secondary" class="mt-4">
-              <v-icon left>mdi-content-copy</v-icon> Open duplicate videos in a new tab </v-btn>
+              <v-icon left>mdi-content-copy</v-icon> Open duplicate PDFs in a new tab </v-btn>
             <v-btn @click="openUserFolder" block rounded color="secondary" class="mt-4">
               <v-icon left>mdi-folder-account</v-icon> Open folder with user files in explorer </v-btn>
           </v-card>
@@ -91,9 +91,7 @@
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon v-bind="attrs" v-on="on" left>mdi-help-circle-outline</v-icon>
                 </template>
-                <span>The built-in player does not support all videos, <br>
-                  BUT it has additional features: markers, playlists and etc. 
-                  <br> The list of features will be expanded in new releases!</span>
+                <!-- TODO system player is here -->
               </v-tooltip>
               <span class="mr-6">Play video in:</span>
               <v-switch v-model="isPlayVideoInSystemPlayer" inset class="d-inline mt-0 pt-0" hide-details
@@ -576,7 +574,6 @@ import Registration from '@/components/pages/settings/Registration.vue'
 import vuescroll from 'vuescroll'
 import { async } from 'node-stream-zip'
 
-// TODO separate each tab to components
 
 export default {
   name: 'SettingsPage',

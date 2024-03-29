@@ -169,7 +169,7 @@ export default {
 
 
 <style lang="scss" scoped>
-// TODO Add paddings if running OS is not Windows 
+
 .files-panel {
   padding-top: 40px;
   padding-left: 300px;

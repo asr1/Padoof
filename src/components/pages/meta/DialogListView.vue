@@ -108,7 +108,7 @@ export default {
           tip: 'Rating',
         }) 
       }
-      // TODO videos, views
+
     },
     close() {
       this.dialog = false

@@ -179,7 +179,6 @@ export default {
     metaAssignedToVideos() { return this.$store.state.Settings.metaAssignedToVideos }
   },
   methods: {
-    // TODO: add paste from clipboard function for all input's type
     initMetaList() {
       for (let i = 0; i < this.metaAssignedToVideos.length; i++) {
         let id = this.metaAssignedToVideos[i].id

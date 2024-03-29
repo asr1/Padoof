@@ -198,7 +198,6 @@
       <v-icon large>mdi-content-save</v-icon>
     </v-btn>
     
-    <!-- TODO create components for dialogs new item and new card -->
     <v-dialog v-if="dialogAddNewCard" v-model="dialogAddNewCard" width="500">
       <v-card>
         <v-toolbar color="primary">

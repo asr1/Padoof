@@ -42,7 +42,7 @@
 
         <v-stepper-content step="2" class="pa-0">
           <v-card>
-            <!-- TODO: ADD VALIDATION FOR PATH. MAYBE CHECKOUT WITH FS EVERY PATH -->
+
             <vuescroll>
               <v-card-text>
                 <div class="text-center">

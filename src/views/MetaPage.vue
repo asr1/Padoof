@@ -91,7 +91,7 @@
     </div>
     
     <div v-else class="text-center"> 
-      <!-- TODO replace the icon with a nice .svg image -->
+
       <div><v-icon size="100" class="ma-10">mdi-close</v-icon></div>
       There are no matching {{meta.settings.name.toLowerCase()}} for the selected filters
     </div>
@@ -167,7 +167,7 @@ export default {
       'a','b','c','d','e','f','g','h','i','j','k','l','m','n',
       'o','p','q','r','s','t','u','v','w','x','y','z'
     ],
-    cardsPerPagePreset: [20,40,60,80,100,150,200,300], // TODO create custom numbers in settings
+    cardsPerPagePreset: [20,40,60,80,100,150,200,300], 
     isScrollToTopVisible: false,
     jumpPage: null,
   }),

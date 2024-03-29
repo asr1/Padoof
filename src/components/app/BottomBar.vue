@@ -1,6 +1,6 @@
 <template>
   <v-bottom-navigation absolute style="bottom:20px" shift>
-    <!-- TODO custom background color depends on current route -->
+
     <vuescroll :ops="ops">
       <div class="bottom-menu">
         <v-tooltip top>

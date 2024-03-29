@@ -352,7 +352,7 @@ const Videos = {
       }
       return 'Videos' + (filters.length ? ' with ': ' ') + filters.join('; ')
     },
-    videosTotal(state, store) { return store.videos.value().length },
+    pdfTotal(state, store) { return store.videos.value().length },
     videosTotalSize: (state, store) => {
       let sizes = store.videos.map('size').value()
       let total = 0

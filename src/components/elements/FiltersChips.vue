@@ -23,7 +23,7 @@
       <span v-if="filter.type=='array'||filter.type=='select'" class="ml-1">"{{getMetaItems(filter.by, filter.val)}}"</span>
       <span v-else-if="filter.type=='boolean'"></span>
       <span v-else class="ml-1">"{{filter.val}}"</span>
-      <!-- TODO remove empty quotes and create function for getting values -->
+
     </v-chip>
   </div>
 </template>

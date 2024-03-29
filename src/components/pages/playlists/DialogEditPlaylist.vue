@@ -9,7 +9,7 @@
             </template>
             <span>Copy name to clipboard</span>
           </v-tooltip>
-          <!-- TODO make the same function for copy text -->
+
         </div>
         <v-spacer></v-spacer>
         <v-btn outlined class="mx-4" @click="close"><v-icon left>mdi-close</v-icon>close</v-btn>
