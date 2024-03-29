@@ -34,6 +34,7 @@ export default {
       },
     },
     reg() {
+      return true; // We don't need no registration
       if (!this.registration) return false
       let today = new Date()
       today = today.toISOString().substring(0, 10)
