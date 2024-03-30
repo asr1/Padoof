@@ -11,8 +11,10 @@ This is a fork of Mediachips, which was designed for videos.
 ## Requirements
 
 Note: Imagemagick-CLI is rquired
-  Download it and, on windows, MAKE SURE YOU CLICK INSTALL LEGACY UTILITIES (E.G. CONVERT)
+  [Download it and, on Windows](https://imagemagick.org/script/download.php#windows), **MAKE SURE YOU CLICK INSTALL LEGACY UTILITIES (E.G. CONVERT)**
 
   ![Imagemagick installer](image.png)
 
-One Mac, you can use `brew install imagemagick`
+On Mac, you can use `brew install imagemagick`
+
+On linux, run `sudo apt install imagemagick`
