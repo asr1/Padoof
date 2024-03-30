@@ -35,7 +35,7 @@
           Number of videos new: {{folder.newFiles.length}}
         </v-alert>
         <v-spacer></v-spacer>
-        <v-btn @click="addNewVideos" color="green" dark>
+        <v-btn @click="addnewPdfs" color="green" dark>
           <v-icon left>mdi-plus</v-icon> Add new videos
         </v-btn>
       </v-card-actions>
@@ -130,8 +130,8 @@ export default {
     copyPath(i, type) {
       clipboard.writeText(this.folder[type][i])
     },
-    addNewVideos() {
-      this.$emit('addNewVideos')
+    addnewPdfs() {
+      this.$emit('addnewPdfs')
       this.$store.state.dialogFolder = false
     },
   },

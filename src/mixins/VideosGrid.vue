@@ -173,7 +173,7 @@ export default {
         this.$store.state.scan.folders = folders
         this.$store.state.scan.files = videos
         this.$store.state.scan.stage = 2
-        this.$store.state.Settings.dialogScanVideos = true
+        this.$store.state.Settings.dialogScanPdfs = true
       }
     },
   },

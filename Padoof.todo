@@ -16,3 +16,10 @@ Remove referenes to videos,
 make parse actually take PDFs on import
 
 Change AppPlayer.vue to read PDFs instead
+
+
+Remove ffmpeg
+
+Do I need to add image-magick to places like vue.config to make it work?
+
+Generate thumbnail from PDF cover

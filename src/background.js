@@ -178,7 +178,7 @@ let systemMenu = Menu.buildFromTemplate([
     submenu: [
       {
         label: 'Add New Videos...',
-        click() { addNewVideos() } 
+        click() { addnewPdfs() } 
       },
       {
         label: 'Check for Updates...',
@@ -347,7 +347,7 @@ let systemMenu = Menu.buildFromTemplate([
 Menu.setApplicationMenu(systemMenu)
 
 // system menu events for main window
-function addNewVideos() { win.webContents.send( 'addNewVideos' ) }
+function addnewPdfs() { win.webContents.send( 'addnewPdfs' ) }
 function checkForUpdates() { win.webContents.send( 'checkForUpdates' ) }
 function toggleSystemPlayer() { win.webContents.send( 'toggleSystemPlayer' ) }
 function toggleDarkMode() { win.webContents.send( 'toggleDarkMode' ) }

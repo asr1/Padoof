@@ -16,14 +16,14 @@
             </div>
 
             <div class="mb-4 mt-10">Then add PDFs from your computer by selecting folders. You can also drag and drop videos</div>
-            <v-btn @click="$store.state.Settings.dialogScanVideos=true" color="primary" class="mb-6" x-large rounded block>
+            <v-btn @click="$store.state.Settings.dialogScanPdfs=true" color="primary" class="mb-6" x-large rounded block>
               <v-icon left>mdi-plus</v-icon> Add PDFs </v-btn>
           </v-col>
         </v-row>
 
         <v-row v-else>
           <v-col cols="12" class="pt-0 d-flex justify-space-between">
-            <v-btn @click="$store.state.Settings.dialogScanVideos=true" rounded color="primary">
+            <v-btn @click="$store.state.Settings.dialogScanPdfs=true" rounded color="primary">
               <v-icon left>mdi-plus</v-icon> Add new PDFs
             </v-btn>
             <v-btn @click="customization=!customization" rounded color="primary"> 

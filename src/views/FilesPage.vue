@@ -24,7 +24,7 @@
             </div>
             <div v-else>
               <div class="icon-wrapper">
-                <!-- TODO this shouldn't be video  -->
+                <!-- TODO this shouldn't be video, change to PDF  -->
                 <img v-if="isImage(f.ext)" @click="openViewer(i)" :src="getFilePath(i)" height="80" class="image">
                 <video v-else-if="f.ext=='.mp4'" :src="getFilePath(i)" width="120" height="80" class="video"/>
                 <v-icon v-else size="80">mdi-{{getFileIcon(f.ext)}}</v-icon>

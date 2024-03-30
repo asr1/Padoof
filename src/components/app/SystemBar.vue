@@ -14,7 +14,7 @@
               <v-icon left size="18">mdi-update</v-icon> Check for Updates...
             </v-list-item-title>
           </v-list-item>
-          <v-list-item link @mouseup="$store.state.Settings.dialogScanVideos=true">
+          <v-list-item link @mouseup="$store.state.Settings.dialogScanPdfs=true">
             <v-list-item-title>
               <v-icon left size="18">mdi-video-plus</v-icon> Add New Videos...
             </v-list-item-title>
@@ -227,7 +227,7 @@ export default {
       // requests from main process for system menu
       ipcRenderer.on('maximize', () => { this.maximized = true })
       ipcRenderer.on('unmaximize', () => { this.maximized = false })
-      ipcRenderer.on('addNewVideos', () => { this.$store.state.Settings.dialogScanVideos=true })
+      ipcRenderer.on('addnewPdfs', () => { this.$store.state.Settings.dialogScanPdfs=true })
       ipcRenderer.on('checkForUpdates', () => { this.checkForUpdates() })
       ipcRenderer.on('lockApp', () => { this.lock() })
       ipcRenderer.on('toggleSystemPlayer', () => { this.isPlayVideoInSystemPlayer=!this.isPlayVideoInSystemPlayer })

@@ -17,7 +17,7 @@
     <v-tabs-items v-model="tab" class="settings-tabs">
       <v-tab-item value="app-settings">
         <v-card flat max-width="800" style="margin: auto;" class="py-10">
-          <v-btn @click="$store.state.Settings.dialogScanVideos=true" class="mb-10" block color="primary" x-large rounded>
+          <v-btn @click="$store.state.Settings.dialogScanPdfs=true" class="mb-10" block color="primary" x-large rounded>
             <v-icon large class="mr-4">mdi-video-plus</v-icon> Add new videos </v-btn>
 
           <WatchedFolders/>
@@ -69,7 +69,7 @@
                     <span>Disable this option if stuttering occurs at the end of the process of adding new videos</span>
                   </v-tooltip>
                   <span class="mr-6">Update data after adding new PDFs:</span>
-                  <v-switch v-model="updateDataAfterAddingNewVideos" :label="updateDataAfterAddingNewVideos?'Yes':'No'" inset class="d-inline mt-0 pt-0" hide-details/>
+                  <v-switch v-model="updateDataAfterAddingnewPdfs" :label="updateDataAfterAddingnewPdfs?'Yes':'No'" inset class="d-inline mt-0 pt-0" hide-details/>
                 </div>
               </v-col>
             </v-row>
@@ -652,9 +652,9 @@ export default {
       get() {return this.$store.state.Settings.autoUpdateDataFromVideos},
       set(value) {this.$store.dispatch('updateSettingsState', {key:'autoUpdateDataFromVideos', value})},
     },
-    updateDataAfterAddingNewVideos: {
-      get() {return this.$store.state.Settings.updateDataAfterAddingNewVideos},
-      set(value) {this.$store.dispatch('updateSettingsState', {key:'updateDataAfterAddingNewVideos', value})},
+    updateDataAfterAddingnewPdfs: {
+      get() {return this.$store.state.Settings.updateDataAfterAddingnewPdfs},
+      set(value) {this.$store.dispatch('updateSettingsState', {key:'updateDataAfterAddingnewPdfs', value})},
     },
     updateDataFromVideosOnStart: {
       get() {return this.$store.state.Settings.updateDataFromVideosOnStart},
@@ -969,7 +969,7 @@ export default {
           cond: 'one of',
           val: result.map(i=>i.path),
           type: 'boolean',
-          flag: 'duplicateVideos',
+          flag: 'duplicatePdfs',
           lock: true,
         }],
         sortBy: 'size',

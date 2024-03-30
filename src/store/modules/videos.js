@@ -77,7 +77,7 @@ const Videos = {
         let type = filters[filter].type
         let flag = filters[filter].flag
         
-        if (flag === 'lostVideos' || flag === 'duplicateVideos') {
+        if (flag === 'lostVideos' || flag === 'duplicatePdfs') {
           videos = videos.filter(c=>{
             let include = false
             for (let i of val) if (c[by].includes(i)) {include=true;break}
@@ -336,7 +336,7 @@ const Videos = {
         if (metaBy) by = metaBy.settings.name
 
         if (flag === 'lostVideos') return 'Lost Videos'
-        else if (flag === 'duplicateVideos') return 'Duplicate videos'
+        else if (flag === 'duplicatePdfs') return 'Duplicate videos'
         if (val === null || val.length === 0) continue
         
         if (equals.includes(cond)) cond = '='

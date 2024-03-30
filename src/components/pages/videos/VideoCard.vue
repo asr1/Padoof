@@ -631,6 +631,7 @@ export default {
     updateFileInfo() {
       function getVideoMetadata (pathToFile) {
         return new Promise((resolve, reject) => {
+          // TODO replace ffmpeg with imagemagick
           return ffmpeg.ffprobe(pathToFile, (error, info) => {
             if (error) return reject(error)
             else if (info.streams[0].duration < 1) return reject('duration less than 1 sec.')
@@ -646,7 +647,9 @@ export default {
           return
         } 
         try {
+          console.log("Trying to get metadata 1");
           let metadata = await getVideoMetadata(video.path)
+          console.log(metadata);
           let duration = Math.floor(metadata.format.duration)
           let resolution
           for (let i = 0; i < metadata.streams.length; i++) {

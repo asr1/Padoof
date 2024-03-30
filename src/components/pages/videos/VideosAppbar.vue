@@ -3,7 +3,7 @@
     <div>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-btn icon tile @click="$store.state.Settings.dialogScanVideos=true" v-on="on">
+          <v-btn icon tile @click="$store.state.Settings.dialogScanPdfs=true" v-on="on">
             <v-icon>mdi-video-plus</v-icon>
           </v-btn>
         </template>

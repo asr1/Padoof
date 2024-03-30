@@ -1,12 +1,12 @@
 <template> 
-  <v-dialog v-model="$store.state.Settings.dialogScanVideos" scrollable persistent max-width="1200">
-    <v-stepper v-model="scanVideosForm">
+  <v-dialog v-model="$store.state.Settings.dialogScanPdfs" scrollable persistent max-width="1200">
+    <v-stepper v-model="ScanPdfsForm">
       <v-stepper-header style="height: 50px;">
-        <v-stepper-step :complete="scanVideosForm > 1" step="1" class="py-0">
+        <v-stepper-step :complete="ScanPdfsForm > 1" step="1" class="py-0">
           Choose folders
         </v-stepper-step>
         <v-divider></v-divider>
-        <v-stepper-step :complete="scanVideosForm > 2" step="2" class="py-0">
+        <v-stepper-step :complete="ScanPdfsForm > 2" step="2" class="py-0">
           Parse settings
         </v-stepper-step>
         <v-divider></v-divider>
@@ -21,7 +21,7 @@
             <vuescroll>
               <v-card-text class="text-center">
                 <v-textarea v-model="folderPaths" outlined no-resize
-                  label="Path to folder with videos" hint="each path starts on a new line" />
+                  label="Path to folder with PDFs" hint="each path starts on a new line" />
 
                 <v-btn @click="chooseMultipleDir" outlined>
                   <v-icon left>mdi-folder-open</v-icon>Choose folders
@@ -33,7 +33,7 @@
                 <v-icon left>mdi-cancel</v-icon> Cancel
               </v-btn>
               <v-spacer></v-spacer>
-              <v-btn @click="scanVideosForm = 2" :disabled="folderPaths.length===0" color="primary" class="ma-2">
+              <v-btn @click="ScanPdfsForm = 2" :disabled="folderPaths.length===0" color="primary" class="ma-2">
                 <v-icon left>mdi-video-check</v-icon> Next: parse settings <v-icon large right>mdi-chevron-right</v-icon>
               </v-btn>
             </v-card-actions>
@@ -74,7 +74,7 @@
                 <v-icon left>mdi-cancel</v-icon> Cancel
               </v-btn>
               <v-spacer></v-spacer>
-              <v-btn v-if="scanStage==0" @click="scanVideosForm=1" class="my-2 mr-6">
+              <v-btn v-if="scanStage==0" @click="ScanPdfsForm=1" class="my-2 mr-6">
                 <v-icon large left>mdi-chevron-left</v-icon> Back
               </v-btn>
               <v-btn @click="startScanProcess" color="primary" class="my-2 mr-2">
@@ -91,12 +91,12 @@
               {{headerText}}
               <v-spacer></v-spacer>
               <span class="body-2">
-                {{currentNumberOfScanVideos}} / {{totalNumberOfScanVideos}} videos scanned
+                {{currentNumberOfScanPdfs}} / {{totalNumberOfScanPdfs}} PDFs scanned
               </span>
             </v-card-title>
 
             <v-card-actions class="px-4">
-              <v-progress-linear v-model="videoScanProgressBar" :class="{active: isProcessRun}" 
+              <v-progress-linear v-model="pdfScanProgressBar" :class="{active: isProcessRun}" 
                 height="20" rounded class="progress-striped">
                 <template v-slot="{ value }">
                   <strong class="process-percents">{{ Math.ceil(value) }}%</strong>
@@ -104,8 +104,8 @@
               </v-progress-linear>
             </v-card-actions>
 
-            <v-card-actions v-if="currentVideoScanName!==''" class="py-1 px-4">
-              {{currentVideoScanName}}
+            <v-card-actions v-if="currentPdfScanName!==''" class="py-1 px-4">
+              {{currentPdfScanName}}
             </v-card-actions>
 
             <v-card-actions v-if="$store.state.Settings.scanProcRun" class="py-1 px-4">
@@ -126,7 +126,7 @@
                   border="left" text dense outlined :height="alertScanErrorHeight" 
                 > <v-row align="start">
                     <v-col class="grow">
-                      Video file read error: ({{errorVideos.length}}) <br>{{errorScanVideos}}
+                      PDF file read error: ({{errorPdfs.length}}) <br>{{errorScanPdfs}}
                     </v-col>
                     <v-col class="shrink">
                       <v-btn depressed fab outlined width="24" height="24" color="error"
@@ -137,35 +137,35 @@
                   </v-row>
                 </v-alert>
                 <v-alert style="overflow:hidden;"
-                  v-model="alertDuplicateVideos" type="warning" :icon="false"
-                  border="left" text dense outlined :height="alertDuplicateVideosHeight" 
+                  v-model="alertduplicatePdfs" type="warning" :icon="false"
+                  border="left" text dense outlined :height="alertduplicatePdfsHeight" 
                 > <v-row align="start">
                     <v-col class="grow">
-                      Already in the database: ({{duplicateVideos.length}}) 
-                      <br>{{parsedDuplicateVideos}}
+                      Already in the database: ({{duplicatePdfs.length}}) 
+                      <br>{{parsedduplicatePdfs}}
                     </v-col>
                     <v-col class="shrink">
                       <v-btn depressed fab outlined width="24" height="24" color="warning"
-                        @click="alertDuplicateVideosHeightChange"
+                        @click="alertduplicatePdfsHeightChange"
                       ><v-icon size="16">mdi-arrow-up-down</v-icon>
                       </v-btn>
                     </v-col>
                   </v-row>
                 </v-alert>
                 <v-alert
-                  v-model="noNewVideosAdded"
+                  v-model="noNewPdfsAdded"
                   border="left" text dense outlined  type="info"
                 > {{textNoVideosAdded}}
                 </v-alert>
                 <v-alert style="overflow:hidden;"
-                  v-model="alertAddNewVideos" type="success" :icon="false"
-                  border="left" text dense outlined :height="alertAddNewVideosHeight"
+                  v-model="alertAddnewPdfs" type="success" :icon="false"
+                  border="left" text dense outlined :height="alertAddnewPdfsHeight"
                 > <v-row align="start">
-                    <v-col class="grow"> Added: ({{newVideos.length}})
-                      <br>{{parsedNewVideos}} </v-col>
+                    <v-col class="grow"> Added: ({{newPdfs.length}})
+                      <br>{{parsednewPdfs}} </v-col>
                     <v-col class="shrink">
                       <v-btn depressed fab outlined width="24" height="24" color="success"
-                        @click="alertAddNewVideosHeightChange"
+                        @click="alertAddnewPdfsHeightChange"
                       ><v-icon size="16">mdi-arrow-up-down</v-icon>
                       </v-btn>
                     </v-col>
@@ -195,7 +195,8 @@ const {ipcRenderer} = require('electron')
 const fs = require('fs')
 const path = require('path')
 const shortid = require('shortid')
-const ffmpeg = require('fluent-ffmpeg')
+const ffmpeg = require('fluent-ffmpeg') // TODO remove this dependency entirely
+const im = require('imagemagick');
 const pathToFfmpeg = require('ffmpeg-static').replace('app.asar', 'app.asar.unpacked')
 const pathToFfprobe = require('ffprobe-static').path.replace('app.asar', 'app.asar.unpacked')
 ffmpeg.setFfmpegPath(pathToFfmpeg)
@@ -205,14 +206,14 @@ import vuescroll from 'vuescroll'
 import MetaGetters from '@/mixins/MetaGetters'
 
 export default {
-  name: 'ScanVideos',
+  name: 'ScanPdfs',
   components: {
     vuescroll
 	},
   mixins: [MetaGetters],
   mounted() {
     this.$nextTick(function () {
-      if (this.scanStage>0) this.scanVideosForm = this.scanStage
+      if (this.scanStage>0) this.ScanPdfsForm = this.scanStage
       this.folderPaths = this.$store.state.Settings.folders.map(f=>f.path).join('\n')
     })
   },
@@ -220,26 +221,26 @@ export default {
     this.initParseMeta()
   },
   data: () => ({
-    scanVideosForm: 1,
+    ScanPdfsForm: 1,
     folderPaths: '',
-    headerText: 'Videos scanning in progress...',
-    videoScanProgressBar: 0,
-    currentVideoScanName: '',
-    isVideoScanFinished: false,
-    currentNumberOfScanVideos: 0,
-    totalNumberOfScanVideos: 0,
+    headerText: 'PDFs scanning in progress...',
+    pdfScanProgressBar: 0,
+    currentPdfScanName: '',
+    isPdfScanFinished: false,
+    currentNumberOfScanPdfs: 0,
+    totalNumberOfScanPdfs: 0,
     alertFolderError: false,
     alertScanError: false,
     alertScanErrorHeight: 100,
-    alertDuplicateVideos: false,
-    alertDuplicateVideosHeight: 100,
-    alertAddNewVideos: false,
-    alertAddNewVideosHeight: 100,
+    alertduplicatePdfs: false,
+    alertduplicatePdfsHeight: 100,
+    alertAddnewPdfs: false,
+    alertAddnewPdfsHeight: 100,
     errorFolders: [],
-    errorVideos: [],
-    duplicateVideos: [],
-    newVideos: [],
-    noNewVideosAdded: false,
+    errorPdfs: [],
+    duplicatePdfs: [],
+    newPdfs: [],
+    noNewPdfsAdded: false,
     textNoVideosAdded: '',
     stop: false,
     fileInfo: {},
@@ -248,9 +249,9 @@ export default {
   }),
   computed: {
     errorScanFolders() { return this.errorFolders.join(', \n') },
-    errorScanVideos() { return this.errorVideos.join(', \n') },
-    parsedDuplicateVideos() { return this.duplicateVideos.join(', \n') },
-    parsedNewVideos() { return this.newVideos.join(', \n') },
+    errorScanPdfs() { return this.errorPdfs.join(', \n') },
+    parsedduplicatePdfs() { return this.duplicatePdfs.join(', \n') },
+    parsednewPdfs() { return this.newPdfs.join(', \n') },
     isProcessRun() { return this.$store.state.Settings.scanProcRun },
     pathToUserData() { return this.$store.getters.getPathToUserData },
     metaForParsing() {  
@@ -280,13 +281,13 @@ export default {
       if (this.alertScanErrorHeight == 100) this.alertScanErrorHeight = undefined
       else this.alertScanErrorHeight = 100
     },
-    alertDuplicateVideosHeightChange() {
-      if (this.alertDuplicateVideosHeight == 100) this.alertDuplicateVideosHeight = undefined
-      else this.alertDuplicateVideosHeight = 100
+    alertduplicatePdfsHeightChange() {
+      if (this.alertduplicatePdfsHeight == 100) this.alertduplicatePdfsHeight = undefined
+      else this.alertduplicatePdfsHeight = 100
     },
-    alertAddNewVideosHeightChange() {
-      if (this.alertAddNewVideosHeight == 100) this.alertAddNewVideosHeight = undefined
-      else this.alertAddNewVideosHeight = 100
+    alertAddnewPdfsHeightChange() {
+      if (this.alertAddnewPdfsHeight == 100) this.alertAddnewPdfsHeight = undefined
+      else this.alertAddnewPdfsHeight = 100
     },
     async chooseMultipleDir() {
       await ipcRenderer.invoke('chooseDirectoryMultiple').then((result) => {
@@ -296,21 +297,21 @@ export default {
     },
     scanDir() {
       this.$store.state.Settings.scanProcRun = true
-      this.headerText = 'Videos scanning in progress...'
+      this.headerText = 'PDFs scanning in progress...'
 
-      this.videoScanProgressBar = 0
-      this.isVideoScanFinished = false
-      this.currentNumberOfScanVideos = 0
-      this.totalNumberOfScanVideos = 0
+      this.pdfScanProgressBar = 0
+      this.isPdfScanFinished = false
+      this.currentNumberOfScanPdfs = 0
+      this.totalNumberOfScanPdfs = 0
       this.alertFolderError = false
       this.alertScanError = false
-      this.alertDuplicateVideos = false
-      this.alertAddNewVideos = false
+      this.alertduplicatePdfs = false
+      this.alertAddnewPdfs = false
       this.errorFolders = []
-      this.errorVideos = []
-      this.duplicateVideos = []
-      this.newVideos = []
-      this.noNewVideosAdded = false
+      this.errorPdfs = []
+      this.duplicatePdfs = []
+      this.newPdfs = []
+      this.noNewPdfsAdded = false
       this.stop = false
       
       let formats = /\.pdf$/
@@ -331,53 +332,53 @@ export default {
 
       async function processArray(files) {
         let percentsPerFile = 100/files.length 
-        vm.totalNumberOfScanVideos = files.length
+        vm.totalNumberOfScanPdfs = files.length
         // console.log(percentsPerFile)
         for (const file of files) {
           if (vm.stop) break // stop process
-          vm.currentVideoScanName = file
+          vm.currentPdfScanName = file
           let fileProcResult = await vm.fileScanProc(file)
           if (fileProcResult.errorVideo) {
             vm.alertScanError = true
-            vm.errorVideos.unshift(fileProcResult.errorVideo)
+            vm.errorPdfs.unshift(fileProcResult.errorVideo)
           }
           if (fileProcResult.duplicate) {
-            vm.alertDuplicateVideos = true
-            vm.duplicateVideos.unshift(fileProcResult.duplicate)
+            vm.alertduplicatePdfs = true
+            vm.duplicatePdfs.unshift(fileProcResult.duplicate)
           }
           if (fileProcResult.success) {
-            vm.alertAddNewVideos = true
-            vm.newVideos.unshift(fileProcResult.success.path)
+            vm.alertAddnewPdfs = true
+            vm.newPdfs.unshift(fileProcResult.success.path)
           }
-          ++vm.currentNumberOfScanVideos
-          vm.videoScanProgressBar += percentsPerFile
-          if (vm.videoScanProgressBar > 100) vm.videoScanProgressBar = 100
-          // console.log(vm.videoScanProgressBar)
+          ++vm.currentNumberOfScanPdfs
+          vm.pdfScanProgressBar += percentsPerFile
+          if (vm.pdfScanProgressBar > 100) vm.pdfScanProgressBar = 100
+          // console.log(vm.pdfScanProgressBar)
           // console.log(fileProcResult)
           await sleep(10)
         }
-        vm.isVideoScanFinished = true
+        vm.isPdfScanFinished = true
         // console.log(vm.updateVideosInStore);
         // console.log('Files scaned!');
       }
 
       processArray(filesArray).then(()=>{
-        vm.currentVideoScanName = ''
-        if (vm.newVideos.length===0 && vm.totalNumberOfScanVideos!==0) {
-          vm.noNewVideosAdded = true
+        vm.currentPdfScanName = ''
+        if (vm.newPdfs.length===0 && vm.totalNumberOfScanPdfs!==0) {
+          vm.noNewPdfsAdded = true
           vm.textNoVideosAdded = 'No videos have been added.'
         }
-        if (vm.newVideos.length===0 && vm.totalNumberOfScanVideos===0) {
-          vm.noNewVideosAdded = true
+        if (vm.newPdfs.length===0 && vm.totalNumberOfScanPdfs===0) {
+          vm.noNewPdfsAdded = true
           vm.textNoVideosAdded = 'There is no video in the selected folder.'
         }
-        if (vm.newVideos.length>0) {
+        if (vm.newPdfs.length>0) {
           vm.$store.commit('addLog', {
             type:'info',
             color:'green',
-            text:`${vm.newVideos.length} new videos have been added 😀`
+            text:`${vm.newPdfs.length} new videos have been added 😀`
           })
-          if (vm.$store.state.Settings.updateDataAfterAddingNewVideos) vm.$store.dispatch('updateDataFromVideos')
+          if (vm.$store.state.Settings.updateDataAfterAddingnewPdfs) vm.$store.dispatch('updateDataFromVideos')
         }
         vm.$store.state.Settings.scanProcRun = false
         vm.$store.dispatch('filterVideos')
@@ -425,9 +426,12 @@ export default {
       const vm = this
 
       try {
+        console.log("Trying to get metadata 2");
         await this.getVideoMetadata(file)
       } catch (error) {
-        vm.$store.commit('addLog', {type:'error',text:'Video scanning process: '+error})
+        console.log("Error 1");
+        console.log(error);
+        vm.$store.commit('addLog', {type:'error',text:'PDF scanning process: '+error})
         fileProcResult.errorVideo = file
         return fileProcResult
       }
@@ -448,16 +452,27 @@ export default {
     },
     getVideoMetadata (pathToFile) {
       return new Promise((resolve, reject) => {
-        return ffmpeg.ffprobe(pathToFile, (error, info) => {
+        console.log(pathToFile);
+
+      return im.readMetadata(pathToFile, function(err, metadata){
+        if (err) throw err;
+        console.log('Shot at '+metadata.exif.dateTimeOriginal);
+      })
+
+        return im.readMetadata(pathToFile, (error, info) => {
+          console.log("Processing metadata");
           if (error) {
-            this.$store.commit('addLog', {type:'error',text:'Video scanning process: '+error})
+            this.$store.commit('addLog', {type:'error',text:'PDF scanning process: '+error})
             return reject(error)
           }
-          // console.log(`getVideoMetadata: ` + JSON.stringify(videoInfo.format))
+
           this.fileInfo.meta = info
-          if (this.fileInfo.meta.streams[0].duration < 1) return reject('duration less than 1 sec.')
+          console.log(info);
+          console.log("Bruges 12");
+          // if (this.fileInfo.meta.streams[0].duration < 1) return reject('duration less than 1 sec.')
           return resolve()
-        })
+        });
+
       })
     },
     createInfoForDb() { // create info of videofile, generating thumb.jpg and return object with videofile info
@@ -466,6 +481,7 @@ export default {
         
         let resolution
         for(let i = 0; i < this.fileInfo.meta.streams.length; i++) {
+          // TODO 
           if (this.fileInfo.meta.streams[i].codec_type === 'video') {
             resolution = this.fileInfo.meta.streams[i].width + 'x' + this.fileInfo.meta.streams[i].height
           } 
@@ -495,6 +511,7 @@ export default {
         let outputPathThumbs = path.join(this.pathToUserData, '/media/thumbs/')
         if (!fs.existsSync(outputPathThumbs)) fs.mkdirSync(outputPathThumbs)
         // creating the thumb of the video
+      // TODO create thumb from PDF
         ffmpeg()
           .input(pathToFile)
           .screenshots({
@@ -547,7 +564,7 @@ export default {
       else return true
     },
     startScanProcess() {
-      this.scanVideosForm = 3
+      this.ScanPdfsForm = 3
       setTimeout(()=>{ this.scanDir() },500)
     },
     endScanProcess() {
@@ -555,17 +572,17 @@ export default {
       this.$store.state.updateFoldersData = Date.now()
     },
     close() {
-      this.$store.state.Settings.dialogScanVideos = false
+      this.$store.state.Settings.dialogScanPdfs = false
       this.scanFolders = []
       this.scanFiles = []
       this.scanStage = 0
-      this.scanVideosForm = 1
+      this.ScanPdfsForm = 1
     },
   },
   watch: {
-    alertScanError(val) { if (!val) this.errorVideos = [] }, 
-    alertDuplicateVideos(val) { if (!val) this.duplicateVideos = [] },
-    alertAddNewVideos(val) { if (!val) { this.newVideos = [] } },
+    alertScanError(val) { if (!val) this.errorPdfs = [] }, 
+    alertduplicatePdfs(val) { if (!val) this.duplicatePdfs = [] },
+    alertAddnewPdfs(val) { if (!val) { this.newPdfs = [] } },
   },
 }
 </script>

@@ -72,7 +72,7 @@
 
     <VideosGridElements />
 
-    <ScanVideos v-if="$store.state.Settings.dialogScanVideos"/>
+    <ScanPdfs v-if="$store.state.Settings.dialogScanPdfs"/>
 
     <img v-show="$store.state.hoveredImage" class="list-img-preview"
       :src="getHoveredImage" height="160" max-width="160"
@@ -134,7 +134,7 @@
       </v-sheet>
     </v-bottom-sheet>
 
-    <DialogFolder v-if="$store.state.dialogFolder" @addNewVideos="addNewVideos" :folder="folder"/>
+    <DialogFolder v-if="$store.state.dialogFolder" @addnewPdfs="addnewPdfs" :folder="folder"/>
     <Migration v-if="isMigrationNeeded" :versions="versions"/>
 
     <v-footer app height="20" class="pa-0 footer-app">
@@ -170,7 +170,7 @@ export default {
     DialogFolder: () => import('@/components/app/DialogFolder.vue'),
     ContextMenu: () => import('@/components/app/ContextMenu.vue'),
     VideosGridElements: () => import('@/components/elements/VideosGridElements.vue'),
-    ScanVideos: () => import('@/components/pages/settings/ScanVideos.vue'),
+    ScanPdfs: () => import('@/components/pages/settings/ScanPdfs.vue'),
     About: () => import('@/components/app/About.vue'),
     Migration: () => import('@/components/app/Migration.vue'),
     vuescroll,
@@ -412,12 +412,16 @@ export default {
     },
     checkForUpdates() {
       axios.get(`https://github.com/asr1/Padoof/releases`).then((response) => {
+        console.log("Checking for updates");
         if (response.status === 200) {
           const html = response.data
           const $ = cheerio.load(html)
           let lastVersion = $('a:contains("Padoof v")')
           if (lastVersion.length == 0) lastVersion = $('a:contains("padoof v")')
           this.versions.new = lastVersion.eq(0).text().trim() // from github
+          if(!this.versions.new) {
+            return;
+          }
           this.versions.new = this.versions.new.match(/\d{1,2}.\d{1,2}.\d{1,2}/)[0]
           if (this.getVer(this.versions.app) < this.getVer(this.versions.new)) {
             this.$store.commit('addLog',{text:`💿 Available new version: ${this.versions.new}`, color:'green'})
@@ -434,10 +438,10 @@ export default {
       this.folder = this.foldersData[index]
       this.$store.state.dialogFolder = true
     },
-    addNewVideos() {
+    addnewPdfs() {
       this.$store.state.scan.files = this.folder.newFiles
       this.$store.state.scan.stage = 2
-      this.$store.state.Settings.dialogScanVideos = true
+      this.$store.state.Settings.dialogScanPdfs = true
     },
     createBackup() {
       let temp = path.join(this.pathToUserData, 'backups', 'temp')
