@@ -191,12 +191,12 @@
 </template>
 
 <script>
+// const { PdfReader } = require('pdfreader');
 const {ipcRenderer} = require('electron')
 const fs = require('fs')
 const path = require('path')
 const shortid = require('shortid')
 const ffmpeg = require('fluent-ffmpeg') // TODO remove this dependency entirely
-const im = require('imagemagick');
 const pathToFfmpeg = require('ffmpeg-static').replace('app.asar', 'app.asar.unpacked')
 const pathToFfprobe = require('ffprobe-static').path.replace('app.asar', 'app.asar.unpacked')
 ffmpeg.setFfmpegPath(pathToFfmpeg)
@@ -455,26 +455,20 @@ export default {
         console.log("");
         console.log(pathToFile);
 
-      return im.readMetadata('D:\\Documents\\Rpg\\Systems\\Masks\\icon.png', function(err, metadata){
-  if (err) throw err;
-  console.log("OOOHA");
-  console.log(metadata); 
-  console.log('Shot at '+metadata.exif.dateTimeOriginal);
-})
+        // new PdfReader().parseFileItems(pathToFile, (error, info) => {
+        //   console.log("Processing metadata");
+        //   console.log(info);
+        //   if (error) {
+        //     this.$store.commit('addLog', {type:'error',text:'PDF scanning process: '+error})
+        //     return reject(error)
+        //   }
 
-        return im.readMetadata(pathToFile, (error, info) => {
-          console.log("Processing metadata");
-          if (error) {
-            this.$store.commit('addLog', {type:'error',text:'PDF scanning process: '+error})
-            return reject(error)
-          }
-
-          this.fileInfo.meta = info
-          console.log(info);
-          console.log("Bruges 1");
-          // if (this.fileInfo.meta.streams[0].duration < 1) return reject('duration less than 1 sec.')
-          return resolve()
-        });
+        //   this.fileInfo.meta = info
+        //   console.log(info);
+        //   console.log("Bruges 1");
+        //   // if (this.fileInfo.meta.streams[0].duration < 1) return reject('duration less than 1 sec.')
+        //   return resolve()
+        // });
 
       })
     },

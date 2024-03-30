@@ -15,7 +15,6 @@ module.exports = {
         'archiver', 
         'fluent-ffmpeg', 
         'chokidar', 
-        'imagemagick',
         'ffmpeg-static',
         'ffprobe-static',
       ],
