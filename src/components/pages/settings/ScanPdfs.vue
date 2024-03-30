@@ -192,6 +192,8 @@
 
 <script>
 // const { PdfReader } = require('pdfreader');
+// const PDFParser = require('pdf2json');
+// const pdfParser = new PDFParser();
 const {ipcRenderer} = require('electron')
 const fs = require('fs')
 const path = require('path')
@@ -454,29 +456,25 @@ export default {
       return new Promise((resolve, reject) => {
         console.log("");
         console.log(pathToFile);
+        const metadata = fs.statSync(pathToFile, {});
+        
+      // pdfParser.on('pdfParser_dataReady', function(data) {
+      //     const doc = data.PDFJS && data.PDFJS.pdfDocument && data.PDFJS.pdfDocument.numPages;
+      //     console.log('Number of pages:', doc);
+      // });
+      // pdfParser.loadPDF(pathToFile);
+      console.log(doc);
 
-        // new PdfReader().parseFileItems(pathToFile, (error, info) => {
-        //   console.log("Processing metadata");
-        //   console.log(info);
-        //   if (error) {
-        //     this.$store.commit('addLog', {type:'error',text:'PDF scanning process: '+error})
-        //     return reject(error)
-        //   }
-
-        //   this.fileInfo.meta = info
-        //   console.log(info);
-        //   console.log("Bruges 1");
-        //   // if (this.fileInfo.meta.streams[0].duration < 1) return reject('duration less than 1 sec.')
-        //   return resolve()
-        // });
-
+        console.log(metadata);
+        this.fileInfo.meta = metadata
+        return resolve();
       })
     },
     createInfoForDb() { // create info of PDF file, generating thumb.jpg and return object with PDF file info
       return new Promise ((resolve, reject) => {
         console.log("");
         console.log("Making Info for DB");
-        let duration = Math.floor(this.fileInfo.meta.format.duration)
+        let size = Math.floor(this.fileInfo.meta.size)
         
         let resolution
         for(let i = 0; i < this.fileInfo.meta.streams.length; i++) {
@@ -492,8 +490,7 @@ export default {
         let videoMetadata = {
           id: this.fileInfo.id,
           path: pathToFile,
-          duration: duration,
-          size: this.fileInfo.meta.format.size,
+          size: this.fileInfo.meta.size,
           resolution: resolution,
           rating: 0,
           favorite: false,
