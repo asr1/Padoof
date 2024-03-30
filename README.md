@@ -17,4 +17,4 @@ Note: Imagemagick-CLI is rquired
 
 On Mac, you can use `brew install imagemagick`
 
-On linux, run `sudo apt install imagemagick`
+On Linux, run `sudo apt install imagemagick`

@@ -11,11 +11,11 @@
           <v-icon left>mdi-format-list-numbered</v-icon> Toggle full list
         </v-btn>
         <v-alert dense text color="orange" class="mb-0 ml-6">
-          Number of videos lost: {{folder.lostFiles.length}}
+          Number of PDFs lost: {{folder.lostFiles.length}}
         </v-alert>
         <v-spacer></v-spacer>
         <v-btn @click="openTabWithLostVideos" color="secondary">
-          <v-icon left>mdi-open-in-new</v-icon> Open tab with lost videos
+          <v-icon left>mdi-open-in-new</v-icon> Open tab with lost PDFs
         </v-btn>
       </v-card-actions>
       <vuescroll v-if="listLostFiles">

@@ -359,24 +359,24 @@ export default {
         }
         vm.isPdfScanFinished = true
         // console.log(vm.updateVideosInStore);
-        // console.log('Files scaned!');
+        // console.log('Files scanned!');
       }
 
       processArray(filesArray).then(()=>{
         vm.currentPdfScanName = ''
         if (vm.newPdfs.length===0 && vm.totalNumberOfScanPdfs!==0) {
           vm.noNewPdfsAdded = true
-          vm.textNoVideosAdded = 'No videos have been added.'
+          vm.textNoVideosAdded = 'No PDFs have been added.'
         }
         if (vm.newPdfs.length===0 && vm.totalNumberOfScanPdfs===0) {
           vm.noNewPdfsAdded = true
-          vm.textNoVideosAdded = 'There is no video in the selected folder.'
+          vm.textNoVideosAdded = 'There is no PDF in the selected folder.'
         }
         if (vm.newPdfs.length>0) {
           vm.$store.commit('addLog', {
             type:'info',
             color:'green',
-            text:`${vm.newPdfs.length} new videos have been added 😀`
+            text:`${vm.newPdfs.length} new PDFs have been added 😀`
           })
           if (vm.$store.state.Settings.updateDataAfterAddingnewPdfs) vm.$store.dispatch('updateDataFromVideos')
         }
@@ -426,7 +426,7 @@ export default {
       const vm = this
 
       try {
-        console.log("Trying to get metadata 2");
+        console.log("Trying to 1get metadata 2");
         await this.getVideoMetadata(file)
       } catch (error) {
         console.log("Error 1");
@@ -436,7 +436,7 @@ export default {
         return fileProcResult
       }
 
-      // add videoinfo to DB
+      // add PDF to DB
       await this.createInfoForDb()
         .then(async (videoMetadata) => {
           await this.$store.getters.videos.push(videoMetadata).write()
@@ -452,12 +452,15 @@ export default {
     },
     getVideoMetadata (pathToFile) {
       return new Promise((resolve, reject) => {
+        console.log("");
         console.log(pathToFile);
 
-      return im.readMetadata(pathToFile, function(err, metadata){
-        if (err) throw err;
-        console.log('Shot at '+metadata.exif.dateTimeOriginal);
-      })
+      return im.readMetadata('D:\\Documents\\Rpg\\Systems\\Masks\\icon.png', function(err, metadata){
+  if (err) throw err;
+  console.log("OOOHA");
+  console.log(metadata); 
+  console.log('Shot at '+metadata.exif.dateTimeOriginal);
+})
 
         return im.readMetadata(pathToFile, (error, info) => {
           console.log("Processing metadata");
@@ -468,15 +471,17 @@ export default {
 
           this.fileInfo.meta = info
           console.log(info);
-          console.log("Bruges 12");
+          console.log("Bruges 1");
           // if (this.fileInfo.meta.streams[0].duration < 1) return reject('duration less than 1 sec.')
           return resolve()
         });
 
       })
     },
-    createInfoForDb() { // create info of videofile, generating thumb.jpg and return object with videofile info
+    createInfoForDb() { // create info of PDF file, generating thumb.jpg and return object with PDF file info
       return new Promise ((resolve, reject) => {
+        console.log("");
+        console.log("Making Info for DB");
         let duration = Math.floor(this.fileInfo.meta.format.duration)
         
         let resolution

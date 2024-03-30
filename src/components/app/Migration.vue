@@ -74,7 +74,7 @@ export default {
             "id": "videos",
             "type": "specific",
             "settings": {
-              "name": "Number of videos",
+              "name": "Number of PDFs",
               "icon": "video"
             }
           }

@@ -177,7 +177,7 @@ let systemMenu = Menu.buildFromTemplate([
     label: 'App',
     submenu: [
       {
-        label: 'Add New Videos...',
+        label: 'Add New PDFs...',
         click() { addnewPdfs() } 
       },
       {

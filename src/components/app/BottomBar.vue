@@ -26,11 +26,11 @@
         <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-btn v-on="on" to="/videos/:default?tabId=default" @click.middle="addNewTabVideos" text color="secondary" title="Videos">
-              <span>Videos</span>
-              <v-icon>mdi-video-outline</v-icon>
+              <span>PDFs</span>
+              <v-icon>mdi-file-pdf-box</v-icon>
             </v-btn>
           </template>
-          <span>Videos</span>
+          <span>PDFs</span>
         </v-tooltip>
 
         <v-tooltip top>
