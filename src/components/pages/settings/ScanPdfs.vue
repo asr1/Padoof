@@ -198,11 +198,6 @@ const {ipcRenderer} = require('electron')
 const fs = require('fs')
 const path = require('path')
 const shortid = require('shortid')
-const ffmpeg = require('fluent-ffmpeg') // TODO remove this dependency entirely
-const pathToFfmpeg = require('ffmpeg-static').replace('app.asar', 'app.asar.unpacked')
-const pathToFfprobe = require('ffprobe-static').path.replace('app.asar', 'app.asar.unpacked')
-ffmpeg.setFfmpegPath(pathToFfmpeg)
-ffmpeg.setFfprobePath(pathToFfprobe)
 
 import vuescroll from 'vuescroll'
 import MetaGetters from '@/mixins/MetaGetters'
@@ -384,7 +379,7 @@ export default {
         }
         vm.$store.state.Settings.scanProcRun = false
         vm.$store.dispatch('filterVideos')
-        vm.headerText = 'Video scanning process completed!'
+        vm.headerText = 'PDF scanning process completed!'
       })
     },
     findInDir(dir, filter, fileList = []) {
@@ -392,7 +387,7 @@ export default {
       try {
         files = fs.readdirSync(dir)
       } catch (err) {
-        this.$store.commit('addLog', {type:'error', text:'Video scanning process: '+err})
+        this.$store.commit('addLog', {type:'error', text:'PDF scanning process: '+err})
         files = []
         this.alertFolderError = true
         this.errorFolders.unshift(dir)
@@ -404,7 +399,7 @@ export default {
         try {
           fileStat = fs.lstatSync(filePath)
         } catch (error) {
-          this.$store.commit('addLog', {type:'error', text:'Video scanning process: '+error})
+          this.$store.commit('addLog', {type:'error', text:'PDF scanning process: '+error})
           return
         }
 
@@ -428,7 +423,7 @@ export default {
       const vm = this
 
       try {
-        console.log("Trying to 1get metadata 2");
+        console.log("Trying to get metadata 2");
         await this.getVideoMetadata(file)
       } catch (error) {
         console.log("Error 1");
@@ -439,7 +434,7 @@ export default {
       }
 
       // add PDF to DB
-      await this.createInfoForDb()
+      await this.createInfoForDb(file)
         .then(async (videoMetadata) => {
           await this.$store.getters.videos.push(videoMetadata).write()
           fileProcResult.duplicate = false
@@ -447,7 +442,9 @@ export default {
           return(fileProcResult)
         })
         .catch(error => {
-          vm.$store.commit('addLog', {type:'error',text:'Video scanning process: '+error})
+          console.log("Error 3");
+          console.log(error);
+          vm.$store.commit('addLog', {type:'error',text:'PDF scanning process: '+error})
           fileProcResult.errorVideo = file
         })
       return fileProcResult
@@ -463,35 +460,34 @@ export default {
       //     console.log('Number of pages:', doc);
       // });
       // pdfParser.loadPDF(pathToFile);
-      console.log(doc);
+      // console.log(doc);
 
         console.log(metadata);
         this.fileInfo.meta = metadata
         return resolve();
       })
     },
-    createInfoForDb() { // create info of PDF file, generating thumb.jpg and return object with PDF file info
+    createInfoForDb(pathToFile) { // create info of PDF file, generating thumb.jpg and return object with PDF file info
       return new Promise ((resolve, reject) => {
-        console.log("");
         console.log("Making Info for DB");
         let size = Math.floor(this.fileInfo.meta.size)
         
         let resolution
-        for(let i = 0; i < this.fileInfo.meta.streams.length; i++) {
+        // for(let i = 0; i < this.fileInfo.meta.streams.length; i++) {
           // TODO 
-          if (this.fileInfo.meta.streams[i].codec_type === 'video') {
-            resolution = this.fileInfo.meta.streams[i].width + 'x' + this.fileInfo.meta.streams[i].height
-          } 
-        }
+          // if (this.fileInfo.meta.streams[i].codec_type === 'video') {
+            // resolution = this.fileInfo.meta.streams[i].width + 'x' + this.fileInfo.meta.streams[i].height
+          // } 
+        // }
 
-        let pathToFile = this.fileInfo.meta.format.filename
+        // let pathToFile = this.fileInfo.meta.format.filename
             
         // get file info 
         let videoMetadata = {
           id: this.fileInfo.id,
           path: pathToFile,
-          size: this.fileInfo.meta.size,
-          resolution: resolution,
+          size: 5, //this.fileInfo.meta.size,
+          resolution: "300x300",// resolution,
           rating: 0,
           favorite: false,
           bookmark: '',
@@ -507,22 +503,28 @@ export default {
         let outputPathThumbs = path.join(this.pathToUserData, '/media/thumbs/')
         if (!fs.existsSync(outputPathThumbs)) fs.mkdirSync(outputPathThumbs)
         // creating the thumb of the video
+        fs.appendFile(`${outputPathThumbs}\\${this.fileInfo.id}.jpg`, '1', function(err) {
+          console.log("Error 5");
+          console.log(err);
+          if(err) throw err;
+        })
       // TODO create thumb from PDF
-        ffmpeg()
-          .input(pathToFile)
-          .screenshots({
-            count: 1, 
-            filename: `${this.fileInfo.id}.jpg`,
-            folder: outputPathThumbs,
-            size: '?x320' 
-          })
-          .on('end', () => {
-            // console.log(`thumb created: ${outputPathThumbs + this.fileInfo.id}.jpg`)
-            resolve(videoMetadata)
-          })
-          .on('error', (err) => {
-            reject(err.message)
-          })
+        // ffmpeg()
+        //   .input(pathToFile)
+        //   .screenshots({
+        //     count: 1, 
+        //     filename: `${this.fileInfo.id}.jpg`,
+        //     folder: outputPathThumbs,
+        //     size: '?x320' 
+        //   })
+        //   .on('end', () => {
+        //     // console.log(`thumb created: ${outputPathThumbs + this.fileInfo.id}.jpg`)
+        //     resolve(videoMetadata)
+        //   })
+        //   .on('error', (err) => {
+        //     reject(err.message)
+        //   })
+        resolve(videoMetadata);
       })
     },
     parsePathForMeta(filePath) {

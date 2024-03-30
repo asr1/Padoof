@@ -1,25 +1,14 @@
 Padoof notes
 
-
-
-
-
 See if you can scrape from RPG Geek instead of the current place
-
-
 
 Remove scrape
 
-
 Remove referenes to videos,
-
-make parse actually take PDFs on import
-
-Change AppPlayer.vue to read PDFs instead
-
 
 Remove ffmpeg
 
-Do I need to add image-magick to places like vue.config to make it work?
-
 Generate thumbnail from PDF cover
+
+Set duration to page count
+

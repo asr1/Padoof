@@ -2,7 +2,7 @@
   <vuescroll ref="mainContainer" @handle-scroll="handleScroll">
     <div @dragover="showDrop">
       <div class="headline text-h4 d-flex align-center justify-center pt-4">
-        <v-icon left>mdi-video-outline</v-icon> Videos
+        <v-icon left>mdi-video-outline</v-icon> PDFs
         <span v-if="totalVideos!=numberFilteredVideos" class="text-h6 ml-2">({{numberFilteredVideos}} of {{totalVideos}})</span>
         <span v-else class="text-h6 ml-2">({{numberFilteredVideos}})</span>
       </div>
@@ -39,20 +39,20 @@
       
       <div v-if="totalVideos==0" class="text-center">
         <div><v-icon size="100" class="ma-10">mdi-video</v-icon></div>
-        It's so empty... maybe add some videos
+        It's so empty... maybe add some PDFs
         <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-icon v-on="on">mdi-help-circle-outline</v-icon>
           </template>
           <span>Click on the icon <v-icon dark>mdi-video-plus</v-icon> in the upper left corner, on appbar <br>
-            or drag a folder or video files here</span>
+            or drag a folder or PDF files here</span>
         </v-tooltip>
       </div>
       
       
       <div v-if="numberFilteredVideos==0&&totalVideos>0" class="text-center"> 
         <div><v-icon size="100" class="ma-10">mdi-close</v-icon></div>
-        There are no matching videos for the selected filters
+        There are no matching PDFs for the selected filters
       </div>
 
       <v-container fluid class="wide-image videos-selection" :class="[cardSize, gapSize, {'card-grid':view==0}, {'line-grid':view==1}]">
@@ -83,7 +83,7 @@ import vuescroll from 'vuescroll'
 import Keys from '@/mixins/Keys'
 
 export default {
-  name: 'Videos',
+  name: 'PDFsdddddd',
   components: {
     vuescroll,
     Loading: () => import('@/components/elements/Loading.vue'),

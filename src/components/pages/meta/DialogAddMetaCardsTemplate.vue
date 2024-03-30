@@ -56,7 +56,7 @@ export default {
         value: true,
         meta: null,
       },
-      websites: {
+      publishers: {
         value: true,
         meta: null,
       },

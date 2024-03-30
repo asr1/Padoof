@@ -19,9 +19,9 @@
         <v-list-item link to="/videos/:default?tabId=default"
           @click.middle="addNewTabVideos" color="secondary" draggable="false">
           <v-list-item-icon>
-            <v-icon>mdi-video-outline</v-icon>
+            <v-icon>mdi-file-pdf-box</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>Videos</v-list-item-title>
+          <v-list-item-title>PDFs</v-list-item-title>
         </v-list-item>
         
         <v-list-item link to="/playlists/:default?tabId=default"

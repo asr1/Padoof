@@ -15,7 +15,7 @@
           <v-icon>mdi-play</v-icon> </v-btn>
 
         <div v-if="errorThumb" class="error-load-thumb">
-          unable to find thumb for this video
+          unable to find thumb for this PDF
         </div>
 
         <v-rating v-if="!ratingAndFavoriteInCard && !isRatingHidden" 
@@ -130,8 +130,7 @@
       class="video-card meta-card" outlined hover :disabled="!reg && i>4">
       <div @click="playVideo" @mousemove.capture="scrollStory($event)" @mouseleave="stopScrollStory" ref="story" class="story">
         <v-sheet v-if="!isFileNameHidden" class="video-card-title" v-html="fileName"/>
-        <div v-if="!reg && i>4" class="reg-block">App not registered</div>
-        <div v-if="!isVideoExist" class="path-error"> <div class="error">No video found. Please update the path.</div> </div>
+        <div v-if="!isVideoExist" class="path-error"> <div class="error">No PDF found. Please update the path.</div> </div>
         <div v-if="!isQualityLabelHidden" label outlined class="resolution">
           <div class="text text-no-wrap" :class="calcHeightTitle(video.resolution).toLowerCase()">
             {{calcHeightTitle(video.resolution)}}
@@ -650,8 +649,8 @@ export default {
           console.log("Trying to get metadata 1");
           let metadata = await getVideoMetadata(video.path)
           console.log(metadata);
-          let duration = Math.floor(metadata.format.duration)
-          let resolution
+          let duration = 2; // Math.floor(metadata.format.duration)
+          let resolution;
           for (let i = 0; i < metadata.streams.length; i++) {
             if (metadata.streams[i].codec_type === 'video') {
               resolution = metadata.streams[i].width + 'x' + metadata.streams[i].height
@@ -659,8 +658,8 @@ export default {
           }
           let updatedMetadata = {
             duration: duration,
-            size: metadata.format.size,
-            resolution: resolution,
+            size: 10, // metadata.format.size,
+            resolution: "300x300",// resolution,
             edit: Date.now(),
           }
           this.$store.getters.videos.find({ id }).assign(updatedMetadata).write()

@@ -40,7 +40,7 @@ const routes = [
   },
   {
     path: '/videos/:id?',
-    name: 'Videos',
+    name: 'PDFsaaa',
     components: {
       default: Videos,
       appbar: VideosAppbar,
