@@ -130,8 +130,8 @@ import MetaGetters from '@/mixins/MetaGetters'
 export default {
   name: 'VideosAppbarActions',
   components: {
-    DialogFolderTree: () => import('@/components/pages/videos/DialogFolderTree.vue'),
-    DialogFilterVideos: () => import('@/components/pages/videos/DialogFilterVideos.vue'),
+    DialogFolderTree: () => import('@/components/pages/pdfs/DialogFolderTree.vue'),
+    DialogFilterVideos: () => import('@/components/pages/pdfs/DialogFilterVideos.vue'),
     vuescroll,
   },
   mixins: [MetaGetters],
@@ -198,7 +198,7 @@ export default {
   }),
   computed: {
     filtersNumber() {
-      let filters = _.cloneDeep(this.$store.state.Settings.videoFilters)
+      let filters = _.cloneDeep(this.$store.state.Settings.pdfFilters)
       if (!filters.length) return 0
       filters = _.filter(filters, f => {
         if (f.type == null) return false 
@@ -215,19 +215,19 @@ export default {
       if (sortObject) return `mdi-${sortObject.icon}`
       else return 'mdi-help'
     },
-    sortDirection() { return this.$store.state.Settings.videoSortDirection },
+    sortDirection() { return this.$store.state.Settings.pdfSortDirection },
     isTreeEmpty() { return !this.$store.state.Videos.tree.length },
     treeBadgeContent() { return this.$store.state.Videos.tree.length },
     tabId() { return this.$route.query.tabId },
     searchStringComputed() {
-      let filters = this.$store.state.Settings.videoFilters
+      let filters = this.$store.state.Settings.pdfFilters
       let search = _.find(filters, {by: 'path', appbar: true})
       if (search) return search.val
       else return ''
     },
     favoritesFilterExist() {
       let favorite = {by:'favorite',cond:'yes',val:'',type:'boolean',flag:null,appbar:true,lock:false}
-      let filters = this.$store.state.Settings.videoFilters
+      let filters = this.$store.state.Settings.pdfFilters
       let index = _.findIndex(filters, favorite)
       return index > -1
     },
@@ -236,10 +236,10 @@ export default {
   methods: {
     search() {
       if (this.searchString == null || this.searchString.length == 0) return
-      let filters = this.$store.state.Settings.videoFilters
+      let filters = this.$store.state.Settings.pdfFilters
       let index = _.findIndex(filters, {by: 'path', appbar: true})
       if (index > -1) filters.splice(index, 1)
-      this.$store.state.Settings.videoFilters.push({
+      this.$store.state.Settings.pdfFilters.push({
         by: 'path', cond: 'includes', val: this.searchString,
         type: 'string', flag: null, appbar: true, lock: false
       })
@@ -247,22 +247,22 @@ export default {
     },
     changeSearchString(e) { this.searchString = e },
     clearSearch() {
-      let filters = this.$store.state.Settings.videoFilters
+      let filters = this.$store.state.Settings.pdfFilters
       let index = _.findIndex(filters, {by: 'path', appbar: true})
       if (index > -1) filters.splice(index, 1)
       else return
       this.$store.dispatch('filterVideos')
     },
     toggleFavorites() {
-      let filters = this.$store.state.Settings.videoFilters
+      let filters = this.$store.state.Settings.pdfFilters
       let favorite = {by:'favorite',cond:'yes',val:'',type:'boolean',flag:null,appbar:true,lock:false}
       let index = _.findIndex(filters, favorite)
       if (index > -1) filters.splice(index, 1)
-      else this.$store.state.Settings.videoFilters.push(favorite)
+      else this.$store.state.Settings.pdfFilters.push(favorite)
       this.$store.dispatch('filterVideos')
     },
     initSort() {
-      this.sortBy = this.$store.state.Settings.videoSortBy || 'name'
+      this.sortBy = this.$store.state.Settings.pdfSortBy || 'name'
       for (const m of this.metaAssignedToVideos) {
         if (m.type === 'simple') {
           let sm = this.getMeta(m.id)
@@ -277,22 +277,22 @@ export default {
     changeSortBy(e) { this.sortBy = e },
     sortCards() {
       setTimeout(()=>{ 
-        if (this.$store.state.Settings.videoSortBy == this.sortBy) {
-          this.$store.state.Settings.videoSortDirection = this.sortDirection=='asc'?'desc':'asc'
+        if (this.$store.state.Settings.pdfSortBy == this.sortBy) {
+          this.$store.state.Settings.pdfSortDirection = this.sortDirection=='asc'?'desc':'asc'
         }
-        this.$store.state.Settings.videoSortBy = this.sortBy
+        this.$store.state.Settings.pdfSortBy = this.sortBy
         this.$store.dispatch('filterVideos') 
       }, 100)
     },
     toggleSortDirection() {
       setTimeout(()=>{         
-        this.$store.state.Settings.videoSortDirection = this.sortDirection=='asc'?'desc':'asc'
+        this.$store.state.Settings.pdfSortDirection = this.sortDirection=='asc'?'desc':'asc'
         this.$store.dispatch('filterVideos') 
       }, 100)
     },
     // selectAllVideos() {
     //   this.$store.state.Videos.selection.clearSelection()
-    //   let selected = this.$store.state.Videos.selection.select('.video-card')
+    //   let selected = this.$store.state.Videos.selection.select('.pdf-card')
     //   this.$store.state.Videos.selection.keepSelection()
     //   let ids = selected.map(item => (item.dataset.id))
     //   this.$store.commit('updateSelectedVideos', ids)
@@ -302,17 +302,17 @@ export default {
     // },
     addNewTab() {
       let tabId = Date.now()
-      let filters = _.cloneDeep(this.$store.state.Settings.videoFilters)
+      let filters = _.cloneDeep(this.$store.state.Settings.pdfFilters)
       filters = filters.map(i=>{i.lock=false;return i})
       let tab = { 
-        name: this.$store.getters.videoFiltersForTabName, 
-        link: `/videos/:${tabId}?tabId=${tabId}`,
+        name: this.$store.getters.pdfFiltersForTabName, 
+        link: `/pdfs/:${tabId}?tabId=${tabId}`,
         id: tabId,
         filters,
-        sortBy: this.$store.state.Settings.videoSortBy,
-        sortDirection: this.$store.state.Settings.videoSortDirection,
+        sortBy: this.$store.state.Settings.pdfSortBy,
+        sortDirection: this.$store.state.Settings.pdfSortDirection,
         page: 1,
-        icon: 'video-outline'
+        icon: 'pdf-outline'
       }
       this.$store.dispatch('addNewTab', tab)
       this.$router.push(tab.link)

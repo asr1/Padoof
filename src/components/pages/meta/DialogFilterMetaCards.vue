@@ -216,8 +216,8 @@ export default {
         this.metaType.number.push('rating')
       } 
       if (this.isMetaAssignedToVideo) {
-        this.metaList.push('videos')
-        this.metaType.number.push('videos')
+        this.metaList.push('pdfs')
+        this.metaType.number.push('pdfs')
       } 
       if (this.meta.settings.bookmark) {
         this.metaList.push('bookmark')

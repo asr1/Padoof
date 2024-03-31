@@ -29,7 +29,7 @@
           <v-spacer></v-spacer>
           <v-icon>mdi-card-bulleted-settings</v-icon>
         </v-toolbar>
-        <v-slider v-model="$store.state.Settings.videoCardSize"
+        <v-slider v-model="$store.state.Settings.pdfCardSize"
           min="1" max="5" step="1" :tick-labels="cardSizes"
           @input="changeCardSize" class="pa-6"
         />
@@ -68,7 +68,7 @@
 
             <v-list-item link @click="toggleQualityLabelVisibilty()">
               <v-list-item-title>
-                <v-icon left size="18">mdi-video-box</v-icon> Quality Label
+                <v-icon left size="18">mdi-pdf-box</v-icon> Quality Label
               </v-list-item-title>
               <v-icon size="20" class="pl-10" :color="!isQualityLabelHidden?'':'rgba(0,0,0,0)'">mdi-check</v-icon>
             </v-list-item>
@@ -145,46 +145,46 @@ export default {
   }),
   computed: {
     isChipsColored: {
-      get() { return this.$store.state.Settings.videoChipsColored },
-      set(value) { this.$store.dispatch('updateSettingsState', {key:'videoChipsColored', value}) },
+      get() { return this.$store.state.Settings.pdfChipsColored },
+      set(value) { this.$store.dispatch('updateSettingsState', {key:'pdfChipsColored', value}) },
     },
     isEditBtnHidden: {
-      get() { return this.$store.state.Settings.videoEditBtnHidden },
-      set(value) { this.$store.dispatch('updateSettingsState', {key:'videoEditBtnHidden', value}) },
+      get() { return this.$store.state.Settings.pdfEditBtnHidden },
+      set(value) { this.$store.dispatch('updateSettingsState', {key:'pdfEditBtnHidden', value}) },
     },
     isFileNameHidden: {
-      get() { return this.$store.state.Settings.videoFileNameHidden },
-      set(value) { this.$store.dispatch('updateSettingsState', {key:'videoFileNameHidden', value}) },
+      get() { return this.$store.state.Settings.pdfFileNameHidden },
+      set(value) { this.$store.dispatch('updateSettingsState', {key:'pdfFileNameHidden', value}) },
     },
     isFileInfoHidden: {
-      get() { return this.$store.state.Settings.videoFileInfoHidden },
-      set(value) { this.$store.dispatch('updateSettingsState', {key:'videoFileInfoHidden', value}) },
+      get() { return this.$store.state.Settings.pdfFileInfoHidden },
+      set(value) { this.$store.dispatch('updateSettingsState', {key:'pdfFileInfoHidden', value}) },
     },
     isRatingHidden: {
-      get() { return this.$store.state.Settings.videoRatingHidden },
-      set(value) { this.$store.dispatch('updateSettingsState', {key:'videoRatingHidden', value}) },
+      get() { return this.$store.state.Settings.pdfRatingHidden },
+      set(value) { this.$store.dispatch('updateSettingsState', {key:'pdfRatingHidden', value}) },
     },
     isFavoriteHidden: {
-      get() { return this.$store.state.Settings.videoFavoriteHidden },
-      set(value) { this.$store.dispatch('updateSettingsState', {key:'videoFavoriteHidden', value}) },
+      get() { return this.$store.state.Settings.pdfFavoriteHidden },
+      set(value) { this.$store.dispatch('updateSettingsState', {key:'pdfFavoriteHidden', value}) },
     },
     isQualityLabelHidden: {
-      get() { return this.$store.state.Settings.videoQualityLabelHidden },
-      set(value) { this.$store.dispatch('updateSettingsState', {key:'videoQualityLabelHidden', value}) },
+      get() { return this.$store.state.Settings.pdfQualityLabelHidden },
+      set(value) { this.$store.dispatch('updateSettingsState', {key:'pdfQualityLabelHidden', value}) },
     },
     isDurationHidden: {
-      get() { return this.$store.state.Settings.videoDurationHidden },
-      set(value) { this.$store.dispatch('updateSettingsState', {key:'videoDurationHidden', value}) },
+      get() { return this.$store.state.Settings.pdfDurationHidden },
+      set(value) { this.$store.dispatch('updateSettingsState', {key:'pdfDurationHidden', value}) },
     },
    
     metaAssignedToVideos() { return this.$store.state.Settings.metaAssignedToVideos },
     visibility: {
-      get() { return this.$store.state.Settings.videoVisibility },
-      set(value) { this.$store.dispatch('updateSettingsState', {key:'videoVisibility', value}) },
+      get() { return this.$store.state.Settings.pdfVisibility },
+      set(value) { this.$store.dispatch('updateSettingsState', {key:'pdfVisibility', value}) },
     },
     view: {
-      get() { return this.$store.state.Settings.videoView },
-      set(value) { this.$store.dispatch('updateSettingsState', {key:'videoView', value}) },
+      get() { return this.$store.state.Settings.pdfView },
+      set(value) { this.$store.dispatch('updateSettingsState', {key:'pdfView', value}) },
     },
   },
   methods: {
@@ -195,12 +195,12 @@ export default {
       this.visibility = _.pickBy(visibility, (val, key) => _.find(this.metaAssignedToVideos, i=>i.id===key) )
     },
     changeCardSize(value) {
-      this.$store.dispatch('updateSettingsState', {key:'videoCardSize', value})
+      this.$store.dispatch('updateSettingsState', {key:'pdfCardSize', value})
       this.getCardSizeIcon()
     },
     getCardSizeIcon() {
       let size = ''
-      switch(this.$store.state.Settings.videoCardSize) {
+      switch(this.$store.state.Settings.pdfCardSize) {
         case 1: size = 'xs'; break
         case 2: size = 's'; break
         case 3: size = 'm'; break
@@ -217,7 +217,7 @@ export default {
     toggleRatingVisibilty() { this.isRatingHidden = !this.isRatingHidden },
     toggleFavoriteVisibilty() { this.isFavoriteHidden = !this.isFavoriteHidden },
     toggleFileInfoVisibilty() { this.isFileInfoHidden = !this.isFileInfoHidden },
-    toggleVisibility(item) { this.$store.state.Settings.videoVisibility[item] = !this.visibility[item] },
+    toggleVisibility(item) { this.$store.state.Settings.pdfVisibility[item] = !this.visibility[item] },
   },
   watch: {
   },

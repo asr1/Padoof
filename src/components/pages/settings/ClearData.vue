@@ -39,7 +39,7 @@
         </v-toolbar>
         <v-card-text class="text-center">
           <v-icon size="72" color="info" class="py-4">mdi-information-outline</v-icon>
-          <div>This will delete all generated {{dataName}} images of videos. <br> They will be automatically recreated when needed.</div>
+          <div>This will delete all generated {{dataName}} images of pdfs. <br> They will be automatically recreated when needed.</div>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     clearDB(dataType, dataName) {
-      if (dataName=='videos' && dataType=='data') this.clearVideosDb()
+      if (dataName=='pdfs' && dataType=='data') this.clearVideosDb()
       else if (dataName=='meta' && dataType=='data') this.clearMetaDb()
       else if (dataName=='saved filters' && dataType=='data') this.clearSavedFiltersDb()
       else if (dataName=='markers' && dataType=='data') this.clearMarkersDb()
@@ -89,18 +89,18 @@ export default {
     },
     clearVideosDb() {
       this.clearMarkersDb() // clear markers
-      this.$store.getters.videosDatabase.set('videos', []).write()
-      this.$store.getters.playlists.each(i => i.videos = []).write()
+      this.$store.getters.pdfsDatabase.set('pdfs', []).write()
+      this.$store.getters.playlists.each(i => i.pdfs = []).write()
       this.clearFiles(path.join(this.pathToUserData, '/media/thumbs/'))
       this.clearFiles(path.join(this.pathToUserData, '/media/grids/'))
       this.clearFiles(path.join(this.pathToUserData, '/media/timelines/'))
       this.clearFiles(path.join(this.pathToUserData, '/media/markers/'))
-      this.$store.getters.savedFilters.set('videos', []).write() // delete saved filters
+      this.$store.getters.savedFilters.set('pdfs', []).write() // delete saved filters
       this.$store.dispatch('updateSavedFilters') // update saved filters
-      ipcRenderer.send('updatePlayerDb', 'videos') // update markers in player window
-      ipcRenderer.send('closePlayer') // stop playing video in separated window
+      ipcRenderer.send('updatePlayerDb', 'pdfs') // update markers in player window
+      ipcRenderer.send('closePlayer') // stop playing pdf in separated window
       this.$store.commit('updateVideos', [])
-      this.$store.getters.settings.get('tabs').remove(i=>i.link.includes('videos')).write() // close tabs
+      this.$store.getters.settings.get('tabs').remove(i=>i.link.includes('pdfs')).write() // close tabs
       this.$store.commit('updateSettingsState', 'tabs') // update tabs
     },
     clearMetaDb() {
@@ -116,14 +116,14 @@ export default {
       this.$store.getters.dbMeta.set('meta', [...SpecificMeta]).set('cards', []).write() // clear meta db
       let metaInVideos = this.$store.getters.settings.get('metaAssignedToVideos').map('id').value()
       for (let id of metaInVideos) {
-        this.$store.getters.settings.get('videoFilters').remove({by:id}).write() // remove from video filters
-        this.$store.getters.videos.each(v=>{delete v[id]}).write() // remove from all videos
+        this.$store.getters.settings.get('pdfFilters').remove({by:id}).write() // remove from pdf filters
+        this.$store.getters.pdfs.each(v=>{delete v[id]}).write() // remove from all pdfs
         this.$store.getters.settings.get('tabs').each(tab=>{
           tab.filters = _.filter(tab.filters, i=>i.by!==id)
         }).write() // remove from tab's filters
       }
-      this.$store.dispatch('updateSettingsState', {key:'metaAssignedToVideos',value:[]}) // update assigned to video
-      this.$store.dispatch('updateSettingsState', {key:'videoVisibility',value:{}}) // update visibile meta in video
+      this.$store.dispatch('updateSettingsState', {key:'metaAssignedToVideos',value:[]}) // update assigned to pdf
+      this.$store.dispatch('updateSettingsState', {key:'pdfVisibility',value:{}}) // update visibile meta in pdf
       this.clearFiles(path.join(this.pathToUserData, '/media/meta/'))
       let metaIds = this.$store.getters.meta.filter({type:'complex'}).map('id').value()
       for (let id in metaIds) this.$store.getters.savedFilters.unset(metaIds[id]).write() // delete from saved filters
@@ -135,7 +135,7 @@ export default {
     },
     clearSavedFiltersDb() {
       let complexMeta = this.$store.getters.meta.filter({type:'complex'}).value()
-      let savedFilters = { videos: [], playlists: [] }
+      let savedFilters = { pdfs: [], playlists: [] }
       for (let m of complexMeta) savedFilters[m.id] = []
       this.$store.getters.savedFiltersDatabase.set('savedFilters', savedFilters).write()
       this.$store.dispatch('updateSavedFilters')

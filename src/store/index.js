@@ -2,7 +2,7 @@ const path = require("path")
 
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Videos from './modules/videos.js'
+import Videos from './modules/pdfs.js'
 import SavedFilters from './modules/savedFilters.js'
 import Playlists from './modules/playlists.js'
 import Markers from './modules/markers.js'
@@ -34,8 +34,8 @@ export default new Vuex.Store({
     contextMenu: false,
     contextMenuContent: [],
     pathToUserData: '',
-    videoPlayerVideoId: null,
-    videoPlayerPlaylist: null,
+    pdfPlayerVideoId: null,
+    pdfPlayerPlaylist: null,
     foldersData: [],
     dialogFolder: false,
     navDrawer: false,
@@ -86,13 +86,13 @@ export default new Vuex.Store({
     removeNotification({ state, commit}, id) { commit('removeNotification', id) },
     clearAllNotifications({ state, commit}) { commit('clearAllNotifications') },
     updateDataFromVideos({getters, rootState}) {
-      const videos = getters.videos
-      // update number of videos for meta cards
+      const pdfs = getters.pdfs
+      // update number of pdfs for meta cards
       let metaAssignedToVideo = getters.meta.filter(m=>
         rootState.Settings.metaAssignedToVideos.find(i=>i.id===m.id)).value()
       for (let m of metaAssignedToVideo) {
         getters.metaCards.filter({metaId:m.id}).each(mc => {
-          mc.videos = videos.filter(v=>{
+          mc.pdfs = pdfs.filter(v=>{
             if (v[m.id]) return v[m.id].includes(mc.id)
             else return false
           }).value().length

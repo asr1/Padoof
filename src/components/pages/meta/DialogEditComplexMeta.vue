@@ -55,9 +55,9 @@
                     <template v-slot:activator="{ on }">
                       <v-icon v-on="on" left>mdi-file-search-outline</v-icon>
                     </template>
-                    <span>Allow the application to parse the path to the video file and look for meta-card names in it</span>
+                    <span>Allow the application to parse the path to the pdf file and look for meta-card names in it</span>
                   </v-tooltip>
-                  <v-switch v-model="settings.parser" :label="`Parse video for data - ${settings.parser?'On':'Off'}`" class="ma-0 pa-0" hide-details/>
+                  <v-switch v-model="settings.parser" :label="`Parse pdf for data - ${settings.parser?'On':'Off'}`" class="ma-0 pa-0" hide-details/>
                 </v-col>
                 <v-col v-if="$store.state.Settings.showExperimentalFeatures" cols="6" class="pt-0 d-flex align-center">
                   <v-tooltip top>

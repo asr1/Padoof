@@ -120,11 +120,11 @@ const SpecificMeta = [
     }
   },
   {
-    "id": "videos",
+    "id": "pdfs",
     "type": "specific",
     "settings": {
-      "name": "Number of videos",
-      "icon": "video"
+      "name": "Number of pdfs",
+      "icon": "pdf"
     }
   },
   {

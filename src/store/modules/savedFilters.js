@@ -7,7 +7,7 @@ const adapterSavedFilters = new FileSync(pathToDbSavedFilters)
 const dbsf = low(adapterSavedFilters)
 dbsf.defaults({
   savedFilters: {
-    videos: [],
+    pdfs: [],
     playlists: [],
   }
 }).write()

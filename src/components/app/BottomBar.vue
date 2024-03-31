@@ -25,7 +25,7 @@
 
         <v-tooltip top>
           <template v-slot:activator="{ on }">
-            <v-btn v-on="on" to="/videos/:default?tabId=default" @click.middle="addNewTabVideos" text color="secondary" title="PDFsbbb">
+            <v-btn v-on="on" to="/pdfs/:default?tabId=default" @click.middle="addNewTabVideos" text color="secondary" title="PDFsbbb">
               <span>PDFs</span>
               <v-icon>mdi-file-pdf-box</v-icon>
             </v-btn>
@@ -162,14 +162,14 @@ export default {
     addNewTabVideos() {
       let tabId = Date.now()
       let tab = { 
-        name: this.$store.getters.videoFiltersForTabName, 
-        link: `/videos/:${tabId}?tabId=${tabId}`,
+        name: this.$store.getters.pdfFiltersForTabName, 
+        link: `/pdfs/:${tabId}?tabId=${tabId}`,
         id: tabId,
-        filters: _.cloneDeep(this.$store.state.Settings.videoFilters),
-        sortBy: this.$store.state.Settings.videoSortBy,
-        sortDirection: this.$store.state.Settings.videoSortDirection,
+        filters: _.cloneDeep(this.$store.state.Settings.pdfFilters),
+        sortBy: this.$store.state.Settings.pdfSortBy,
+        sortDirection: this.$store.state.Settings.pdfSortDirection,
         page: 1,
-        icon: 'video-outline'
+        icon: 'pdf-outline'
       }
       this.$store.dispatch('addNewTab', tab)
       this.$router.push(tab.link)

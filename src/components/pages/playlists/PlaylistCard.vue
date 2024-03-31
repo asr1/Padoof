@@ -10,7 +10,7 @@
       > <v-icon :color="isFavorite===false?'grey':'pink'">mdi-heart-outline</v-icon>
       </v-btn>
       
-      <div v-if="playlist.videos.length > 0" @click="play" class="thumbs">
+      <div v-if="playlist.pdfs.length > 0" @click="play" class="thumbs">
         <v-img v-for="(thumb, i) in thumbs" :key="i" width="50%"
           :src="getImgUrl(thumb)" :aspect-ratio="16/9"/>
         <v-btn @click="play" icon x-large outlined class="btn-playlist-play" color="white">
@@ -22,7 +22,7 @@
         <v-icon size="140">mdi-format-list-bulleted</v-icon>
       </div>
 
-      <v-card-title class="py-1 px-2">{{playlist.name}} ({{playlist.videos.length}})
+      <v-card-title class="py-1 px-2">{{playlist.name}} ({{playlist.pdfs.length}})
       </v-card-title>
 
       <v-btn @click="$store.state.Playlists.dialogEditPlaylist=true" color="secondary" fab x-small class="btn-edit">
@@ -55,14 +55,14 @@ export default {
     imgMainKey: Date.now(),
   }),
   computed: {
-    videos() {
-      let videos = this.$store.getters.videos.filter(v=>(this.playlist.videos.includes(v.id))).value()
-      return _.sortBy(videos, (video) => {
-        let index = _.indexOf(this.playlist.videos, video.id)
-        return (index === -1) ? this.playlist.videos.length : index;
+    pdfs() {
+      let pdfs = this.$store.getters.pdfs.filter(v=>(this.playlist.pdfs.includes(v.id))).value()
+      return _.sortBy(pdfs, (pdf) => {
+        let index = _.indexOf(this.playlist.pdfs, pdf.id)
+        return (index === -1) ? this.playlist.pdfs.length : index;
       })
     },
-    thumbs() { return this.videos.map(video=>(video.id)).slice(0, 6) },
+    thumbs() { return this.pdfs.map(pdf=>(pdf.id)).slice(0, 6) },
     pathToUserData() { return this.$store.getters.getPathToUserData },
     isFavorite: {
       get() { return this.playlist.favorite },
@@ -78,15 +78,15 @@ export default {
   },
   methods: {
     play() {
-      if (this.playlist.videos.length === 0) {
+      if (this.playlist.pdfs.length === 0) {
         this.$store.dispatch('setNotification', {
           type: 'error',
-          text: `Playlist "${this.playlist.name}" is empty. Add video first to play.`
+          text: `Playlist "${this.playlist.name}" is empty. Add pdf first to play.`
         })
         return
       }
       if (this.$store.state.Settings.isPlayVideoInSystemPlayer) {
-        let paths = this.playlist.videos.map(i=>this.$store.getters.videos.find({id:i}).value().path)
+        let paths = this.playlist.pdfs.map(i=>this.$store.getters.pdfs.find({id:i}).value().path)
         let plPath = path.join(this.pathToUserData, `playlist.m3u`)
         let text = ''
         for (let i = 0; i < paths.length; i++) text += paths[i] + '\n'
@@ -94,8 +94,8 @@ export default {
         shell.openPath(plPath) 
       } else {
         let data = {
-          videos: this.videos,
-          id: this.videos[0].id,  
+          pdfs: this.pdfs,
+          id: this.pdfs[0].id,  
         }
         ipcRenderer.send('openPlayer', data)
       }
@@ -105,8 +105,8 @@ export default {
       event.preventDefault()
       event.stopPropagation()
     },
-    getImgUrl(videoId) {
-      let imgPath = path.join(this.pathToUserData, `/media/thumbs/${videoId}.jpg`)
+    getImgUrl(pdfId) {
+      let imgPath = path.join(this.pathToUserData, `/media/thumbs/${pdfId}.jpg`)
       return 'file://' + this.checkImageExist(imgPath)
     },
     checkImageExist(imgPath) {

@@ -131,7 +131,7 @@
       </v-card>
     </v-dialog>
 
-    <SavedFilters v-if="$store.state.SavedFilters.dialogSavedFilters" @loadFilters="loadFilters" type="videos" :filters="filters.filter(f=>f.by)"/>
+    <SavedFilters v-if="$store.state.SavedFilters.dialogSavedFilters" @loadFilters="loadFilters" type="pdfs" :filters="filters.filter(f=>f.by)"/>
   </div>
 </template>
 
@@ -152,7 +152,7 @@ export default {
   mounted() {
     this.$nextTick(function () {
       this.initMetaList()
-      this.filters = _.cloneDeep(this.$store.state.Settings.videoFilters)
+      this.filters = _.cloneDeep(this.$store.state.Settings.pdfFilters)
     })
   },
   data: () => ({
@@ -195,7 +195,7 @@ export default {
     },
     applyFilters() {
       let filters = this.filters.filter(f=>f.by)
-      this.$store.state.Settings.videoFilters = _.cloneDeep(filters)
+      this.$store.state.Settings.pdfFilters = _.cloneDeep(filters)
       this.$store.dispatch('filterVideos')
       this.$store.state.Videos.dialogFilterVideos = false 
     },

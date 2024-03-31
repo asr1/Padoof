@@ -1,13 +1,13 @@
 <template>
-  <v-lazy :key="cardKey" :data-id="video.id" class="select-item">
+  <v-lazy :key="cardKey" :data-id="pdf.id" class="select-item">
     <v-card v-if="view==0" @mousedown="stopSmoothScroll($event)" v-ripple="{ class: 'accent--text' }"
       @mousedown.right="$store.state.contextMenu=false" @contextmenu="showContextMenu"
-      :class="{favorite: isFavorite, 'icons-in-card':ratingAndFavoriteInCard}" class="video-card meta-card"
+      :class="{favorite: isFavorite, 'icons-in-card':ratingAndFavoriteInCard}" class="pdf-card meta-card"
       outlined hover :disabled="!reg && i>4"
     >
       <v-responsive 
         @mouseover.capture="playPreview()" @mouseleave="stopPlayingPreview()"
-        :aspect-ratio="16/9" class="video-preview-container"
+        :aspect-ratio="16/9" class="pdf-preview-container"
       >
         <div v-if="!reg && i>4" class="reg-block"> <div>App not registered</div> </div>
         <v-img :src="getImgUrl()" :aspect-ratio="16/9" class="thumb" contain/>
@@ -19,7 +19,7 @@
         </div>
 
         <v-rating v-if="!ratingAndFavoriteInCard && !isRatingHidden" 
-          :value="video.rating" @input="changeRating($event, video.id)"
+          :value="pdf.rating" @input="changeRating($event, pdf.id)"
           class="rating rating-wrapper"
           color="yellow darken-2" background-color="grey darken-1"
           empty-icon="mdi-star-outline" half-icon="mdi-star-half-full"
@@ -31,22 +31,22 @@
         > <v-icon :color="isFavorite===false?'grey':'pink'">mdi-heart-outline</v-icon>
         </v-btn>
         
-        <div v-if="!isDurationHidden" class="duration">{{calcDur(video.duration)}}</div>
+        <div v-if="!isDurationHidden" class="duration">{{calcDur(pdf.duration)}}</div>
 
         <div v-if="!isQualityLabelHidden" label outlined class="resolution">
-          <div class="text text-no-wrap" :class="calcHeightTitle(video.resolution).toLowerCase()">
-            {{calcHeightTitle(video.resolution)}}
+          <div class="text text-no-wrap" :class="calcHeightTitle(pdf.resolution).toLowerCase()">
+            {{calcHeightTitle(pdf.resolution)}}
           </div>
           <div class="value">
-            <span>{{calcHeightValue(video.resolution)}}</span>
+            <span>{{calcHeightValue(pdf.resolution)}}</span>
           </div>
         </div>
         <div class="preview"
           :style="`animation-delay: ${delayVideoPreview}.7s`">
-          <video ref="video" autoplay muted loop />
+          <pdf ref="pdf" autoplay muted loop />
         </div>
 
-        <div v-if="isVideoHovered && videoPreviewHover=='timeline'" class="timeline">
+        <div v-if="isVideoHovered && pdfPreviewHover=='timeline'" class="timeline">
           <img :src="getTimelineImgUrl(timeline[hoveredSection])">
           <div class="sections">
             <div v-for="(item, i) in timeline" :key="i" @mouseover="hoveredSection=i" class="section"/>
@@ -54,30 +54,30 @@
         </div>
       </v-responsive>
 
-      <div v-if="!isFileNameHidden" class="video-card-title" :title="fileName" v-html="fileName"/>
+      <div v-if="!isFileNameHidden" class="pdf-card-title" :title="fileName" v-html="fileName"/>
 
       <!-- Video meta -->
       <v-chip v-if="!isFileInfoHidden" label class="props px-2 py-1 mt-0 mx-1">
-        <div label outlined class="prop" :title="videoPath">
+        <div label outlined class="prop" :title="pdfPath">
           <v-icon>mdi-folder-outline</v-icon>
           <span class="value">Path</span>
         </div>
         <div label outlined class="prop">
           <v-icon>mdi-monitor-screenshot</v-icon>
-          {{video.resolution}}
+          {{pdf.resolution}}
         </div>
         <div label outlined class="prop">
-          <v-icon>mdi-file-video</v-icon>
+          <v-icon>mdi-file-pdf</v-icon>
           {{fileExtension}}
         </div>
         <div label outlined class="prop">
           <v-icon>mdi-harddisk</v-icon>
-          {{calcSize(video.size)}}
+          {{calcSize(pdf.size)}}
         </div>
       </v-chip>
 
       <v-card-actions v-if="ratingAndFavoriteInCard" class="px-1 py-0">
-        <v-rating :value="video.rating" @input="changeRating($event, video.id)"
+        <v-rating :value="pdf.rating" @input="changeRating($event, pdf.id)"
           color="yellow darken-2" background-color="grey"
           empty-icon="mdi-star-outline" half-icon="mdi-star-half-full"
           dense half-increments hover clearable />
@@ -94,7 +94,7 @@
         <div v-if="visibility[m.id]&&checkShowEmptyValue(m)" class="meta-in-card">
           <v-chip-group v-if="m.type=='complex'" column>
             <v-icon :title="getMeta(m.id).settings.name">mdi-{{getMeta(m.id).settings.icon}}</v-icon>
-            <v-chip v-for="mc in video[m.id]" :key="mc" 
+            <v-chip v-for="mc in pdf[m.id]" :key="mc" 
               :color="getColor(m.id,mc)" 
               :label="getMeta(m.id).settings.chipLabel"
               :outlined="getMeta(m.id).settings.chipOutlined"
@@ -107,40 +107,40 @@
           </v-chip-group>
           <div v-else-if="m.type=='simple'" class="simple-meta">
             <v-icon :title="getMeta(m.id).settings.name">mdi-{{getMeta(m.id).settings.icon}}</v-icon>
-            <span v-if="getMeta(m.id).dataType=='array'">{{getArrayValuesForCard(m.id, 'video')}}</span>
+            <span v-if="getMeta(m.id).dataType=='array'">{{getArrayValuesForCard(m.id, 'pdf')}}</span>
             <span v-else-if="getMeta(m.id).dataType=='rating'">      
-              <v-rating :value="video[m.id]" @input="changeMetaRating($event, m.id)" :length="getMeta(m.id).settings.ratingMax" hover 
+              <v-rating :value="pdf[m.id]" @input="changeMetaRating($event, m.id)" :length="getMeta(m.id).settings.ratingMax" hover 
                 :full-icon="`mdi-${getMeta(m.id).settings.ratingIcon}`" :empty-icon="`mdi-${getMeta(m.id).settings.ratingIconEmpty||getMeta(m.id).settings.ratingIcon}`" 
                 :color="getMeta(m.id).settings.ratingColor" background-color="grey" class="meta-rating" clearable
                 :half-increments="getMeta(m.id).settings.ratingHalf" :half-icon="`mdi-${getMeta(m.id).settings.ratingIconHalf||getMeta(m.id).settings.ratingIcon}`"/>
             </span>
-            <span v-else-if="getMeta(m.id).dataType=='boolean'">{{video[m.id]?'Yes':'No'}}</span>
-            <span v-else>{{video[m.id]}}</span>
+            <span v-else-if="getMeta(m.id).dataType=='boolean'">{{pdf[m.id]?'Yes':'No'}}</span>
+            <span v-else>{{pdf[m.id]}}</span>
           </div>
         </div>
       </div>
       
-      <v-icon v-if="video.bookmark" class="bookmark" color="red" :title="video.bookmark">mdi-bookmark</v-icon>
+      <v-icon v-if="pdf.bookmark" class="bookmark" color="red" :title="pdf.bookmark">mdi-bookmark</v-icon>
 
       <v-btn v-if="!isEditBtnHidden" @click="$store.state.Videos.dialogEditVideoInfo=true"
         color="secondary" fab x-small class="btn-edit"> <v-icon>mdi-pencil</v-icon> </v-btn>
     </v-card>
     <v-card v-else-if="view==1" @contextmenu="showContextMenu"
       @mousedown="stopSmoothScroll($event)" @mousedown.right="$store.state.contextMenu=false"
-      class="video-card meta-card" outlined hover :disabled="!reg && i>4">
+      class="pdf-card meta-card" outlined hover :disabled="!reg && i>4">
       <div @click="playVideo" @mousemove.capture="scrollStory($event)" @mouseleave="stopScrollStory" ref="story" class="story">
-        <v-sheet v-if="!isFileNameHidden" class="video-card-title" v-html="fileName"/>
+        <v-sheet v-if="!isFileNameHidden" class="pdf-card-title" v-html="fileName"/>
         <div v-if="!isVideoExist" class="path-error"> <div class="error">No PDF found. Please update the path.</div> </div>
         <div v-if="!isQualityLabelHidden" label outlined class="resolution">
-          <div class="text text-no-wrap" :class="calcHeightTitle(video.resolution).toLowerCase()">
-            {{calcHeightTitle(video.resolution)}}
+          <div class="text text-no-wrap" :class="calcHeightTitle(pdf.resolution).toLowerCase()">
+            {{calcHeightTitle(pdf.resolution)}}
           </div>
-          <div class="value" v-html="calcHeightValue(video.resolution)"/>
+          <div class="value" v-html="calcHeightValue(pdf.resolution)"/>
         </div>
         <div class="wrapper" ref="storyWrapper" :class="{'hovered':isVideoHovered}">
           <div v-for="(p, i) in timeline" :key="i" class="frame">
             <img :src="getTimelineImgUrl(p)"/>
-            <div v-if="!isDurationHidden" class="duration">{{calcDur(p/100*video.duration)}}</div>
+            <div v-if="!isDurationHidden" class="duration">{{calcDur(p/100*pdf.duration)}}</div>
           </div>
         </div>
       </div>
@@ -150,27 +150,27 @@
           <v-icon v-if="isFavorite" color="pink">mdi-heart</v-icon>
           <v-icon v-else color="grey">mdi-heart-outline</v-icon>
         </v-btn>
-        <v-rating v-if="!isRatingHidden" :value="video.rating" @input="changeRating($event, video.id)"
+        <v-rating v-if="!isRatingHidden" :value="pdf.rating" @input="changeRating($event, pdf.id)"
           color="yellow darken-2" background-color="grey"
           empty-icon="mdi-star-outline" half-icon="mdi-star-half-full"
           dense half-increments hover clearable class="mx-1" />
 
         <v-chip v-if="!isFileInfoHidden" label class="px-2 py-1 mx-2">
-          <div label outlined class="prop mr-2" :title="videoPath">
+          <div label outlined class="prop mr-2" :title="pdfPath">
             <v-icon>mdi-folder-outline</v-icon>
             <span class="value">Path</span>
           </div>
           <div label outlined class="prop mr-2">
             <v-icon>mdi-monitor-screenshot</v-icon>
-            {{video.resolution}}
+            {{pdf.resolution}}
           </div>
           <div label outlined class="prop mr-2">
-            <v-icon>mdi-file-video</v-icon>
+            <v-icon>mdi-file-pdf</v-icon>
             {{fileExtension}}
           </div>
           <div label outlined class="prop">
             <v-icon>mdi-harddisk</v-icon>
-            {{calcSize(video.size)}}
+            {{calcSize(pdf.size)}}
           </div>
         </v-chip>
 
@@ -179,7 +179,7 @@
           <div v-if="visibility[m.id]&&checkShowEmptyValue(m)" class="meta-in-card">
             <v-chip-group v-if="m.type=='complex'" column>
               <v-icon :title="getMeta(m.id).settings.name">mdi-{{getMeta(m.id).settings.icon}}</v-icon>
-              <v-chip v-for="mc in video[m.id]" :key="mc" 
+              <v-chip v-for="mc in pdf[m.id]" :key="mc" 
                 :color="getColor(m.id,mc)" 
                 :label="getMeta(m.id).settings.chipLabel"
                 :outlined="getMeta(m.id).settings.chipOutlined"
@@ -192,15 +192,15 @@
             </v-chip-group>
             <div v-else-if="m.type=='simple'" class="simple-meta">
               <v-icon :title="getMeta(m.id).settings.name">mdi-{{getMeta(m.id).settings.icon}}</v-icon>
-              <span v-if="getMeta(m.id).dataType=='array'">{{getArrayValuesForCard(m.id, 'video')}}</span>
+              <span v-if="getMeta(m.id).dataType=='array'">{{getArrayValuesForCard(m.id, 'pdf')}}</span>
               <span v-else-if="getMeta(m.id).dataType=='rating'">      
-                <v-rating :value="video[m.id]" @input="changeMetaRating($event, m.id)" :length="getMeta(m.id).settings.ratingMax" hover 
+                <v-rating :value="pdf[m.id]" @input="changeMetaRating($event, m.id)" :length="getMeta(m.id).settings.ratingMax" hover 
                   :full-icon="`mdi-${getMeta(m.id).settings.ratingIcon}`" :empty-icon="`mdi-${getMeta(m.id).settings.ratingIconEmpty||getMeta(m.id).settings.ratingIcon}`" 
                   :color="getMeta(m.id).settings.ratingColor" background-color="grey" class="meta-rating" clearable
                   :half-increments="getMeta(m.id).settings.ratingHalf" :half-icon="`mdi-${getMeta(m.id).settings.ratingIconHalf||getMeta(m.id).settings.ratingIcon}`"/>
               </span>
-              <span v-else-if="getMeta(m.id).dataType=='boolean'">{{video[m.id]?'Yes':'No'}}</span>
-              <span v-else>{{video[m.id]}}</span>
+              <span v-else-if="getMeta(m.id).dataType=='boolean'">{{pdf[m.id]?'Yes':'No'}}</span>
+              <span v-else>{{pdf[m.id]}}</span>
             </div>
           </div>
         </div>
@@ -231,19 +231,19 @@ import MetaGetters from '@/mixins/MetaGetters'
 export default {
   name: 'VideoCard',
   props: {
-    video: Object,
+    pdf: Object,
     i: Number,
     reg: Boolean,
   },
   mixins: [ShowImageFunction, Functions, LabelFunctions, MetaGetters],
   mounted() {
     this.$nextTick(function () {
-      this.cardKey = this.video.id
-      this.isVideoExist = fs.existsSync(this.video.path)
+      this.cardKey = this.pdf.id
+      this.isVideoExist = fs.existsSync(this.pdf.path)
     })
   },
   beforeDestroy() {
-    try { this.$refs.video.src = '' } catch (error) {}
+    try { this.$refs.pdf.src = '' } catch (error) {}
   },
   destroyed() {
     for (const timeout in this.timeouts) clearTimeout(this.timeouts[timeout])
@@ -259,35 +259,35 @@ export default {
   }),
   computed: {
     updateCardIds() { return this.$store.state.Videos.updateCardIds},
-    isChipsColored() {return this.$store.state.Settings.videoChipsColored},
-    isEditBtnHidden() {return this.$store.state.Settings.videoEditBtnHidden },
-    isFileNameHidden() {return this.$store.state.Settings.videoFileNameHidden },
-    isFileInfoHidden() {return this.$store.state.Settings.videoFileInfoHidden },
-    isRatingHidden() {return this.$store.state.Settings.videoRatingHidden },
-    isFavoriteHidden() {return this.$store.state.Settings.videoFavoriteHidden},
-    isQualityLabelHidden() {return this.$store.state.Settings.videoQualityLabelHidden},
-    isDurationHidden() { return this.$store.state.Settings.videoDurationHidden },
-    videoPath() { return path.parse(this.video.path).dir },
-    fileName() { return path.parse(this.video.path).name },
-    fileExtension() { return path.parse(this.video.path).ext.replace('.', '').toLowerCase() },
+    isChipsColored() {return this.$store.state.Settings.pdfChipsColored},
+    isEditBtnHidden() {return this.$store.state.Settings.pdfEditBtnHidden },
+    isFileNameHidden() {return this.$store.state.Settings.pdfFileNameHidden },
+    isFileInfoHidden() {return this.$store.state.Settings.pdfFileInfoHidden },
+    isRatingHidden() {return this.$store.state.Settings.pdfRatingHidden },
+    isFavoriteHidden() {return this.$store.state.Settings.pdfFavoriteHidden},
+    isQualityLabelHidden() {return this.$store.state.Settings.pdfQualityLabelHidden},
+    isDurationHidden() { return this.$store.state.Settings.pdfDurationHidden },
+    pdfPath() { return path.parse(this.pdf.path).dir },
+    fileName() { return path.parse(this.pdf.path).name },
+    fileExtension() { return path.parse(this.pdf.path).ext.replace('.', '').toLowerCase() },
     isFavorite: {
-      get() { return this.video.favorite },
+      get() { return this.pdf.favorite },
       set(value) {
-        this.video.favorite = value
-        this.$store.getters.videos.find({id: this.video.id}).assign({
+        this.pdf.favorite = value
+        this.$store.getters.pdfs.find({id: this.pdf.id}).assign({
           favorite: value,
           edit: Date.now(),
         }).write()
       },
     },
     pathToUserData() { return this.$store.getters.getPathToUserData },
-    videoPreviewStatic() { return this.$store.state.Settings.videoPreviewStatic },
-    videoPreviewHover() { return this.$store.state.Settings.videoPreviewHover },
+    pdfPreviewStatic() { return this.$store.state.Settings.pdfPreviewStatic },
+    pdfPreviewHover() { return this.$store.state.Settings.pdfPreviewHover },
     delayVideoPreview() { return this.$store.state.Settings.delayVideoPreview },
     ratingAndFavoriteInCard() { return this.$store.state.Settings.ratingAndFavoriteInCard },
     metaAssignedToVideos() { return this.$store.state.Settings.metaAssignedToVideos },
-    view() { return this.$store.state.Settings.videoView || 0 },
-    visibility() { return this.$store.state.Settings.videoVisibility },
+    view() { return this.$store.state.Settings.pdfView || 0 },
+    visibility() { return this.$store.state.Settings.pdfVisibility },
     isSelectedSingleVideo() { return this.$store.getters.getSelectedVideos.length == 1 },
     complexMetaAssignedToVideo() { return this.$store.getters.settings.get('metaAssignedToVideos').filter({type:'complex'}).value() },
     metaForParsing() {  
@@ -306,22 +306,22 @@ export default {
     },
     checkShowEmptyValue(meta) {
       if (this.showEmptyMetaValueInCard) return true
-      if (meta.type == 'complex') return this.video[meta.id]&&this.video[meta.id].length
-      let valueType = typeof this.video[meta.id]
+      if (meta.type == 'complex') return this.pdf[meta.id]&&this.pdf[meta.id].length
+      let valueType = typeof this.pdf[meta.id]
       let simpleMeta = this.getMeta(meta.id)
       if (valueType == 'undefined' && simpleMeta.dataType!=='rating') return false
-      if (['object','string'].includes(valueType)) return this.video[meta.id].length
+      if (['object','string'].includes(valueType)) return this.pdf[meta.id].length
       else return true
     },
-    setVideoProgress(percent) { this.$refs.video.currentTime = Math.floor(this.video.duration*percent) },
+    setVideoProgress(percent) { this.$refs.pdf.currentTime = Math.floor(this.pdf.duration*percent) },
     playPreview() {
       if (this.isVideoHovered) return
       this.isVideoHovered = true
-      if (this.videoPreviewHover !== 'video') return
+      if (this.pdfPreviewHover !== 'pdf') return
       this.timeouts.z = setTimeout(()=>{
-        // play original video
+        // play original pdf
         if (!this.isVideoExist) return
-        this.$refs.video.src = this.video.path
+        this.$refs.pdf.src = this.pdf.path
         this.setVideoProgress(0.2)
         this.timeouts.a = setTimeout(this.setVideoProgress, 3000, 0.4)
         this.timeouts.b = setTimeout(this.setVideoProgress, 6000, 0.6)
@@ -330,10 +330,10 @@ export default {
       }, this.delayVideoPreview * 1000 + 500)
     },
     stopPlayingPreview() {
-      if (this.videoPreviewHover != 'none') this.isVideoHovered = false
-      if (this.videoPreviewHover != 'video') return
+      if (this.pdfPreviewHover != 'none') this.isVideoHovered = false
+      if (this.pdfPreviewHover != 'pdf') return
       for (const timeout in this.timeouts) clearTimeout(this.timeouts[timeout])
-      this.$refs.video.src = ''
+      this.$refs.pdf.src = ''
     },
     scrollStory(e) {
       let storyWidth = this.$refs.story.clientWidth
@@ -346,12 +346,12 @@ export default {
     },
     stopScrollStory() { this.$refs.storyWrapper.style.left = 0 },
     getImgUrl() {
-      let imgPath = path.join(this.pathToUserData, `/media/thumbs/${this.video.id}.jpg`)
-      let gridPath = path.join(this.pathToUserData, `/media/grids/${this.video.id}.jpg`)
+      let imgPath = path.join(this.pathToUserData, `/media/thumbs/${this.pdf.id}.jpg`)
+      let gridPath = path.join(this.pathToUserData, `/media/grids/${this.pdf.id}.jpg`)
       return 'file://' + this.checkImageExist(imgPath, gridPath)
     },
     checkImageExist(imgPath, gridPath) {
-      if (this.videoPreviewStatic=='grid' && fs.existsSync(gridPath)) return gridPath
+      if (this.pdfPreviewStatic=='grid' && fs.existsSync(gridPath)) return gridPath
       else if (fs.existsSync(imgPath)) return imgPath
       else {
         this.errorThumb = true
@@ -359,12 +359,12 @@ export default {
       }
     },
     getTimelineImgUrl(progress) {
-      let imgPath = path.join(this.pathToUserData, `/media/timelines/${this.video.id}_${progress}.jpg`)
+      let imgPath = path.join(this.pathToUserData, `/media/timelines/${this.pdf.id}_${progress}.jpg`)
       if (fs.existsSync(imgPath)) return 'file://' + imgPath
       else return 'file://' + path.join(__static, '/img/default.png')
     },
     playVideo() {
-      const pathToVideo = this.video.path
+      const pathToVideo = this.pdf.path
       if (!this.isVideoExist) {
         this.$store.state.Videos.dialogErrorPlayVideo = true
         this.$store.state.Videos.errorPlayVideoPath = pathToVideo
@@ -372,13 +372,13 @@ export default {
       }
       if (this.$store.state.Settings.isPlayVideoInSystemPlayer) shell.openPath(pathToVideo) 
       else { 
-        let data = { videos: this.$store.getters.videosOnPage, id: this.video.id }
+        let data = { pdfs: this.$store.getters.pdfsOnPage, id: this.pdf.id }
         ipcRenderer.send('openPlayer', data)
       } 
       this.countViewData()
     },
     playVideoInSystemPlayer() {
-      const pathToVideo = this.video.path
+      const pathToVideo = this.pdf.path
       if (!this.isVideoExist) {
         this.$store.state.Videos.dialogErrorPlayVideo = true
         this.$store.state.Videos.errorPlayVideoPath = pathToVideo
@@ -388,14 +388,14 @@ export default {
       this.countViewData()
     },
     countViewData() {
-      let views = this.video.views || 0
+      let views = this.pdf.views || 0
       if (this.$store.state.Settings.countNumberOfViews) ++views 
-      this.$store.getters.videos.find({id: this.video.id}).assign({
+      this.$store.getters.pdfs.find({id: this.pdf.id}).assign({
         views: views,
         viewed: Date.now(),
       }).write()
     },
-    changeRating(stars, videoID) { this.$store.getters.videos.find({id:videoID}).assign({rating:stars,edit:Date.now()}).write() },
+    changeRating(stars, pdfID) { this.$store.getters.pdfs.find({id:pdfID}).assign({rating:stars,edit:Date.now()}).write() },
     showContextMenu(e) {
       e.preventDefault()
       const vm = this
@@ -404,7 +404,7 @@ export default {
         for (let m of vm.complexMetaAssignedToVideo) {
           const meta = vm.getMeta(m.id)
           let menuMetaCards = []
-          let metaCardIds = vm.video[m.id]
+          let metaCardIds = vm.pdf[m.id]
           if (metaCardIds) for (let metaCardId of metaCardIds) {
             const card = vm.getCard(metaCardId)
             menuMetaCards.push({name: card.meta.name, type: 'item', icon: 'circle', color: card.meta.color, function: ()=>{vm.filterVideosBy(m.id,metaCardId)}})
@@ -418,9 +418,9 @@ export default {
       function metaClipboard(metaId, type) {
         if (type === 'copy') {
           let metaCardIds = []
-          vm.$store.getters.getSelectedVideos.map(videoId => {
-            let video = vm.$store.getters.videos.find({id:videoId}).value()
-            if (video[metaId]) metaCardIds = [...metaCardIds, ...video[metaId] || []] 
+          vm.$store.getters.getSelectedVideos.map(pdfId => {
+            let pdf = vm.$store.getters.pdfs.find({id:pdfId}).value()
+            if (pdf[metaId]) metaCardIds = [...metaCardIds, ...pdf[metaId] || []] 
           })
           metaCardIds = metaCardIds.filter((value, index, self) => (self.indexOf(value) === index))
           vm.$store.state.clipboardMeta[metaId] = metaCardIds
@@ -431,14 +431,14 @@ export default {
           clipboard.writeText(names.join(', '))
         } else {
           let clipboard = vm.$store.state.clipboardMeta[metaId]
-          let videoIds = vm.$store.getters.getSelectedVideos
-          if ((clipboard===undefined || clipboard.length==0) && type!=='clear' || videoIds.length==0) return
-          videoIds.map(videoId => {
+          let pdfIds = vm.$store.getters.getSelectedVideos
+          if ((clipboard===undefined || clipboard.length==0) && type!=='clear' || pdfIds.length==0) return
+          pdfIds.map(pdfId => {
             let newValues = []
-            let video = vm.$store.getters.videos.find({ id: videoId })
-            // replace video values with clipboard values
+            let pdf = vm.$store.getters.pdfs.find({ id: pdfId })
+            // replace pdf values with clipboard values
             if (type === 'add') {
-              newValues = [...video.value()[metaId] || [], ...clipboard]
+              newValues = [...pdf.value()[metaId] || [], ...clipboard]
               newValues = [...new Set(newValues)]
             } else if (type === 'replace') newValues = clipboard
             // sort by name
@@ -448,9 +448,9 @@ export default {
               b = vm.getCard(b).meta.name
               return a.localeCompare(b)
             })
-            video.assign({[metaId]:newValues,edit:Date.now()}).write()
+            pdf.assign({[metaId]:newValues,edit:Date.now()}).write()
           })
-          vm.$store.commit('updateVideos', videoIds)
+          vm.$store.commit('updateVideos', pdfIds)
         }
       }
       function getMetaClipboard(type) {
@@ -465,7 +465,7 @@ export default {
       function getPlaylists() {
         let items = []
         for (let p of vm.playlists) {
-          items.push({name: `${p.name} (${p.videos.length})`, type: 'item', icon: '', function: ()=>{vm.addToPlaylist(p)}})
+          items.push({name: `${p.name} (${p.pdfs.length})`, type: 'item', icon: '', function: ()=>{vm.addToPlaylist(p)}})
         }
         if (vm.playlists.length==0) items.push({name:'No playlists', type: 'item', function: ()=>{}, disabled: true})
         return items
@@ -516,19 +516,19 @@ export default {
     },
     addToPlaylist(playlist) {
       let id = playlist.id
-      let videos = _.cloneDeep(playlist.videos)
-      this.$store.getters.getSelectedVideos.map(videoId => {
-        if (!videos.includes(videoId)) videos.push(videoId)
+      let pdfs = _.cloneDeep(playlist.pdfs)
+      this.$store.getters.getSelectedVideos.map(pdfId => {
+        if (!pdfs.includes(pdfId)) pdfs.push(pdfId)
       })
       this.$store.getters.playlists.find({id}).assign({
-        videos: videos,
+        pdfs: pdfs,
         edit: Date.now(),
       }).write()
     },
     revealInFileExplorer() {
-      let videoId = this.$store.getters.getSelectedVideos[0]
-      let videoPath = this.$store.getters.videos.find({id:videoId}).value().path
-      shell.showItemInFolder(videoPath)
+      let pdfId = this.$store.getters.getSelectedVideos[0]
+      let pdfPath = this.$store.getters.pdfs.find({id:pdfId}).value().path
+      shell.showItemInFolder(pdfPath)
     },
     async moveFile() {
       const move = (oldPath, newPath) => {
@@ -539,12 +539,12 @@ export default {
           })
         })
       }
-      const result = await ipcRenderer.invoke('chooseDirectory', path.dirname(this.video.path))
+      const result = await ipcRenderer.invoke('chooseDirectory', path.dirname(this.pdf.path))
       if (result.filePaths.length === 0) return
       let filePath = result.filePaths[0]
       let ids = this.$store.getters.getSelectedVideos
       if (ids.length===0) return
-      let vids = this.$store.getters.videos
+      let vids = this.$store.getters.pdfs
       let bpId = shortid.generate()
       let bp = { id: bpId, text: 'Moving files', icon: 'file-move', }
       this.$store.commit('addBackgroundProcess', bp)
@@ -574,21 +574,21 @@ export default {
         flag: null,
         lock: false,
       }
-      this.$store.state.Settings.videoFilters.push(filter)
+      this.$store.state.Settings.pdfFilters.push(filter)
       this.$store.dispatch('filterVideos')
     },
     changeRating(stars) {
       this.$store.state.Videos.selectedVideos.map(id => {
-        this.$store.getters.videos.find({ id }).assign({ rating: stars, edit: Date.now() }).write()
+        this.$store.getters.pdfs.find({ id }).assign({ rating: stars, edit: Date.now() }).write()
       })
       this.$store.commit('updateVideos', this.$store.state.Videos.selectedVideos)
     },
     changeMetaRating(stars, metaId) {
-      this.$store.getters.videos.find({ id:this.video.id }).assign({edit:Date.now(), [metaId]:stars}).write()
+      this.$store.getters.pdfs.find({ id:this.pdf.id }).assign({edit:Date.now(), [metaId]:stars}).write()
     },
     changeFavorite(value) {
       this.$store.state.Videos.selectedVideos.map(id => {
-        this.$store.getters.videos.find({ id }).assign({favorite: value,edit: Date.now()}).write()
+        this.$store.getters.pdfs.find({ id }).assign({favorite: value,edit: Date.now()}).write()
       })
       this.$store.commit('updateVideos', this.$store.state.Videos.selectedVideos)
     },
@@ -622,9 +622,9 @@ export default {
 
       let ids = this.$store.getters.getSelectedVideos
 
-      this.$store.getters.videos.filter(i=>ids.includes(i.id)).each(video => {
-        const meta = parseFilePath(video.path)
-        for (let m in meta) video[m] = _.union(video[m], meta[m])
+      this.$store.getters.pdfs.filter(i=>ids.includes(i.id)).each(pdf => {
+        const meta = parseFilePath(pdf.path)
+        for (let m in meta) pdf[m] = _.union(pdf[m], meta[m])
       }).write()
     },
     updateFileInfo() {
@@ -640,19 +640,17 @@ export default {
       }
       let successfullyUpdatedIds = []
       this.$store.state.Videos.selectedVideos.map(async id => {
-        let video = this.$store.getters.videos.find({ id }).value()
-        if (!fs.existsSync(video.path)) {
-          this.$store.commit('addLog', { type: 'error', text: `No such file "${video.path}"` })
+        let pdf = this.$store.getters.pdfs.find({ id }).value()
+        if (!fs.existsSync(pdf.path)) {
+          this.$store.commit('addLog', { type: 'error', text: `No such file "${pdf.path}"` })
           return
         } 
         try {
-          console.log("Trying to get metadata 1");
-          let metadata = await getVideoMetadata(video.path)
-          console.log(metadata);
+          let metadata = await getVideoMetadata(pdf.path)
           let duration = 2; // Math.floor(metadata.format.duration)
           let resolution;
           for (let i = 0; i < metadata.streams.length; i++) {
-            if (metadata.streams[i].codec_type === 'video') {
+            if (metadata.streams[i].codec_type === 'pdf') {
               resolution = metadata.streams[i].width + 'x' + metadata.streams[i].height
             } 
           }
@@ -662,7 +660,7 @@ export default {
             resolution: "300x300",// resolution,
             edit: Date.now(),
           }
-          this.$store.getters.videos.find({ id }).assign(updatedMetadata).write()
+          this.$store.getters.pdfs.find({ id }).assign(updatedMetadata).write()
           successfullyUpdatedIds.push(id)
         } catch (error) { console.log(error) }
       })
@@ -693,8 +691,8 @@ export default {
   },
   watch: {
     updateCardIds(newValue) {
-      if (newValue.length === 0) this.cardKey = this.video.id + Date.now()
-      if (newValue.includes(this.video.id)) this.cardKey = this.video.id + Date.now()
+      if (newValue.length === 0) this.cardKey = this.pdf.id + Date.now()
+      if (newValue.includes(this.pdf.id)) this.cardKey = this.pdf.id + Date.now()
     }
   }
 }

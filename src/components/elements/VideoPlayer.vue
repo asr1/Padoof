@@ -1,6 +1,6 @@
 <template>
-  <div class="video-player-wrapper">
-    <v-card class="video-player" :outlined="!maximized&&!fullscreen">
+  <div class="pdf-player-wrapper">
+    <v-card class="pdf-player" :outlined="!maximized&&!fullscreen">
       <v-card-title v-if="showSystemBar" class="pa-0 title-bar" :class="{maximized:maximized,fullscreen:fullscreen,}">
         <v-spacer></v-spacer>
         <span class="now-playing-title">{{getFileNameFromPath(nowPlaying)}}</span>
@@ -20,7 +20,7 @@
           </v-btn>
         </div>
       </v-card-title>
-      <div class="video-player-container">
+      <div class="pdf-player-container">
         <AppPlayer ref="player" @toggleFullscreen="toggleFullscreen" @nowPlaying="updateNowPlaying($event)"/>
       </div>
     </v-card>
@@ -41,7 +41,7 @@ export default {
   },
   async beforeCreate() {
     // get databases from main window
-    await this.$store.dispatch('getDb', 'videos')
+    await this.$store.dispatch('getDb', 'pdfs')
     await this.$store.dispatch('getDb', 'playlists')
     await this.$store.dispatch('getDb', 'markers')
     await this.$store.dispatch('getDb', 'meta')
@@ -57,7 +57,7 @@ export default {
   }),
   computed: {
     showSystemBar() {return process.platform === 'win32'},
-    videosDb() { return this.$store.state.videosDb},
+    pdfsDb() { return this.$store.state.pdfsDb},
     tagsDb() {return this.$store.state.tagsDb},
     playlistsDb() {return this.$store.state.playlistsDb},
     markersDb() {return this.$store.state.markersDb},
@@ -67,8 +67,8 @@ export default {
     fullscreen() {return this.$store.state.fullscreen},
   },
   methods: {
-    getFileNameFromPath(videoPath) {return path.parse(videoPath).name},
-    updateNowPlaying(video) { if (video) this.nowPlaying = video.path},
+    getFileNameFromPath(pdfPath) {return path.parse(pdfPath).name},
+    updateNowPlaying(pdf) { if (pdf) this.nowPlaying = pdf.path},
     minimize() { ipcRenderer.invoke('minimize', 'player') },
     maximize() {
       this.maximized = true
@@ -90,7 +90,7 @@ export default {
 
 
 <style lang="less">
-.video-player {
+.pdf-player {
   border-radius: 0 !important;
   overflow: hidden !important;
   height: 100%;

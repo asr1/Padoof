@@ -188,7 +188,7 @@ export default {
       this.runAutoUpdateDataFromVideos()
       if (this.$store.state.Settings.updateDataFromVideosOnStart) this.updateDataFromVideos()
       if (this.passwordProtection && this.phrase!=='') this.disableRunApp = this.phrase !== this.password 
-      if (this.watchFolders) this.watchDir(this.folders.map(f=>f.path)) // watch folders for new videos, deleted videos
+      if (this.watchFolders) this.watchDir(this.folders.map(f=>f.path)) // watch folders for new pdfs, deleted pdfs
       setInterval(() => { this.createBackup() }, 1000 * 60 * 30) // every 30 minutes
       // ipcRenderer.on('getPlugin', (event, data) => { console.log(data) })
     }) 
@@ -322,7 +322,7 @@ export default {
       this.$store.state.foldersData = []
       for (let i=0; i<this.folders.length; i++) { // get compared paths
         let folderPath = this.folders[i].path
-        let filesInDb = this.$store.getters.videos.filter(v=>v.path.includes(folderPath)).map('path').value()
+        let filesInDb = this.$store.getters.pdfs.filter(v=>v.path.includes(folderPath)).map('path').value()
         let filesInFolder = files.filter(x => x.includes(folderPath))
         let lostFiles = filesInDb.filter(x => !filesInFolder.includes(x))
         let newFiles = filesInFolder.filter(x => !filesInDb.includes(x))
@@ -346,7 +346,7 @@ export default {
     },
     updateDataFromVideos() {
       let bpId = shortid.generate()
-      let bp = { id: bpId, text: 'Updating number of videos', icon: 'video', }
+      let bp = { id: bpId, text: 'Updating number of pdfs', icon: 'pdf', }
       this.$store.commit('addBackgroundProcess', bp)
       setTimeout(() => {
         this.$store.dispatch('updateDataFromVideos')
@@ -412,7 +412,6 @@ export default {
     },
     checkForUpdates() {
       axios.get(`https://github.com/asr1/Padoof/releases`).then((response) => {
-        console.log("Checking for updates");
         if (response.status === 200) {
           const html = response.data
           const $ = cheerio.load(html)

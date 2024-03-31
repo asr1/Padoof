@@ -2,7 +2,7 @@
   <div class="d-flex" style="width:100%">
     <div v-if="isVideosPage" class="d-flex align-center ml-4">
       <span class="caption">
-        {{getTotalVideosNumber}} video{{getTotalVideosNumber>1?'s':''}}
+        {{getTotalVideosNumber}} pdf{{getTotalVideosNumber>1?'s':''}}
         {{getTotalVideosSize}}
       </span>
     </div>
@@ -82,12 +82,12 @@
       <div class="mt-2">
         <div class="overline text-center">Total PDFs</div>
         <div class="d-flex align-center">
-          <v-icon size="20" left dark>mdi-video</v-icon> Number: 
+          <v-icon size="20" left dark>mdi-pdf</v-icon> Number: 
           <span class="ml-1" v-text="$store.getters.pdfTotal"/>
         </div>
         <div class="d-flex align-center">
           <v-icon size="20" left dark>mdi-harddisk</v-icon> Size:
-          <span class="ml-1" v-text="$store.getters.videosTotalSize"/>
+          <span class="ml-1" v-text="$store.getters.pdfsTotalSize"/>
         </div>
       </div>
     </v-tooltip>
@@ -197,7 +197,7 @@ export default {
     },
     getTypeSelectedItems() {
       let type = ''
-      if (this.isVideosPage) type = 'video'
+      if (this.isVideosPage) type = 'pdf'
       else if (this.$route.path.includes('/meta/')) {
         type = this.$store.getters.meta.find({id: this.$route.query.metaId}).value().settings.nameSingular.toLowerCase()
       } 
@@ -205,13 +205,13 @@ export default {
     },
     getSelectedVideosSize() {
       let ids = this.$store.getters.getSelectedVideos
-      let selectedVideos = this.$store.getters.videos.filter(v=>(ids.includes(v.id))).value()
+      let selectedVideos = this.$store.getters.pdfs.filter(v=>(ids.includes(v.id))).value()
       return this.getVideosTotalSize(selectedVideos)
     },
     getTotalVideosSize() { return this.getVideosTotalSize(this.$store.state.Videos.filteredVideos) },
     getTotalVideosNumber() { return this.$store.state.Videos.filteredVideos.length },
     isVideosPage() {
-      const pages = ['/videos/:','/metacard/']
+      const pages = ['/pdfs/:','/metacard/']
       return pages.some(page => this.$route.path.includes(page))
     },
     backgroundProcesses() { return this.$store.state.backgroundProcesses },

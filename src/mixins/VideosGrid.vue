@@ -1,5 +1,5 @@
 <script>
-import VideoCard from '@/components/pages/videos/VideoCard.vue'
+import VideoCard from '@/components/pages/pdfs/VideoCard.vue'
 import VideoPreviewGrid from '@/components/elements/VideoPreviewGrid'
 import VideoPreviewTimeline from '@/components/elements/VideoPreviewTimeline'
 
@@ -16,11 +16,11 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.jumpPage = this.videosCurrentPage
+      this.jumpPage = this.pdfsCurrentPage
     })
   },
   data: () => ({
-    videosPerPagePreset: [20,40,60,80,100,150,200,300],
+    pdfsPerPagePreset: [20,40,60,80,100,150,200,300],
     isGenerationGridsRun: false,
     isGenerationTimelinesRun: false,
     isGenerationBreak: false,
@@ -31,20 +31,20 @@ export default {
   }),
   computed: {
     getNumberOfPagesLimit() {return this.$store.state.Settings.numberOfPagesLimit},
-    pages(){return this.$store.getters.videosPages},
-    videosOnPage() {return this.$store.getters.videosOnPage},
-    videosPerPage: {
-      get() {return this.$store.state.Settings.videosPerPage},
+    pages(){return this.$store.getters.pdfsPages},
+    pdfsOnPage() {return this.$store.getters.pdfsOnPage},
+    pdfsPerPage: {
+      get() {return this.$store.state.Settings.pdfsPerPage},
       set(number) {this.$store.dispatch('changeVideosPerPage', number)},
     },
-    videosPagesSum: {
+    pdfsPagesSum: {
       get() {return this.$store.state.Videos.pageTotal},
       set(number) {this.$store.state.Videos.pageTotal = number},
     },
-    videosCurrentPage: {
-      get() {return this.$store.state.Settings.videoPage},
+    pdfsCurrentPage: {
+      get() {return this.$store.state.Settings.pdfPage},
       set(number) {
-        this.$store.state.Settings.videoPage = number
+        this.$store.state.Settings.pdfPage = number
         this.$store.dispatch('saveFiltersOfVideos')
       },
     },
@@ -53,10 +53,10 @@ export default {
       set(val) { this.$store.state.backgroundProcesses = val },
     },
     pathToUserData() { return this.$store.getters.getPathToUserData },
-    view() { return this.$store.state.Settings.videoView || 0 },
+    view() { return this.$store.state.Settings.pdfView || 0 },
   },
   methods: {
-    async createGrids(videos) {
+    async createGrids(pdfs) {
       let bpId = shortid.generate()
       let bp = { id: bpId, text: 'Generating grids images', icon: 'apps', }
       this.$store.commit('addBackgroundProcess', bp)
@@ -64,13 +64,13 @@ export default {
       const gridsPath = path.join(this.pathToUserData, `/media/grids/`) 
       if (!fs.existsSync(gridsPath)) fs.mkdirSync(gridsPath)
       const vm = this
-      for (let i = 0; i < videos.length; i++) {
-        this.$store.commit('updateTextBackgroundProcess', {id:bpId, text:`Generating grids images ${i+1} of ${videos.length}`})
+      for (let i = 0; i < pdfs.length; i++) {
+        this.$store.commit('updateTextBackgroundProcess', {id:bpId, text:`Generating grids images ${i+1} of ${pdfs.length}`})
         if (this.isGenerationBreak) break
-        const video = videos[i]
-        if (!fs.existsSync(video.path)) continue
-        const gridPath = path.join(vm.pathToUserData, `/media/grids/${video.id}.jpg`)
-        if (!fs.existsSync(gridPath)) await vm.createVideoGrid(video.path, video.id, video.duration)
+        const pdf = pdfs[i]
+        if (!fs.existsSync(pdf.path)) continue
+        const gridPath = path.join(vm.pathToUserData, `/media/grids/${pdf.id}.jpg`)
+        if (!fs.existsSync(gridPath)) await vm.createVideoGrid(pdf.path, pdf.id, pdf.duration)
       }
 
       if (this.numberOfCreatedGrid) this.$store.commit('updateVideos') // re render cards if grid added
@@ -78,21 +78,21 @@ export default {
       this.isGenerationGridsRun = false
       this.$store.commit('removeBackgroundProcess', bpId)
     },
-    async createVideoGrid(inputVideoPath, videoId, videoDuration) {
+    async createVideoGrid(inputVideoPath, pdfId, pdfDuration) {
       let opts = {
         input: inputVideoPath,
-        output: path.join(this.pathToUserData, `/media/grids/${videoId}.jpg`),
+        output: path.join(this.pathToUserData, `/media/grids/${pdfId}.jpg`),
         width: 180,
         cols: 3,
         rows: 3,
-        duration: videoDuration,
+        duration: pdfDuration,
       }
 
       let p = new VideoPreviewGrid(opts)
       const result = await p.generate()
       if (result) ++this.numberOfCreatedGrid
     },
-    async createTimelines(videos) {
+    async createTimelines(pdfs) {
       let bpId = shortid.generate()
       let bp = { id: bpId, text: 'Generating timelines images', icon: 'view-carousel', }
       this.$store.commit('addBackgroundProcess', bp)
@@ -100,21 +100,21 @@ export default {
       const timelinesPath = path.join(this.pathToUserData, `/media/timelines/`) 
       if (!fs.existsSync(timelinesPath)) fs.mkdirSync(timelinesPath)
       const vm = this
-      for (let i = 0; i < videos.length; i++) {
-        this.$store.commit('updateTextBackgroundProcess', {id:bpId, text:`Generating timelines images ${i+1} of ${videos.length}`})
+      for (let i = 0; i < pdfs.length; i++) {
+        this.$store.commit('updateTextBackgroundProcess', {id:bpId, text:`Generating timelines images ${i+1} of ${pdfs.length}`})
         if (this.isGenerationBreak) break
-        const video = videos[i]
-        if (!fs.existsSync(video.path)) continue
-        const frame = path.join(vm.pathToUserData, `/media/timelines/${video.id}_5.jpg`)
-        if (!fs.existsSync(frame)) await vm.createVideoTimeline(video)
-        if (this.view==1) this.$store.commit('updateVideos', [video.id])
+        const pdf = pdfs[i]
+        if (!fs.existsSync(pdf.path)) continue
+        const frame = path.join(vm.pathToUserData, `/media/timelines/${pdf.id}_5.jpg`)
+        if (!fs.existsSync(frame)) await vm.createVideoTimeline(pdf)
+        if (this.view==1) this.$store.commit('updateVideos', [pdf.id])
       }
       this.isGenerationTimelinesRun = false
       this.$store.commit('removeBackgroundProcess', bpId)
     },
-    async createVideoTimeline(video) {
+    async createVideoTimeline(pdf) {
       let opts = {
-        video: video,
+        pdf: pdf,
         pathToUserData: this.pathToUserData,
       }
 
@@ -127,17 +127,17 @@ export default {
       this.timeout = setTimeout(() => {
         this.isGenerationBreak = false
         if (!this.isGenerationGridsRun) {
-          if (this.$store.state.Settings.videoPreviewStatic==='grid') this.createGrids(this.$store.getters.videosOnPage)
+          if (this.$store.state.Settings.pdfPreviewStatic==='grid') this.createGrids(this.$store.getters.pdfsOnPage)
         }
         if (!this.isGenerationTimelinesRun) {
-          if (this.$store.state.Settings.videoPreviewHover==='timeline' || this.$store.state.Settings.videoView===1) 
-          this.createTimelines(this.$store.getters.videosOnPage)
+          if (this.$store.state.Settings.pdfPreviewHover==='timeline' || this.$store.state.Settings.pdfView===1) 
+          this.createTimelines(this.$store.getters.pdfsOnPage)
         }
       }, 3000)
     },
     clearSelection() {
       this.$store.state.Videos.selection.clearSelection()
-      let selected = this.$store.state.Videos.selection.select('.video-card')
+      let selected = this.$store.state.Videos.selection.select('.pdf-card')
       for (let i of selected) i.classList.remove('selected')
       this.$store.commit('updateSelectedVideos', [])
     },
@@ -145,8 +145,8 @@ export default {
       if (this.jumpPage === null) return
       let val = Number(this.jumpPage)
       if (val < 1) val = 1
-      else if (val > this.videosPagesSum) val = this.videosPagesSum
-      if (val !== this.videosCurrentPage) this.videosCurrentPage = val 
+      else if (val > this.pdfsPagesSum) val = this.pdfsPagesSum
+      if (val !== this.pdfsCurrentPage) this.pdfsCurrentPage = val 
       this.jumpPage = val
     },
     showDrop() { if (this.dropzone==false) this.dropzone = true },
@@ -155,38 +155,38 @@ export default {
 
       let files = e.dataTransfer.files
       let folders = []
-      let videos = []
+      let pdfs = []
       for (let f of files) {
         if (!f.type && f.size%4096 == 0) { // is a folder?
           folders.push(f.path)
         } else {
-          if ( f.type.match(/.+?(?=\/)/)[0] == 'video' ) videos.push(f.path)
+          if ( f.type.match(/.+?(?=\/)/)[0] == 'pdf' ) pdfs.push(f.path)
         }
       }
 
-      if (folders.length == 0 && videos.length == 0) {
+      if (folders.length == 0 && pdfs.length == 0) {
         this.$store.dispatch('setNotification', {
           type: 'error',
-          text: `No videos found in the dropped files`
+          text: `No pdfs found in the dropped files`
         })
       } else {
         this.$store.state.scan.folders = folders
-        this.$store.state.scan.files = videos
+        this.$store.state.scan.files = pdfs
         this.$store.state.scan.stage = 2
         this.$store.state.Settings.dialogScanPdfs = true
       }
     },
   },
   watch: {
-    videosOnPage() {
+    pdfsOnPage() {
       this.clearSelection()
       this.generateImages()
     },
-    videosPerPage() {
+    pdfsPerPage() {
       this.clearSelection()
       this.generateImages()
     },
-    videosCurrentPage() {
+    pdfsCurrentPage() {
       this.clearSelection()
       this.generateImages()
     },

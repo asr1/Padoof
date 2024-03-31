@@ -8,20 +8,20 @@
         @mousedown="handleMouseCanvas($event)" @contextmenu="showContextMenu($event)"
         @wheel="changeVolume" @keydown="handleKey" tabindex="-1">
         <!-- TODO change this to PDF reader -->
-        <video ref="videoPlayer" class="video-player"></video>
-        <div v-if="isVideoFormatNotSupported" class="video-error">
+        <pdf ref="pdfPlayer" class="pdf-player"></pdf>
+        <div v-if="isVideoFormatNotSupported" class="pdf-error">
           <v-icon size="60" color="red">mdi-alert</v-icon>
-          <div>{{getFileFromPath(videos[playIndex].path)}}</div>
+          <div>{{getFileFromPath(pdfs[playIndex].path)}}</div>
           <div class="mb-4">Video format not supported.</div>
           <v-btn @click="playVideoInSystemPlayer" color="primary" small>
             <v-icon left>mdi-television-play</v-icon>
             <span>Play in the system player</span>
           </v-btn>
         </div>
-        <div v-if="isVideoNotExist" class="video-error">
+        <div v-if="isVideoNotExist" class="pdf-error">
           <v-icon size="60" color="red">mdi-alert</v-icon>
-          <div>{{getFileFromPath(videos[playIndex].path)}}</div>
-          <div class="mb-4">The video file is missing.</div>
+          <div>{{getFileFromPath(pdfs[playIndex].path)}}</div>
+          <div class="mb-4">The pdf file is missing.</div>
         </div>
         <div class="status-text">{{statusText}}</div>
       </div>
@@ -231,12 +231,12 @@
         <v-card-text class="pa-0">
           <v-list dense class="pa-0">
             <v-list-item-group v-model="playIndex" mandatory color="primary">
-              <v-list-item v-for="(video, i) in videos" :key="video.id" :ref="`videoItem${i}`"
-                @click="playItemFromPlaylist(i)" class="video-item">
-                <img :src="getPlaylistImgUrl(video.id)" class="thumb"/>
-                <span class="video-name">
+              <v-list-item v-for="(pdf, i) in pdfs" :key="pdf.id" :ref="`pdfItem${i}`"
+                @click="playItemFromPlaylist(i)" class="pdf-item">
+                <img :src="getPlaylistImgUrl(pdf.id)" class="thumb"/>
+                <span class="pdf-name">
                   <b>{{i+1}}.</b>
-                  <span class="path">{{getFileNameFromPath(video.path)}}</span>
+                  <span class="path">{{getFileNameFromPath(pdf.path)}}</span>
                 </span>
                 <span v-if="playIndex===i" class="play-state overline text--primary">
                   <v-icon class="pl-2 pr-1">mdi-play</v-icon>
@@ -473,7 +473,7 @@ export default {
     seekTime: 0,
     // Playlist
     isPlaylistVisible: false,
-    videos: [],
+    pdfs: [],
     playlist: [],
     playlistShuffle: [],
     playIndex: null,
@@ -508,7 +508,7 @@ export default {
     },
     // data from main window
     pathToUserData() { return this.$store.getters.getPathToUserData },
-    videosDb() { return this.$store.state.videosDb },
+    pdfsDb() { return this.$store.state.pdfsDb },
     playlistsDb() { return this.$store.state.playlistsDb },
     metaDb() { return this.$store.state.metaDb },
     metaCardsDb() { return this.$store.state.metaCardsDb },
@@ -527,8 +527,8 @@ export default {
     isNextDisabled() {
       if (this.playlistMode.includes('shuffle')) {
         let shuffleIndex = this.playlistShuffle.indexOf(this.playIndex)
-        return shuffleIndex+1>=this.videos.length && !this.playlistMode.includes('loop')
-      } else return this.playIndex+1>=this.videos.length && !this.playlistMode.includes('loop')
+        return shuffleIndex+1>=this.pdfs.length && !this.playlistMode.includes('loop')
+      } else return this.playIndex+1>=this.pdfs.length && !this.playlistMode.includes('loop')
     },
     metaMarkers() { return _.filter(this.metaDb, i=>i.settings.markers) },
     metaCardsForMarker() { return _.filter(this.metaCardsDb, { metaId: this.markerMetaId }) },
@@ -541,14 +541,14 @@ export default {
   },
   methods: {
     initPlayer() {
-      this.player = this.$refs.videoPlayer
+      this.player = this.$refs.pdfPlayer
       this.player.addEventListener('loadedmetadata', (event) => { this.loadSrc() })
       this.player.addEventListener('ended', (event) => {
         if (this.playlistMode.includes('autoplay')) this.next()
       })
       this.player.addEventListener('error', (event) => {
-        this.$emit("nowPlaying", _.cloneDeep(this.videos[this.playIndex]))
-        if (fs.existsSync(this.videos[this.playIndex].path)) {
+        this.$emit("nowPlaying", _.cloneDeep(this.pdfs[this.playIndex]))
+        if (fs.existsSync(this.pdfs[this.playIndex].path)) {
           this.isVideoFormatNotSupported = true
           this.isVideoNotExist = false
         } else {
@@ -569,16 +569,16 @@ export default {
       } else this.canvasSizes = ''
     },
     updateVideoPlayer(data) {
-      this.videos = data.videos
-      this.playIndex = _.findIndex(data.videos, {id: data.id})
-      this.player.src = path.join('file://', this.videos[this.playIndex].path)
+      this.pdfs = data.pdfs
+      this.playIndex = _.findIndex(data.pdfs, {id: data.id})
+      this.player.src = path.join('file://', this.pdfs[this.playIndex].path)
       this.player.play()
     }, 
     loadSrc() {
       clearTimeout(this.statusTextTimeout)
-      this.statusText = `${this.playIndex+1}. ${this.getFileNameFromPath(this.videos[this.playIndex].path)}`
+      this.statusText = `${this.playIndex+1}. ${this.getFileNameFromPath(this.pdfs[this.playIndex].path)}`
       this.statusTextTimeout = setTimeout(() => {this.statusText = ''}, 3000)
-      this.$emit("nowPlaying", _.cloneDeep(this.videos[this.playIndex]))
+      this.$emit("nowPlaying", _.cloneDeep(this.pdfs[this.playIndex]))
       this.isVideoFormatNotSupported = false
       this.isVideoNotExist = false
       this.duration = this.player.duration
@@ -605,10 +605,10 @@ export default {
       setTimeout(() => { this.getCanvasSizes() }, 1000)
     },
     setAsThumb() {
-      let video = this.videos[this.playIndex]
-      let imgPath = path.join(this.pathToUserData, `/media/thumbs/${video.id}.jpg`)
+      let pdf = this.pdfs[this.playIndex]
+      let imgPath = path.join(this.pathToUserData, `/media/thumbs/${pdf.id}.jpg`)
       let specificTime = new Date(this.currentTime*1000).toISOString().substr(11, 8)
-      this.createMarkerThumb(specificTime, video.path, imgPath, 320)
+      this.createMarkerThumb(specificTime, pdf.path, imgPath, 320)
         .then(result => { console.log('thumb created') })
         .catch(error => { console.log(error) })
     },
@@ -617,11 +617,11 @@ export default {
       if (this.duration > 200) timeout = 1000
       this.currentTimeTracker = setInterval(() => {this.currentTime = this.player.currentTime}, timeout)
     },
-    playVideoInSystemPlayer() { shell.openPath(this.videos[this.playIndex].path) },
-    playVideo(video) {
-      this.player.src = video.path
+    playVideoInSystemPlayer() { shell.openPath(this.pdfs[this.playIndex].path) },
+    playVideo(pdf) {
+      this.player.src = pdf.path
       this.player.play()
-      ipcRenderer.send('videoWatched', video.id)
+      ipcRenderer.send('pdfWatched', pdf.id)
     },
     // CONTROLS
     play() {
@@ -647,13 +647,13 @@ export default {
       if (this.playlistMode.includes('shuffle')) {
         let shuffleIndex = this.playlistShuffle.indexOf(this.playIndex)
         shuffleIndex = shuffleIndex - 1
-        if (isLoopMode && shuffleIndex < 0) shuffleIndex = this.videos.length-1 // if loop mode
+        if (isLoopMode && shuffleIndex < 0) shuffleIndex = this.pdfs.length-1 // if loop mode
         this.playIndex = this.playlistShuffle[shuffleIndex]
       } else {
         this.playIndex = this.playIndex - 1
-        if (isLoopMode && this.playIndex < 0) this.playIndex = this.videos.length-1 // if loop
+        if (isLoopMode && this.playIndex < 0) this.playIndex = this.pdfs.length-1 // if loop
       }
-      this.playVideo(this.videos[this.playIndex])
+      this.playVideo(this.pdfs[this.playIndex])
       if (!this.isPlaylistVisible) return // scroll to now playing in playlist
       const height = `${this.playIndex * document.documentElement.clientWidth / 10}`
       this.$refs.playlist.scrollTo({ y: height }, 50)
@@ -665,13 +665,13 @@ export default {
       if (this.playlistMode.includes('shuffle')) {
         let shuffleIndex = this.playlistShuffle.indexOf(this.playIndex)
         shuffleIndex = shuffleIndex + 1
-        if (isLoopMode && shuffleIndex == this.videos.length) shuffleIndex = 0 // if loop mode
+        if (isLoopMode && shuffleIndex == this.pdfs.length) shuffleIndex = 0 // if loop mode
         this.playIndex = this.playlistShuffle[shuffleIndex]
       } else {
         this.playIndex = this.playIndex + 1
-        if (isLoopMode && this.playIndex > this.videos.length-1) this.playIndex = 0 // if loop mode
+        if (isLoopMode && this.playIndex > this.pdfs.length-1) this.playIndex = 0 // if loop mode
       }
-      this.playVideo(this.videos[this.playIndex])
+      this.playVideo(this.pdfs[this.playIndex])
 
       if (!this.isPlaylistVisible) return  // scroll to now playing in playlist
       const height = `${this.playIndex * document.documentElement.clientWidth / 10}`
@@ -791,15 +791,15 @@ export default {
     async getMarkers() {
       // console.log('get markers')
       await this.$store.dispatch('getDb', 'markers')
-      let video = this.videos[this.playIndex]
-      let markers = _.filter(this.markersDb, marker=>marker.videoId == video.id)
+      let pdf = this.pdfs[this.playIndex]
+      let markers = _.filter(this.markersDb, marker=>marker.pdfId == pdf.id)
       this.markers = _.orderBy(markers, 'time', ['asc'])
       // create marker thumb
       for (let i=0; i<markers.length; i++) {
         let imgPath = path.join(this.pathToUserData, `/media/markers/${markers[i].id}.jpg`)
         if (fs.existsSync(imgPath)) continue
         let specificTime = new Date(1000*markers[i].time).toISOString().substr(11, 8)
-        this.createMarkerThumb(specificTime, video.path, imgPath, 180)
+        this.createMarkerThumb(specificTime, pdf.path, imgPath, 180)
           .then(result => { /*console.log('thumb created')*/ })
           .catch(error => { /*console.log(error)*/ })
       }
@@ -850,16 +850,16 @@ export default {
         this.dialogMarkerMeta = false
       }
     
-      let videoId = _.cloneDeep(this.videos[this.playIndex].id)
+      let pdfId = _.cloneDeep(this.pdfs[this.playIndex].id)
       const marker = {
         id: shortid.generate(),
-        videoId: videoId,
+        pdfId: pdfId,
         type: type,
         name: text,
         time: time,
       } 
 
-      ipcRenderer.send('addMarker', marker, videoId)
+      ipcRenderer.send('addMarker', marker, pdfId)
 
       this.metaForMarker = ''
       this.markerBookmarkText = ''
@@ -870,8 +870,8 @@ export default {
       this.markerForRemove = marker
     },
     removeMarker() {
-      let video = _.cloneDeep(this.videos[this.playIndex])
-      ipcRenderer.send('removeMarker', this.markerForRemove, video)
+      let pdf = _.cloneDeep(this.pdfs[this.playIndex])
+      ipcRenderer.send('removeMarker', this.markerForRemove, pdf)
       this.markerForRemove = {}
       this.dialogRemoveMarker = false
       this.getMarkers()
@@ -881,7 +881,7 @@ export default {
       // console.log(this.player.playlist.items.map(i=>i.mrl))
       if (this.playlistMode.includes('shuffle')) {
         let indices = []
-        for (let i = 0; i < this.videos.length; i++) indices.push(i)
+        for (let i = 0; i < this.pdfs.length; i++) indices.push(i)
         this.playlistShuffle = _.shuffle(indices)
         const i = this.playlistShuffle.indexOf(index)
         this.playlistShuffle.splice(i, 1)
@@ -892,7 +892,7 @@ export default {
           const height = `${this.playIndex * document.documentElement.clientWidth / 10}`
           this.$refs.playlist.scrollTo({ y: height }, 50)
         }
-      } else this.playVideo(this.videos[this.playIndex])
+      } else this.playVideo(this.pdfs[this.playIndex])
     },
     togglePlaylist() {
       this.isPlaylistVisible=!this.isPlaylistVisible
@@ -901,8 +901,8 @@ export default {
       const height = `${this.playIndex * document.documentElement.clientWidth / 10}`
       this.$refs.playlist.scrollTo({ y: height }, 50)
     },
-    getPlaylistImgUrl(videoId) {
-      let imgPath = path.join(this.pathToUserData, `/media/thumbs/${videoId}.jpg`)
+    getPlaylistImgUrl(pdfId) {
+      let imgPath = path.join(this.pathToUserData, `/media/thumbs/${pdfId}.jpg`)
       return 'file://' + this.checkPlaylistImageExist(imgPath)
     },
     checkPlaylistImageExist(imgPath) {
@@ -912,8 +912,8 @@ export default {
         return path.join(__static, '/img/default.png')
       }
     },
-    getFileNameFromPath(videoPath) { return path.parse(videoPath).name },
-    getFileFromPath(videoPath) { return path.basename(videoPath) },
+    getFileNameFromPath(pdfPath) { return path.parse(pdfPath).name },
+    getFileFromPath(pdfPath) { return path.basename(pdfPath) },
     // META
     getMeta(id) { return _.find(this.metaDb, {id}) },
     getCard(cardId) { return _.find(this.metaCardsDb, {id:cardId}) },
@@ -975,10 +975,10 @@ export default {
     playlistMode(mode, oldMode) {
       if (!mode.includes('shuffle') && oldMode.includes('shuffle')) return
       let index = []
-      for (let i = 0; i < this.videos.length; i++) index.push(i) 
+      for (let i = 0; i < this.pdfs.length; i++) index.push(i) 
       this.playlistShuffle = _.shuffle(index)
       this.playIndex = this.playlistShuffle[0]
-      this.player.src = path.join('file://', this.videos[this.playIndex].path)
+      this.player.src = path.join('file://', this.pdfs[this.playIndex].path)
 
       if (this.isPlaylistVisible) { // scroll to now playing in playlist
         const height = `${this.playIndex * document.documentElement.clientWidth / 10}`
@@ -1089,7 +1089,7 @@ export default {
     text-transform: uppercase;
   }
 }
-.video-error {
+.pdf-error {
   position: absolute;
   color: rgb(255, 50, 50);
   margin: auto;
@@ -1182,12 +1182,12 @@ export default {
     flex-wrap: nowrap;
     white-space: nowrap;
   }
-  .video-item {
+  .pdf-item {
     position: relative;
     overflow: hidden;
     height: 10vw;
   }
-  .video-name {
+  .pdf-name {
     font-size: 1vw;
     line-height: 1.2;
     word-break: keep-all;

@@ -10,7 +10,7 @@
         </vuescroll>
       </div>
       <v-alert v-else type="info" text outlined dense class="text-center">
-        Please go to the video page, select filters and save them so that dynamic playlists appear
+        Please go to the pdf page, select filters and save them so that dynamic playlists appear
       </v-alert>
     </v-container>
 
@@ -220,14 +220,14 @@ export default {
       this.$store.dispatch('filterPlaylists', true)
     },
     async initDynamicPlaylists() {
-      let savedFilters = this.$store.state.SavedFilters.savedFilters.videos
+      let savedFilters = this.$store.state.SavedFilters.savedFilters.pdfs
       for (let f of savedFilters) {
-        let videos = await this.$store.dispatch('getFilteredVideos', f.filters)
+        let pdfs = await this.$store.dispatch('getFilteredVideos', f.filters)
         let playlist = {
           id: f.id,
           name: f.name,
           filters: f.filters,
-          videos: videos.value(),
+          pdfs: pdfs.value(),
         }
         this.dynamicPlaylists.push(playlist)
       }

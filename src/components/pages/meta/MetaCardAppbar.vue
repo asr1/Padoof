@@ -95,7 +95,7 @@ export default {
       this.$store.dispatch('deleteMetaCard') 
       if (this.tabId !== 'default') this.$store.dispatch('closeTab', this.tabId)
       else this.$router.push('/home')
-      this.$store.state.Settings.videoFilters = []
+      this.$store.state.Settings.pdfFilters = []
     }
   },
   watch: {},

@@ -9,7 +9,7 @@ const dbv = low(adapterVideos)
 
 import router from '@/router'
 
-dbv.defaults({ videos: [] }).write()
+dbv.defaults({ pdfs: [] }).write()
 
 const Videos = {
   state: () => ({
@@ -41,18 +41,18 @@ const Videos = {
     changeVideosPerPage({ state, commit, getters, dispatch}, number) {
       // commit('updateVideos')
       commit('resetLoading')
-      dispatch('updateSettingsState', {key:'videosPerPage', value:number})
+      dispatch('updateSettingsState', {key:'pdfsPerPage', value:number})
     },
     getFilteredVideos({ state, commit, dispatch, getters, rootState}, filters) {
-      let videos = getters.videos
-      videos = videos.orderBy(video=>(path.basename(video.path)), ['asc'])
+      let pdfs = getters.pdfs
+      pdfs = pdfs.orderBy(pdf=>(path.basename(pdf.path)), ['asc'])
 
       // filter by folder tree
       if (state.tree.length) {
-        videos = videos.filter(video => {
+        pdfs = pdfs.filter(pdf => {
           let include = false
           for (let i = 0; i < state.tree.length; i++) {
-            if (video.path.includes(state.tree[i])) {
+            if (pdf.path.includes(state.tree[i])) {
               include = true
             }
           }
@@ -78,7 +78,7 @@ const Videos = {
         let flag = filters[filter].flag
         
         if (flag === 'lostVideos' || flag === 'duplicatePdfs') {
-          videos = videos.filter(c=>{
+          pdfs = pdfs.filter(c=>{
             let include = false
             for (let i of val) if (c[by].includes(i)) {include=true;break}
             return include
@@ -87,62 +87,62 @@ const Videos = {
         }
 
         if (type === 'boolean') {
-          if (cond === 'yes') videos = videos.filter(c => c[by]===true)
-          else videos = videos.filter(c => !c[by]===true)
+          if (cond === 'yes') pdfs = pdfs.filter(c => c[by]===true)
+          else pdfs = pdfs.filter(c => !c[by]===true)
           continue
         }
 
         if (type=='string') val = val.toLowerCase().trim()
         if ((val===null||val.length===0)&&(cond!='empty'&&cond!='not empty')) continue
         if (cond=='empty') {
-          if (type === 'number') videos=videos.filter(c=>c[by]===undefined||c[by]===0)
-          else videos=videos.filter(c=>c[by]===undefined||c[by]===null||c[by].length==0)
+          if (type === 'number') pdfs=pdfs.filter(c=>c[by]===undefined||c[by]===0)
+          else pdfs=pdfs.filter(c=>c[by]===undefined||c[by]===null||c[by].length==0)
           continue
         } 
         if (cond=='not empty') {
-          if (type === 'number') videos=videos.filter(c=>c[by]!==undefined&&c[by]!==0)
-          else videos=videos.filter(c=>c[by]!==undefined&&c[by]!==null&&c[by].length>0)
+          if (type === 'number') pdfs=pdfs.filter(c=>c[by]!==undefined&&c[by]!==0)
+          else pdfs=pdfs.filter(c=>c[by]!==undefined&&c[by]!==null&&c[by].length>0)
           continue
         }
 
         if (type === 'number' || type === 'date') {
           if (by === 'height') {
-            videos = videos.filter(c=>{
+            pdfs = pdfs.filter(c=>{
               let height = Number(c.resolution.match(/\x(.*)/)[1])
               return compare(cond, val, height)
             })
           } else if (by === 'width') {
-            videos = videos.filter(c=>{
+            pdfs = pdfs.filter(c=>{
               let width = Number(c.resolution.match(/\d*/)[0])
               return compare(cond, val, width)
             })
           } else {
             if (by=='date'||by=='edit'||by=='viewed') val = new Date(val).getTime()
-            videos = videos.filter(c => compare(cond, val, c[by]))
+            pdfs = pdfs.filter(c => compare(cond, val, c[by]))
           } 
           continue
         }
         
         if (type === 'string') {
-          if (cond=='includes') videos=videos.filter(c=>{
-            let videoMeta = c[by]
-            if (videoMeta) return videoMeta.toLowerCase().includes(val)
+          if (cond=='includes') pdfs=pdfs.filter(c=>{
+            let pdfMeta = c[by]
+            if (pdfMeta) return pdfMeta.toLowerCase().includes(val)
             else return false
           })
-          else videos=videos.filter(c=>{
-            let videoMeta = c[by]
-            if (videoMeta) return !videoMeta.toLowerCase().includes(val)
+          else pdfs=pdfs.filter(c=>{
+            let pdfMeta = c[by]
+            if (pdfMeta) return !pdfMeta.toLowerCase().includes(val)
             else return true
           })
           continue
         }
 
         if (type === 'array' || type === 'select') {
-          if (cond === 'includes all') videos = videos.filter(c=>{
+          if (cond === 'includes all') pdfs = pdfs.filter(c=>{
             if (c[by]===undefined) return false
             else return _.isEqual(c[by].sort(), val.sort())
           })
-          else if (cond === 'includes one of') videos = videos.filter(c=>{
+          else if (cond === 'includes one of') pdfs = pdfs.filter(c=>{
             if (c[by]===undefined || c[by].length===0) return false
             else {
               let include = false
@@ -150,7 +150,7 @@ const Videos = {
               return include
             }
           })
-          else if (cond === 'excludes') videos = videos.filter(c=>{
+          else if (cond === 'excludes') pdfs = pdfs.filter(c=>{
             if (c[by]===undefined || c[by].length===0) return false
             else {
               let include = false
@@ -161,10 +161,10 @@ const Videos = {
         }
       }
       // sort PDFs
-      let sortBy = rootState.Settings.videoSortBy || 'name'
-      let sortDirection = rootState.Settings.videoSortDirection || 'asc'
-      if (sortBy === 'name') videos = videos.orderBy(i=>path.basename(i.path), [sortDirection])
-      else if (sortBy === 'resolution') videos = videos.orderBy(i=>Number(i.resolution.match(/\x(.*)/)[1]), [sortDirection])
+      let sortBy = rootState.Settings.pdfSortBy || 'name'
+      let sortDirection = rootState.Settings.pdfSortDirection || 'asc'
+      if (sortBy === 'name') pdfs = pdfs.orderBy(i=>path.basename(i.path), [sortDirection])
+      else if (sortBy === 'resolution') pdfs = pdfs.orderBy(i=>Number(i.resolution.match(/\x(.*)/)[1]), [sortDirection])
       else {
         let meta = getters.meta.find({id:sortBy}).value()
         let defaultValue = 0
@@ -172,14 +172,14 @@ const Videos = {
           if (meta.dataType == 'date') defaultValue = '' 
           else if (meta.dataType=='number' || meta.dataType=='rating') defaultValue = 0 
         }
-        videos = videos.orderBy(i=>i[sortBy]||defaultValue, [sortDirection])
+        pdfs = pdfs.orderBy(i=>i[sortBy]||defaultValue, [sortDirection])
       } 
       // if (state.filters.quality) {
       //   let quality = state.filters.quality
       //   if (quality.length) {
-      //     videos = videos.filter(video=>{
-      //       let width = +video.resolution.match(/\d*/)[0]
-      //       let height = +video.resolution.match(/\x(.*)/)[1]
+      //     pdfs = pdfs.filter(pdf=>{
+      //       let width = +pdf.resolution.match(/\d*/)[0]
+      //       let height = +pdf.resolution.match(/\x(.*)/)[1]
       //       if (quality.includes('4K')) {
       //         return width>height && height>1800
       //       }
@@ -196,37 +196,37 @@ const Videos = {
       //         return width<height
       //       }
       //     })
-      //     // console.log('videos filtered by quality')
+      //     // console.log('pdfs filtered by quality')
       //   }
       // }
-      return videos
+      return pdfs
     },
     async filterVideos({ state, commit, dispatch, getters, rootState}, stayOnCurrentPage) {
-      let filters = rootState.Settings.videoFilters
-      let videos
-      await dispatch('getFilteredVideos', filters).then(result => videos = result)
+      let filters = rootState.Settings.pdfFilters
+      let pdfs
+      await dispatch('getFilteredVideos', filters).then(result => pdfs = result)
       commit('resetLoading')
-      state.filteredVideos = videos.value()
-      if (!stayOnCurrentPage) rootState.Settings.videoPage = 1
+      state.filteredVideos = pdfs.value()
+      if (!stayOnCurrentPage) rootState.Settings.pdfPage = 1
       dispatch('saveFiltersOfVideos')
     },
     saveFiltersOfVideos({state, commit, getters, rootState}) {
       const route = router.currentRoute
-      const newFilters = _.cloneDeep(rootState.Settings.videoFilters)
-      const sortDirection = rootState.Settings.videoSortDirection
-      const sortBy = rootState.Settings.videoSortBy
-      const page = rootState.Settings.videoPage
+      const newFilters = _.cloneDeep(rootState.Settings.pdfFilters)
+      const sortDirection = rootState.Settings.pdfSortDirection
+      const sortBy = rootState.Settings.pdfSortBy
+      const page = rootState.Settings.pdfPage
       const pagesWithVideos = ['/creator/:','/website/:']
 
-      if (route.path.includes('/videos/:')) {
+      if (route.path.includes('/pdfs/:')) {
         if (route.query.tabId === 'default') {
-          getters.settings.set('videoFilters', newFilters).write()
-          getters.settings.set('videoSortDirection', sortDirection).write()
-          getters.settings.set('videoSortBy', sortBy).write()
-          getters.settings.set('videoPage', page).write()
+          getters.settings.set('pdfFilters', newFilters).write()
+          getters.settings.set('pdfSortDirection', sortDirection).write()
+          getters.settings.set('pdfSortBy', sortBy).write()
+          getters.settings.set('pdfPage', page).write()
         } else {
           getters.tabsDb.find({id: +route.query.tabId}).assign({
-            name: getters.videoFiltersForTabName,
+            name: getters.pdfFiltersForTabName,
             filters: newFilters,
             sortBy: sortBy,
             sortDirection: sortDirection,
@@ -249,12 +249,12 @@ const Videos = {
     deleteVideos({state, rootState, commit, dispatch, getters}) {
       getters.getSelectedVideos.map(id => {
         if (getters.tabsDb.find({id: id}).value()) dispatch('closeTab', id)
-        const video = getters.videos.find({'id':id}).value()
-        let fileName = path.basename(video.path)
-        let videoName = path.parse(video.path).name
-        // remove video file
+        const pdf = getters.pdfs.find({'id':id}).value()
+        let fileName = path.basename(pdf.path)
+        let pdfName = path.parse(pdf.path).name
+        // remove pdf file
         if (state.deleteFile) {
-          let filePath = getters.videos.find({ 'id': id }).value().path
+          let filePath = getters.pdfs.find({ 'id': id }).value().path
           if (fs.existsSync(filePath)) {
             fs.unlink(filePath, (err) => {
               if (err) commit('addLog',{type:'error',text:err})
@@ -263,18 +263,18 @@ const Videos = {
           } else {
             commit('addLog',{
               type:'error',
-              text:`Unable to delete "${fileName}". The file does not exist in the path: "${video.path}".`
+              text:`Unable to delete "${fileName}". The file does not exist in the path: "${pdf.path}".`
             })
           }
         }
-        // remove video from database
-        getters.videos.remove({ 'id': id }).write()
-        // remove video from playlists
-        getters.playlists.filter({'videos': [id]}).each(playlist=>{
-          playlist.videos = playlist.videos.filter(video=>(video !== id))
+        // remove pdf from database
+        getters.pdfs.remove({ 'id': id }).write()
+        // remove pdf from playlists
+        getters.playlists.filter({'pdfs': [id]}).each(playlist=>{
+          playlist.pdfs = playlist.pdfs.filter(pdf=>(pdf !== id))
         }).write()
         // remove marker from DB and image of marker
-        let markers = getters.markers.filter({videoId: id}).value()
+        let markers = getters.markers.filter({pdfId: id}).value()
         for (let m = 0; m < markers.length; m++) {
           let imgPath = path.join(getters.getPathToUserData, `/media/markers/${markers[m].id}.jpg`)
           fs.unlink(imgPath, (err) => {
@@ -283,8 +283,8 @@ const Videos = {
           })
         }
 
-        if (markers.length) getters.markers.remove({videoId: id}).write()
-        // remove thumb, grid and preview of video
+        if (markers.length) getters.markers.remove({pdfId: id}).write()
+        // remove thumb, grid and preview of pdf
         let thumbPath = path.join(getters.getPathToUserData, `/media/thumbs/${id}.jpg`)
         fs.unlink(thumbPath, (err) => {
           // if (err) console.log("failed to delete thumb: "+err)
@@ -303,7 +303,7 @@ const Videos = {
             // else console.log('successfully deleted grid')
           })
         }
-        commit('addLog', {type:'info',text:`📹 Video "${videoName}" has been removed from DB 🗑️`})
+        commit('addLog', {type:'info',text:`📹 Video "${pdfName}" has been removed from DB 🗑️`})
       })
       commit('updateSelectedVideos', [])
       dispatch('filterVideos', true)
@@ -314,29 +314,29 @@ const Videos = {
     dbv(state) {
       return state.lastChanged, dbv
     },
-    videos(state, store) {
-      return store.dbv.get('videos')
+    pdfs(state, store) {
+      return store.dbv.get('pdfs')
     },
-    videosDatabase(state, store) {
+    pdfsDatabase(state, store) {
       return store.dbv
     },
-    videoFiltersForTabName: (state, store, rootState, getters) => {
+    pdfFiltersForTabName: (state, store, rootState, getters) => {
       let filters = []
       const equals = ['equal', 'includes all', 'includes one of', 'yes']
       const notEquals = ['not equal', 'excludes', 'no']
       
-      for (let filter in rootState.Settings.videoFilters) {
-        let by = rootState.Settings.videoFilters[filter].by
-        let cond = rootState.Settings.videoFilters[filter].cond
-        let val = rootState.Settings.videoFilters[filter].val
-        let type = rootState.Settings.videoFilters[filter].type
-        let flag = rootState.Settings.videoFilters[filter].flag
+      for (let filter in rootState.Settings.pdfFilters) {
+        let by = rootState.Settings.pdfFilters[filter].by
+        let cond = rootState.Settings.pdfFilters[filter].cond
+        let val = rootState.Settings.pdfFilters[filter].val
+        let type = rootState.Settings.pdfFilters[filter].type
+        let flag = rootState.Settings.pdfFilters[filter].flag
         
         let metaBy = getters.meta.find({id:by}).value()
         if (metaBy) by = metaBy.settings.name
 
         if (flag === 'lostVideos') return 'Lost Videos'
-        else if (flag === 'duplicatePdfs') return 'Duplicate videos'
+        else if (flag === 'duplicatePdfs') return 'Duplicate pdfs'
         if (val === null || val.length === 0) continue
         
         if (equals.includes(cond)) cond = '='
@@ -352,9 +352,9 @@ const Videos = {
       }
       return 'Videos' + (filters.length ? ' with ': ' ') + filters.join('; ')
     },
-    pdfTotal(state, store) { return store.videos.value().length },
-    videosTotalSize: (state, store) => {
-      let sizes = store.videos.map('size').value()
+    pdfTotal(state, store) { return store.pdfs.value().length },
+    pdfsTotalSize: (state, store) => {
+      let sizes = store.pdfs.map('size').value()
       let total = 0
       for (let i=0; i<sizes.length; i++) total += sizes[i]
       if (total > 1000000000000) total = (total/1024/1024/1024/1024-0.01).toFixed(2) + ' TB'
@@ -364,8 +364,8 @@ const Videos = {
       else total += ' B'
       return total
     },
-    videosTotalDuration: (state, store) => {
-      let durations = store.videos.map('duration').value()
+    pdfsTotalDuration: (state, store) => {
+      let durations = store.pdfs.map('duration').value()
       let secs = 0
       for (let i of durations) secs += i
       let d = secs / 8.64e4 | 0
@@ -375,16 +375,16 @@ const Videos = {
       let z = n=> (n < 10? '0' : '') + n
       return `${d}.${z(h)}:${z(m)}:${z(s)}`
     },
-    videosOnPage(state, store, rootState) {
-      const videos = state.filteredVideos, 
-            videosCount = rootState.Settings.videosPerPage
-      state.pageTotal = Math.ceil(videos.length/videosCount)
-      if(rootState.Settings.videoPage > state.pageTotal) rootState.Settings.videoPage = state.pageTotal
-      if (rootState.Settings.videoPage == 0) rootState.Settings.videoPage = 1
-      const end = rootState.Settings.videoPage * videosCount, start = end - videosCount
-      return videos.slice(start, end)
+    pdfsOnPage(state, store, rootState) {
+      const pdfs = state.filteredVideos, 
+            pdfsCount = rootState.Settings.pdfsPerPage
+      state.pageTotal = Math.ceil(pdfs.length/pdfsCount)
+      if(rootState.Settings.pdfPage > state.pageTotal) rootState.Settings.pdfPage = state.pageTotal
+      if (rootState.Settings.pdfPage == 0) rootState.Settings.pdfPage = 1
+      const end = rootState.Settings.pdfPage * pdfsCount, start = end - pdfsCount
+      return pdfs.slice(start, end)
     },
-    videosPages(state) {
+    pdfsPages(state) {
       let pages = []
       for (let i = 0; i < state.pageTotal; i++) pages.push(i+1)
       return pages

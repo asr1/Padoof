@@ -36,7 +36,7 @@ export default {
     },
     getArrayValuesForCard(metaId, cardType) { 
       let array
-      if (cardType === 'video') array = this.video[metaId]
+      if (cardType === 'pdf') array = this.pdf[metaId]
       else array = this.card.meta[metaId]
       if (array === undefined) return ''
       let items = this.getMeta(metaId).settings.items

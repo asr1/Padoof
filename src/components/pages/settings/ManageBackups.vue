@@ -134,7 +134,7 @@ export default {
     isProcessRun: false,
     headers: [
       { text: 'Date, time', value: 'date' },
-      { text: 'Videos', value: 'videos' },
+      { text: 'Videos', value: 'pdfs' },
       { text: 'Total size (MB)', value: 'size', sort: (a,b)=>(a-b) }, 
       { text: 'Version', value: 'version' }, 
     ],
@@ -208,7 +208,7 @@ export default {
           vm = this
           
       backupInfo.date = backupName
-      backupInfo.videos = this.$store.getters.pdfTotal
+      backupInfo.pdfs = this.$store.getters.pdfTotal
       backupInfo.version = this.$store.state.Settings.databaseVersion || '0.8.2'
 
       // console.log('backup creation started')

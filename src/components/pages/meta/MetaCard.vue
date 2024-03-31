@@ -16,7 +16,7 @@
       </div>
       <v-divider/>
 
-      <div v-if="visibility.name" class="px-1 name">{{card.meta.name}} <span v-if="isMetaAssignedToVideo">({{card.videos||0}})</span></div>
+      <div v-if="visibility.name" class="px-1 name">{{card.meta.name}} <span v-if="isMetaAssignedToVideo">({{card.pdfs||0}})</span></div>
       <div v-if="meta.settings.synonyms && visibility.synonyms && card.meta.synonyms && card.meta.synonyms.length" class="px-1 synonyms"> <span class="pl-2"/> {{card.meta.synonyms.join(', ')}} </div>
       
       <v-card-actions v-if="ratingAndFavoriteInCard" class="px-1 py-0">
@@ -251,8 +251,8 @@ export default {
     filterVideosBy() {
       let tabId = Date.now()
       let tab = { 
-        name: this.$store.getters.videoFiltersForTabName, 
-        link: `/videos/:${tabId}?tabId=${tabId}`,
+        name: this.$store.getters.pdfFiltersForTabName, 
+        link: `/pdfs/:${tabId}?tabId=${tabId}`,
         id: tabId,
         filters: [{
           by: this.meta.id, cond: 'includes one of',
@@ -262,7 +262,7 @@ export default {
         sortBy: 'name',
         sortDirection: 'asc',
         page: 1,
-        icon: 'video-outline'
+        icon: 'pdf-outline'
       }
       this.$store.dispatch('addNewTab', tab)
       setTimeout(() => { this.$router.push(tab.link) }, 100)

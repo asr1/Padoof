@@ -107,8 +107,8 @@ export default {
       // return
       let tabId = Date.now()
       let tab = { 
-        name: 'Lost videos', 
-        link: `/videos/:${tabId}?tabId=${tabId}`,
+        name: 'Lost pdfs', 
+        link: `/pdfs/:${tabId}?tabId=${tabId}`,
         id: tabId,
         filters: [{
           by: 'path',
@@ -121,7 +121,7 @@ export default {
         sortBy: 'path',
         sortDirection: 'asc',
         page: 1,
-        icon: 'video-off-outline'
+        icon: 'pdf-off-outline'
       }
       this.$store.dispatch('addNewTab', tab)
       this.$store.state.dialogFolder = false

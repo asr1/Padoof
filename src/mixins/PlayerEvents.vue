@@ -13,20 +13,20 @@ export default {
         let database = this.$store.getters[dbType].value()
         ipcRenderer.send('getDbAnswer', database)
       })
-      ipcRenderer.on('watchLater', (event, videoId) => {
-        this.watchLater(videoId)
+      ipcRenderer.on('watchLater', (event, pdfId) => {
+        this.watchLater(pdfId)
       })
-      ipcRenderer.on('addMarker', (event, marker, video) => {
-        this.addMarker(marker, video)
+      ipcRenderer.on('addMarker', (event, marker, pdf) => {
+        this.addMarker(marker, pdf)
       })
-      ipcRenderer.on('removeMarker', (event, markerForRemove, video) => {
-        this.removeMarker(markerForRemove, video)
+      ipcRenderer.on('removeMarker', (event, markerForRemove, pdf) => {
+        this.removeMarker(markerForRemove, pdf)
       })
       ipcRenderer.on('addNewMetaCard', (event, metaCardName, metaId) => {
         this.addNewMetaCard(metaCardName, metaId)
       })
-      ipcRenderer.on('videoWatched', (event, videoId) => {
-        this.videoWatched(videoId)
+      ipcRenderer.on('pdfWatched', (event, pdfId) => {
+        this.pdfWatched(pdfId)
       })
     })
   },
@@ -36,39 +36,39 @@ export default {
     },
   },
   methods: {
-    watchLater(videoId) {
+    watchLater(pdfId) {
       let playlist = this.$store.getters.playlists.find({name:'Watch later'}).value()
-      if (playlist.videos.includes(videoId)) {
+      if (playlist.pdfs.includes(pdfId)) {
         this.$store.getters.playlists.find({name:'Watch later'}).assign({
-          videos: playlist.videos.filter(video=>(video !== videoId)),
+          pdfs: playlist.pdfs.filter(pdf=>(pdf !== pdfId)),
           edit: Date.now(),
         }).write()
       } else {
-        let videosFromPlaylist = playlist.videos
-        videosFromPlaylist.push(videoId)
+        let pdfsFromPlaylist = playlist.pdfs
+        pdfsFromPlaylist.push(pdfId)
         this.$store.getters.playlists.find({name:'Watch later'}).assign({
-          videos: videosFromPlaylist,
+          pdfs: pdfsFromPlaylist,
           edit: Date.now(),
         }).write()
       }
     },
-    addMarker(marker, videoId) {
-      let video = _.cloneDeep(this.$store.getters.videos.find({id: videoId}).value())
+    addMarker(marker, pdfId) {
+      let pdf = _.cloneDeep(this.$store.getters.pdfs.find({id: pdfId}).value())
       this.$store.getters.markers.push(marker).write()
       if (marker.type !== 'favorite' && marker.type !== 'bookmark') {
-        if (video[marker.type]!==undefined && video[marker.type].includes(marker.name)) return
-        if (video[marker.type]===undefined) video[marker.type] = []
-        video[marker.type].push(marker.name)
-        video[marker.type] = video[marker.type].sort((a,b)=>{
+        if (pdf[marker.type]!==undefined && pdf[marker.type].includes(marker.name)) return
+        if (pdf[marker.type]===undefined) pdf[marker.type] = []
+        pdf[marker.type].push(marker.name)
+        pdf[marker.type] = pdf[marker.type].sort((a,b)=>{
           a = this.getCard(a).meta.name
           b = this.getCard(b).meta.name
           return a.localeCompare(b)
         })
-        this.$store.getters.videos.find({ id: video.id }).assign({ 
-          [marker.type]: video[marker.type],
+        this.$store.getters.pdfs.find({ id: pdf.id }).assign({ 
+          [marker.type]: pdf[marker.type],
           edit: Date.now(),
         }).write()
-        this.$store.commit('updateVideos', [video.id])
+        this.$store.commit('updateVideos', [pdf.id])
       }
     },
     removeMarker(markerForRemove) {
@@ -82,12 +82,12 @@ export default {
       })
       ipcRenderer.send('updatePlayerDb', 'metaCards') // update meta in player window
     },
-    videoWatched(videoId) {
-      let video = this.$store.getters.videos.find({id: videoId})
-      if (!video.value()) return 
-      let views = video.value().views || 0
+    pdfWatched(pdfId) {
+      let pdf = this.$store.getters.pdfs.find({id: pdfId})
+      if (!pdf.value()) return 
+      let views = pdf.value().views || 0
       if (this.$store.state.Settings.countNumberOfViews) ++views
-      video.assign({
+      pdf.assign({
         views: views,
         viewed: Date.now(),
       }).write()

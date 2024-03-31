@@ -19,7 +19,7 @@
           <v-icon>mdi-dice-5</v-icon>
         </v-btn>
       </template>
-      <span>Open random video</span>
+      <span>Open random pdf</span>
     </v-tooltip>
 
     <v-spacer></v-spacer>
@@ -51,19 +51,19 @@ export default {
   },
   methods: {
     openRandomVideo() {
-      const videos = this.$store.state.Videos.filteredVideos
-      if (videos.length == 0) return
-      if (videos.length == 1) { this.playVideo(videos[0]); return }
-      const rand = this.getRandomIntInclusive(1, videos.length)
-      this.playVideo(videos[rand-1])
+      const pdfs = this.$store.state.Videos.filteredVideos
+      if (pdfs.length == 0) return
+      if (pdfs.length == 1) { this.playVideo(pdfs[0]); return }
+      const rand = this.getRandomIntInclusive(1, pdfs.length)
+      this.playVideo(pdfs[rand-1])
     },
     getRandomIntInclusive(min, max) {
       min = Math.ceil(min)
       max = Math.floor(max)
       return Math.floor(Math.random() * (max - min + 1)) + min
     },
-    playVideo(video) {
-      const pathToVideo = video.path
+    playVideo(pdf) {
+      const pathToVideo = pdf.path
       if (!fs.existsSync(pathToVideo)) {
         this.$store.state.Videos.dialogErrorPlayVideo = true
         this.$store.state.Videos.errorPlayVideoPath = pathToVideo
@@ -71,7 +71,7 @@ export default {
       }
       if (this.$store.state.Settings.isPlayVideoInSystemPlayer) shell.openPath(pathToVideo)
       else {
-        let data = { videos: [video], id: video.id }
+        let data = { pdfs: [pdf], id: pdf.id }
         ipcRenderer.send('openPlayer', data)
       }  
     },

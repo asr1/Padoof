@@ -24,9 +24,9 @@
             </div>
             <div v-else>
               <div class="icon-wrapper">
-                <!-- TODO this shouldn't be video, change to PDF  -->
+                <!-- TODO this shouldn't be pdf, change to PDF  -->
                 <img v-if="isImage(f.ext)" @click="openViewer(i)" :src="getFilePath(i)" height="80" class="image">
-                <video v-else-if="f.ext=='.mp4'" :src="getFilePath(i)" width="120" height="80" class="video"/>
+                <pdf v-else-if="f.ext=='.mp4'" :src="getFilePath(i)" width="120" height="80" class="pdf"/>
                 <v-icon v-else size="80">mdi-{{getFileIcon(f.ext)}}</v-icon>
                 <v-chip class="ext px-1" small label>{{ f.ext || '???' }}</v-chip>
               </div>
@@ -123,11 +123,11 @@ export default {
     getFileIcon(ext) {
       ext = ext.replace('.', '').toLowerCase()
       let music = ['mp3','aac','m4a','wav','flac','wma','ogg','midi']
-      let video = ['wmv','avi','mkv']
+      let pdf = ['wmv','avi','mkv']
       let text = ['txt','ini','doc','docx']
       let archive = ['zip','rar','tar']
       if (music.indexOf(ext)>-1) return 'file-music-outline' 
-      else if (video.indexOf(ext)>-1) return 'file-video-outline' 
+      else if (pdf.indexOf(ext)>-1) return 'file-pdf-outline' 
       else if (text.indexOf(ext)>-1) return 'file-document-outline' 
       else if (archive.indexOf(ext)>-1) return 'zip-box-outline'
       else return 'file-outline' 

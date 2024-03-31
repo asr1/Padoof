@@ -190,8 +190,8 @@ export default {
         tip: 'Date of Editing',
       },
       {
-        name: 'videos',
-        icon: 'video-outline',
+        name: 'pdfs',
+        icon: 'pdf-outline',
         tip: 'Number of Videos',
       },
     ],

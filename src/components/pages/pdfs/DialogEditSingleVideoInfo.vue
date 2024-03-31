@@ -1,18 +1,18 @@
 <template>
   <div v-if="$store.state.Videos.dialogEditVideoInfo">
-    <v-bottom-sheet v-model="sheet" inset scrollable persistent content-class="video-sheet">
+    <v-bottom-sheet v-model="sheet" inset scrollable persistent content-class="pdf-sheet">
       <v-card>
         <v-card-actions class="pa-0">
           <v-btn @click="close" class="close-btn" fab small>
             <v-icon>mdi-close</v-icon></v-btn>
           <v-responsive :aspect-ratio="16/9">
-            <div class="video-container">
+            <div class="pdf-container">
               <img :src="'file://' + getImg()">
-              <video ref="video" autoplay loop :poster="'file://' + getImg()" muted></video>
+              <pdf ref="pdf" autoplay loop :poster="'file://' + getImg()" muted></pdf>
             </div>
             <div class="gradient" :style="gradient"></div>
             <v-card-actions class="actions">
-              <v-btn @click="playVideo" small outlined fab :disabled="!videoExists" :color="darkMode?'#ccc':'#777'">
+              <v-btn @click="playVideo" small outlined fab :disabled="!pdfExists" :color="darkMode?'#ccc':'#777'">
                 <v-icon large>mdi-play</v-icon> </v-btn>
               <v-btn @click="toggleMuted" small outlined fab class="mr-4" :color="darkMode?'#ccc':'#777'">
                 <v-icon v-if="muted">mdi-volume-off</v-icon>
@@ -28,26 +28,26 @@
               <v-btn @click="saveVideoInfo" large outlined rounded :color="darkMode?'#ccc':'#777'" class="pr-3">
                 <v-icon left>mdi-content-save</v-icon> save </v-btn>
             </v-card-actions>
-            <div class="headline video-title text--secondary text-h4">{{fileName}}</div>
+            <div class="headline pdf-title text--secondary text-h4">{{fileName}}</div>
             <v-btn class="file-info-icon" fab x-small>
               <v-icon>mdi-information-variant</v-icon>
             </v-btn>
             <v-card class="file-info">
               <div>
                 <v-icon left size="18">mdi-monitor-screenshot</v-icon>
-                Resolution: {{video.resolution}}
+                Resolution: {{pdf.resolution}}
               </div>
               <div>
-                <v-icon left size="18">mdi-file-video</v-icon>
+                <v-icon left size="18">mdi-file-pdf</v-icon>
                 File extension: .{{fileExtension}}
               </div>
               <div>
                 <v-icon left size="18">mdi-harddisk</v-icon>
-                File size: {{calcSize(video.size)}}
+                File size: {{calcSize(pdf.size)}}
               </div>
               <div>
                 <v-icon left size="18">mdi-eye-outline</v-icon>
-                Views: {{video.views||0}}
+                Views: {{pdf.views||0}}
               </div>
               <div>
                 <v-icon left size="18">mdi-calendar-plus</v-icon>
@@ -260,7 +260,7 @@ export default {
     this.$nextTick(function () {})
   },
   beforeDestroy() {
-    try {this.$refs.video.src = '' } catch (error) {}
+    try {this.$refs.pdf.src = '' } catch (error) {}
   },
   destroyed() {
     for (const timeout in this.timeouts) { clearTimeout(this.timeouts[timeout]) }
@@ -269,7 +269,7 @@ export default {
   data: () => ({
     valid: false,
     pathEditable: false,
-    videoExists: true,
+    pdfExists: true,
     // info
     rating: 0,
     favorite: false,
@@ -300,38 +300,38 @@ export default {
     dialogListView: false,
   }),
   computed: {
-    video() {
-      let videoId = this.$store.getters.getSelectedVideos[0]
-      return this.$store.getters.videos.find({id:videoId}).value()
+    pdf() {
+      let pdfId = this.$store.getters.getSelectedVideos[0]
+      return this.$store.getters.pdfs.find({id:pdfId}).value()
     },
-    fileName() { return path.parse(this.video.path).name },
+    fileName() { return path.parse(this.pdf.path).name },
     darkMode() { return this.$vuetify.theme.isDark },
     gradient() { 
       let color = this.darkMode ? 'rgb(30 30 30)' : 'rgb(255 255 255)'
       return `background: linear-gradient(to top, ${color}, rgba(0,0,0,.0))`
     },
-    fileExtension() { return path.parse(this.video.path).ext.replace('.', '').toLowerCase() },
+    fileExtension() { return path.parse(this.pdf.path).ext.replace('.', '').toLowerCase() },
     metaAssignedToVideos() { return this.$store.state.Settings.metaAssignedToVideos },
     showIcons() { return this.$store.state.Settings.showIconsOfMetaInEditingDialog },
   },
   methods: {
     initAll() {
       this.sheet = true
-      let video = _.cloneDeep(this.video)
+      let pdf = _.cloneDeep(this.pdf)
       
-      // get info of video
-      this.rating = video.rating || 0
-      this.favorite = video.favorite || false
-      this.pathToFile = video.path || ''
-      this.bookmark = video.bookmark || ''
+      // get info of pdf
+      this.rating = pdf.rating || 0
+      this.favorite = pdf.favorite || false
+      this.pathToFile = pdf.path || ''
+      this.bookmark = pdf.bookmark || ''
 
       // get date added and date of last edit text
-      let dateAdded = new Date(video.date)
+      let dateAdded = new Date(pdf.date)
       this.added = dateAdded.toLocaleDateString() + ' ' + dateAdded.toLocaleTimeString()
-      let dateEdit = new Date(video.edit)
+      let dateEdit = new Date(pdf.edit)
       this.edit = dateEdit.toLocaleDateString() + ' ' + dateEdit.toLocaleTimeString()
-      if (video.viewed) {
-        let dateViewed = new Date(video.viewed)
+      if (pdf.viewed) {
+        let dateViewed = new Date(pdf.viewed)
         this.viewed = dateViewed.toLocaleDateString() + ' ' + dateViewed.toLocaleTimeString()
       } else this.viewed = 'Never'
       setTimeout(() => { this.playPreview() }, 300)
@@ -340,19 +340,19 @@ export default {
       for (let i = 0; i < this.metaAssignedToVideos.length; i++) {
         const id = this.metaAssignedToVideos[i].id
         const type = this.metaAssignedToVideos[i].type
-        if (type=='complex') { this.values[id] = _.cloneDeep(this.video[id]) || []; continue }
+        if (type=='complex') { this.values[id] = _.cloneDeep(this.pdf[id]) || []; continue }
         const simpleMetaType = this.getMeta(id).dataType
         let defaultValue = ''
         if (simpleMetaType=='array') defaultValue = []
         if (simpleMetaType=='boolean') defaultValue = false
         if (simpleMetaType=='number'||simpleMetaType=='rating') defaultValue = 0
-        this.values[id] = _.cloneDeep(this.video[id]) || defaultValue
+        this.values[id] = _.cloneDeep(this.pdf[id]) || defaultValue
       }
     },
     playPreview() {
-      if (!fs.existsSync(this.video.path)) return
-      this.$refs.video.src = this.video.path
-      if (this.video.duration > 65) {
+      if (!fs.existsSync(this.pdf.path)) return
+      this.$refs.pdf.src = this.pdf.path
+      if (this.pdf.duration > 65) {
         this.setVideoProgress(0.1)
         this.timeouts.a = setTimeout(this.setVideoProgress, 5000, 0.2)
         this.timeouts.b = setTimeout(this.setVideoProgress, 10000, 0.3)
@@ -380,7 +380,7 @@ export default {
         }, 50000)
       }
     },
-    setVideoProgress(percent) { this.$refs.video.currentTime = Math.floor(this.video.duration*percent) },
+    setVideoProgress(percent) { this.$refs.pdf.currentTime = Math.floor(this.pdf.duration*percent) },
     filterCards(cardObject, queryText, itemText) {
       let card = _.cloneDeep(cardObject)
       let query = queryText.toLowerCase()
@@ -421,7 +421,7 @@ export default {
       }
     },
     changePathEditable() {
-      if (this.pathEditable) this.pathToFile = _.cloneDeep(this.video.path)
+      if (this.pathEditable) this.pathToFile = _.cloneDeep(this.pdf.path)
       this.pathEditable = !this.pathEditable
     },
     close() {
@@ -442,38 +442,38 @@ export default {
 
       let newValues = {...presetValues, ...this.values}
 
-      this.$store.getters.videos.find({ id: this.video.id }).assign(newValues).write()
+      this.$store.getters.pdfs.find({ id: this.pdf.id }).assign(newValues).write()
 
-      this.$store.commit('updateVideos', [this.video.id])
+      this.$store.commit('updateVideos', [this.pdf.id])
       this.$store.dispatch('filterVideos', true)
       this.$store.commit('addLog', {type:'info',text:`📹 Video "${this.fileName}" has been edited ✏️`})
       this.close()
 
-      if (this.pathEditable && this.pathToFile!==this.video.path) {
+      if (this.pathEditable && this.pathToFile!==this.pdf.path) {
         setTimeout(() => {this.$store.state.updateFoldersData = Date.now()}, 1000)
       }
     },
     getImg() {
-      let imgPath = path.join(this.$store.getters.getPathToUserData, `/media/thumbs/${this.video.id}.jpg`)
+      let imgPath = path.join(this.$store.getters.getPathToUserData, `/media/thumbs/${this.pdf.id}.jpg`)
       if (fs.existsSync(imgPath)) return imgPath
       else return path.join(__static, '/img/default.png')
     },
     getTag(tagName) { return this.$store.getters.tags.find({name:tagName}).value() },
     playVideo() {
-      const pathToVideo = this.video.path
+      const pathToVideo = this.pdf.path
       if (fs.existsSync(pathToVideo)) {
-        this.videoExists = false
+        this.pdfExists = false
         if (this.$store.state.Settings.isPlayVideoInSystemPlayer) shell.openPath(pathToVideo)
         else {
-          let data = { videos: [this.video], id: this.video.id, }
+          let data = { pdfs: [this.pdf], id: this.pdf.id, }
           ipcRenderer.send('openPlayer', data)
         }
-        setTimeout(() => { this.videoExists = true }, 1500)
-      } else this.videoExists = false
+        setTimeout(() => { this.pdfExists = true }, 1500)
+      } else this.pdfExists = false
     },
     toggleMuted() {
       this.muted = !this.muted
-      this.$refs.video.muted = this.muted
+      this.$refs.pdf.muted = this.muted
     },
     setVal(value, metaId) { 
       let meta = this.getMeta(metaId)
@@ -527,7 +527,7 @@ export default {
 
 
 <style lang="less">
-.video-sheet {
+.pdf-sheet {
   padding-bottom: 20px;
   &>.v-sheet.v-card {
     border-radius: 10px 10px 0 0;
@@ -539,7 +539,7 @@ export default {
     position: absolute;
     z-index: 3;
   }
-  .video-container {
+  .pdf-container {
     width: 100%;
     height: 100%;
     display: flex;
@@ -552,14 +552,14 @@ export default {
       opacity: 1;
       filter: blur(10px);
     }
-    video {
+    pdf {
       min-width: 100%;
       min-height: 100%;
       object-fit: contain;
       z-index: 1;
     }
   }
-  .video-title {
+  .pdf-title {
     word-break: break-word;
     position: absolute;
     bottom: 80px;

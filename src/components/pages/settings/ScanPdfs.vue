@@ -34,7 +34,7 @@
               </v-btn>
               <v-spacer></v-spacer>
               <v-btn @click="ScanPdfsForm = 2" :disabled="folderPaths.length===0" color="primary" class="ma-2">
-                <v-icon left>mdi-video-check</v-icon> Next: parse settings <v-icon large right>mdi-chevron-right</v-icon>
+                <v-icon left>mdi-pdf-check</v-icon> Next: parse settings <v-icon large right>mdi-chevron-right</v-icon>
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -412,7 +412,7 @@ export default {
     async fileScanProc(file) {
       let fileProcResult = {}
       // check for duplicates in database
-      let duplicate = this.$store.getters.videos.find(video => video.path.toLowerCase() == file.toLowerCase()).value()
+      let duplicate = this.$store.getters.pdfs.find(pdf => pdf.path.toLowerCase() == file.toLowerCase()).value()
       if (duplicate) {
         fileProcResult.duplicate = file
         fileProcResult.success = false
@@ -423,7 +423,6 @@ export default {
       const vm = this
 
       try {
-        console.log("Trying to get metadata 2");
         await this.getVideoMetadata(file)
       } catch (error) {
         console.log("Error 1");
@@ -435,10 +434,10 @@ export default {
 
       // add PDF to DB
       await this.createInfoForDb(file)
-        .then(async (videoMetadata) => {
-          await this.$store.getters.videos.push(videoMetadata).write()
+        .then(async (pdfMetadata) => {
+          await this.$store.getters.pdfs.push(pdfMetadata).write()
           fileProcResult.duplicate = false
-          fileProcResult.success = videoMetadata
+          fileProcResult.success = pdfMetadata
           return(fileProcResult)
         })
         .catch(error => {
@@ -451,8 +450,6 @@ export default {
     },
     getVideoMetadata (pathToFile) {
       return new Promise((resolve, reject) => {
-        console.log("");
-        console.log(pathToFile);
         const metadata = fs.statSync(pathToFile, {});
         
       // pdfParser.on('pdfParser_dataReady', function(data) {
@@ -462,31 +459,19 @@ export default {
       // pdfParser.loadPDF(pathToFile);
       // console.log(doc);
 
-        console.log(metadata);
         this.fileInfo.meta = metadata
         return resolve();
       })
     },
     createInfoForDb(pathToFile) { // create info of PDF file, generating thumb.jpg and return object with PDF file info
       return new Promise ((resolve, reject) => {
-        console.log("Making Info for DB");
         let size = Math.floor(this.fileInfo.meta.size)
-        
-        let resolution
-        // for(let i = 0; i < this.fileInfo.meta.streams.length; i++) {
-          // TODO 
-          // if (this.fileInfo.meta.streams[i].codec_type === 'video') {
-            // resolution = this.fileInfo.meta.streams[i].width + 'x' + this.fileInfo.meta.streams[i].height
-          // } 
-        // }
 
-        // let pathToFile = this.fileInfo.meta.format.filename
-            
         // get file info 
-        let videoMetadata = {
+        let pdfMetadata = {
           id: this.fileInfo.id,
           path: pathToFile,
-          size: 5, //this.fileInfo.meta.size,
+          size: size,
           resolution: "300x300",// resolution,
           rating: 0,
           favorite: false,
@@ -498,11 +483,11 @@ export default {
 
         let parsed = this.parsePathForMeta(pathToFile)
 
-        videoMetadata = {...videoMetadata, ...parsed}
+        pdfMetadata = {...pdfMetadata, ...parsed}
         
         let outputPathThumbs = path.join(this.pathToUserData, '/media/thumbs/')
         if (!fs.existsSync(outputPathThumbs)) fs.mkdirSync(outputPathThumbs)
-        // creating the thumb of the video
+        // creating the thumb of the pdf
         fs.appendFile(`${outputPathThumbs}\\${this.fileInfo.id}.jpg`, '1', function(err) {
          if(err) console.log("Error 5");
           console.log(err);
@@ -519,12 +504,12 @@ export default {
         //   })
         //   .on('end', () => {
         //     // console.log(`thumb created: ${outputPathThumbs + this.fileInfo.id}.jpg`)
-        //     resolve(videoMetadata)
+        //     resolve(pdfMetadata)
         //   })
         //   .on('error', (err) => {
         //     reject(err.message)
         //   })
-        resolve(videoMetadata);
+        resolve(pdfMetadata);
       })
     },
     parsePathForMeta(filePath) {

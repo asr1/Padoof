@@ -68,14 +68,14 @@ export default {
         }).write()
       }
       if (this.versions.migration.includes('0.11.1')) {
-        let metaVideos = this.$store.getters.meta.find({id:'videos'}).value()
+        let metaVideos = this.$store.getters.meta.find({id:'pdfs'}).value()
         if (!metaVideos) this.$store.getters.meta.push( 
           {
-            "id": "videos",
+            "id": "pdfs",
             "type": "specific",
             "settings": {
               "name": "Number of PDFs",
-              "icon": "video"
+              "icon": "pdf"
             }
           }
         ).write()

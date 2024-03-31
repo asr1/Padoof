@@ -614,7 +614,7 @@ $headings: '.display-4,.display-3,.display-2,.display-1,.headline,.title,.subtit
 }
 
 // VIDEOS
-.video-card {
+.pdf-card {
   .reg-block {
     position: absolute;
     z-index: 3;
@@ -716,7 +716,7 @@ $headings: '.display-4,.display-3,.display-2,.display-1,.headline,.title,.subtit
     }
   }
   &.theme--dark {
-    .video-card-title {
+    .pdf-card-title {
       &:before {
         background-image: linear-gradient(to right, transparent, #1e1e1e);
       }
@@ -816,14 +816,14 @@ $headings: '.display-4,.display-3,.display-2,.display-1,.headline,.title,.subtit
     &:hover {
       .error,
       .resolution,
-      .video-card-title {
+      .pdf-card-title {
         opacity: 0.3;
       }
     }
   }
 }
 .line-grid {
-  .video-card {
+  .pdf-card {
     margin-bottom: 15px;
     .content {
       display: flex;
@@ -837,7 +837,7 @@ $headings: '.display-4,.display-3,.display-2,.display-1,.headline,.title,.subtit
       left: auto;
     }
   }
-  .video-card-title {
+  .pdf-card-title {
     position: absolute;
     z-index: 1;
     pointer-events: none;
@@ -860,7 +860,7 @@ $headings: '.display-4,.display-3,.display-2,.display-1,.headline,.title,.subtit
   pointer-events: none;
   user-select: none;
 }
-.video-preview-container {
+.pdf-preview-container {
   transition: .2s all ease;
   border-radius: 5px 5px 0 0;
   &:before {
@@ -891,7 +891,7 @@ $headings: '.display-4,.display-3,.display-2,.display-1,.headline,.title,.subtit
     animation-fill-mode: both;
     animation-duration: 0.5s;
     animation-delay: 0.7s;
-    video {
+    pdf {
       min-width: 100%;
       min-height: 100%;
       object-fit: contain;
@@ -935,7 +935,7 @@ $headings: '.display-4,.display-3,.display-2,.display-1,.headline,.title,.subtit
   margin: auto;
   transform: scale(1.5);
 }
-.video-card-title {
+.pdf-card-title {
   font-size: 1.1em;
   padding: 0.3em 8px;
   letter-spacing: -0.2px !important;
@@ -1565,14 +1565,14 @@ $headings: '.display-4,.display-3,.display-2,.display-1,.headline,.title,.subtit
     .main-img:before {
       opacity: 1;
     }
-    .video-preview-container,
+    .pdf-preview-container,
     .img-container {
       &:before {
         opacity: 1;
       }
     }
     &.icons-in-card {
-      .video-preview-container,
+      .pdf-preview-container,
       .img-container {
         &:before {
           display: none;

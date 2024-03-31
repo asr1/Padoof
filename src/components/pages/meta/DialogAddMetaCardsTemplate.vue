@@ -71,12 +71,8 @@ export default {
   mounted() {
     this.$nextTick(function () {
       let creators = this.$store.getters.meta.find(i=>i.settings.name==='Creators').cloneDeep().value()
-      console.log("Creators");
-      console.log(creators);
       if (creators) this.settings.creators.meta = creators.id 
       let tags = this.$store.getters.meta.find(i=>i.settings.name==='Tags').cloneDeep().value()
-      console.log("Tags");
-      console.log(tags);
       if (tags) this.settings.tags.meta = tags.id 
       let publishers = this.$store.getters.meta.find(i=>i.settings.name==='Publishers').cloneDeep().value()
       if (publishers) this.settings.publishers.meta = publishers.id 
@@ -109,19 +105,9 @@ export default {
   },
   methods: {
     async start() {
-      console.log("Validating", this.valid);
       this.$refs.form.validate()
-      console.log("Validating again", this.valid); 
       if (!this.valid) return
       this.isProcessRunning = true
-      let pages = this.numberCreators/96
-      if (this.settings.creators.value) {
-        for (let i=1; i<=pages; i++) {
-        }
-        console.log("This is never reached");
-        await this.createCreators()
-      }
-      console.log("T or F", this.settings.tags.value);
       if (this.settings.tags.value) await this.createTags()
       if (this.settings.publishers.value) await this.createPublishers()
       this.isProcessRunning = false
@@ -129,37 +115,11 @@ export default {
     },
     close() { this.$emit('close') },
     sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)) },
-    async createCreators() {
-      // TODO since this.found isn't populated, this does nothing and can be removed.
-      return new Promise(async resolve => {
-        const metaId = this.settings.creators.meta
-        for (const p of this.found) {
-          let card = {
-            id: p.id,
-            metaId,
-            views: 0,
-            meta: {
-              name: p.name,
-            },
-          }
-          
-          let isDublicate = this.$store.getters.metaCards.filter({metaId}).find(i=>i.meta.name.toLowerCase()===p.name.toLowerCase()).value()
-          if (!isDublicate) this.$store.dispatch('addMetaCard', card)
-          await this.sleep(1)
-        }
-        resolve()
-      })
-    },
     async createTags() {
-      console.log("Creating specific tags");
       return new Promise(async resolve => {
         const metaId = this.settings.tags.meta
-        console.log("MetaId", metaId);
-        console.log(Tags);
         const synonyms = this.getMeta(metaId).settings.synonyms
         for (const t of Tags) {
-          console.log("One tag");
-          console.log(t);
           let card = {
             id: shortid.generate(),
             metaId,

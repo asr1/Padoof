@@ -39,7 +39,6 @@ function createLoadingWindow () {
   if (isDevelopment) {
     loading.once('show', () => {
       win.webContents.on('did-finish-load', () => {
-        console.log('app loaded')
         win.show() 
         loading.hide()
       })
@@ -48,7 +47,6 @@ function createLoadingWindow () {
     createProtocol('app')
     loading.once('show', () => {
       win.webContents.on('did-finish-load', () => {
-        console.log('app loaded')
         win.show()
         loading.hide() 
         loading = null
@@ -423,13 +421,13 @@ ipcMain.handle('getDb', async (event, dbType) => {
 function getDb() { return new Promise((resolve) => {
   ipcMain.once('getDbAnswer', (e, database) => { resolve(database) }) 
 }) } 
-ipcMain.on('watchLater', (e, videoId) => { win.webContents.send( 'watchLater', videoId ) })
-ipcMain.on('addMarker', (e, marker, markerTag, video) => { win.webContents.send( 'addMarker', marker, markerTag, video ) }) 
-ipcMain.on('removeMarker', (e, markerForRemove, video) => { win.webContents.send( 'removeMarker', markerForRemove, video ) }) 
+ipcMain.on('watchLater', (e, pdfId) => { win.webContents.send( 'watchLater', pdfId ) })
+ipcMain.on('addMarker', (e, marker, markerTag, pdf) => { win.webContents.send( 'addMarker', marker, markerTag, pdf ) }) 
+ipcMain.on('removeMarker', (e, markerForRemove, pdf) => { win.webContents.send( 'removeMarker', markerForRemove, pdf ) }) 
 ipcMain.on('toggleDarkMode', (e, value) => { player.webContents.send( 'toggleDarkMode', value ) })
 ipcMain.on('updatePlayerDb', (e, value) => { player.webContents.send( 'updateDb', value ) })
 ipcMain.on('addNewMetaCard', (e, metaCardName, metaId) => { win.webContents.send( 'addNewMetaCard', metaCardName, metaId ) }) 
-ipcMain.on('videoWatched', (e, videoId) => { win.webContents.send( 'videoWatched', videoId ) }) 
+ipcMain.on('pdfWatched', (e, pdfId) => { win.webContents.send( 'pdfWatched', pdfId ) }) 
 
 // plugins 
 // ipcMain.on('installPlugin', (event, pluginsDir) => {

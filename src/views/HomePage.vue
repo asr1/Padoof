@@ -77,7 +77,7 @@
               </v-card>
               <v-card outlined class="pa-2">
                 <v-icon>mdi-harddisk</v-icon> Total File Size:
-                <b v-text="$store.getters.videosTotalSize"/>
+                <b v-text="$store.getters.pdfsTotalSize"/>
               </v-card>
             </div>
           </v-col>
@@ -97,13 +97,13 @@
               <v-toolbar color="secondary">
                 <div class="headline">{{numberRecentVideos}} recently added PDFs</div>
                 <v-spacer></v-spacer>
-                <v-btn to="/videos/:default?tabId=default" draggable="false" outlined>
-                  <v-icon left>mdi-video</v-icon> Show All PDFs</v-btn>
+                <v-btn to="/pdfs/:default?tabId=default" draggable="false" outlined>
+                  <v-icon left>mdi-pdf</v-icon> Show All PDFs</v-btn>
               </v-toolbar>
               <div class="previews-grid" @mousedown="stopSmoothScroll($event)"> 
-                <v-hover v-for="video in recentVideos" :key="video.id">
+                <v-hover v-for="pdf in recentVideos" :key="pdf.id">
                   <template v-slot:default="{ hover }">
-                    <v-img :src="getVideoThumbUrl(video.id)" @click="playVideo(video, 'recentVideos')" aspect-ratio="1">
+                    <v-img :src="getVideoThumbUrl(pdf.id)" @click="playVideo(pdf, 'recentVideos')" aspect-ratio="1">
                       <v-fade-transition>
                         <v-overlay v-if="hover" absolute color="secondary">
                           <v-btn icon x-large outlined>
@@ -131,15 +131,15 @@
           <v-col v-if="customization||widgets.topViewedVideos" cols="12">
             <v-card outlined>
               <v-toolbar color="secondary">
-                <div class="headline">Top 10 most viewed PDFs ({{videosViewedLastWeek}} viewed in the past week)</div>
+                <div class="headline">Top 10 most viewed PDFs ({{pdfsViewedLastWeek}} viewed in the past week)</div>
                 <v-spacer></v-spacer>
-                <v-btn to="/videos/:default?tabId=default" draggable="false" outlined>
-                  <v-icon left>mdi-video</v-icon> Show All PDFs</v-btn>
+                <v-btn to="/pdfs/:default?tabId=default" draggable="false" outlined>
+                  <v-icon left>mdi-pdf</v-icon> Show All PDFs</v-btn>
               </v-toolbar>
               <div class="previews-grid" @mousedown="stopSmoothScroll($event)"> 
-                <v-hover v-for="video in topViewedVideos" :key="video.id+1">
+                <v-hover v-for="pdf in topViewedVideos" :key="pdf.id+1">
                   <template v-slot:default="{ hover }">
-                    <v-img :src="getVideoThumbUrl(video.id)" @click="playVideo(video, 'topViewedVideos')" aspect-ratio="1" dark>
+                    <v-img :src="getVideoThumbUrl(pdf.id)" @click="playVideo(pdf, 'topViewedVideos')" aspect-ratio="1" dark>
                       <v-fade-transition>
                         <v-overlay v-if="hover" absolute color="secondary">
                           <v-btn icon x-large outlined>
@@ -147,7 +147,7 @@
                           </v-btn>
                         </v-overlay>
                       </v-fade-transition>
-                      <span class="views"><v-icon>mdi-eye-outline</v-icon> {{video.views||0}}</span>
+                      <span class="views"><v-icon>mdi-eye-outline</v-icon> {{pdf.views||0}}</span>
                     </v-img>
                   </template>
                 </v-hover>
@@ -274,19 +274,19 @@ export default {
   }),
   computed: {
     settings() { return this.$store.getters.settings.value() },
-    recentVideos() { return this.$store.getters.videos.orderBy('date', ['desc']).take(this.numberRecentVideos).value() },
-    topViewedVideos() { return this.$store.getters.videos.orderBy('views', ['desc']).take(10).value() },
-    videosViewedLastWeek() {
+    recentVideos() { return this.$store.getters.pdfs.orderBy('date', ['desc']).take(this.numberRecentVideos).value() },
+    topViewedVideos() { return this.$store.getters.pdfs.orderBy('views', ['desc']).take(10).value() },
+    pdfsViewedLastWeek() {
       let lastWeek = new Date().setDate(new Date().getDate()-7)
-      return this.$store.getters.videos.filter(v=>v.viewed||0>=lastWeek).value().length
+      return this.$store.getters.pdfs.filter(v=>v.viewed||0>=lastWeek).value().length
     },
     pathToUserData() { return this.$store.getters.getPathToUserData },
     logoPath() { return path.join('file://', __static, '/icons/icon.png') },
-    pdfNumber() { return this.$store.getters.videos.value().length },
+    pdfNumber() { return this.$store.getters.pdfs.value().length },
     metaNumber() { return this.$store.getters.meta.filter(i=>i.type!=='specific').value().length },
     complexMetaAssignedToVideo() { return this.$store.getters.settings.get('metaAssignedToVideos').filter({type:'complex'}).value() },
     daysBefore() { 
-      let v = this.$store.getters.videos.orderBy(i=>i.date, ['asc']).take(1).value()
+      let v = this.$store.getters.pdfs.orderBy(i=>i.date, ['asc']).take(1).value()
       if (v.length) return Math.floor((Date.now() - v[0].date)/(60*60*1000*24))
       else return 7
     },
@@ -316,8 +316,8 @@ export default {
         start = start.getTime()
         end.setHours(23,59,59,999)
         end = end.getTime()
-        let added = this.$store.getters.videos.filter(v=>v.date>=start&&v.date<=end).value()
-        let edited = this.$store.getters.videos.filter(v=>v.edit>=start&&v.edit<=end).value()
+        let added = this.$store.getters.pdfs.filter(v=>v.date>=start&&v.date<=end).value()
+        let edited = this.$store.getters.pdfs.filter(v=>v.edit>=start&&v.edit<=end).value()
         numAdded.push(added.length)
         numEdited.push(edited.length)
       }
@@ -347,28 +347,28 @@ export default {
       event.stopPropagation()
     },
     getTopMetaCards(metaId) { return this.$store.getters.metaCards.filter({metaId}).orderBy(i=>i.views||0, ['desc']).take(10).value() },
-    getVideoThumbUrl(videoId) {
-      let imgPath = path.join(this.pathToUserData, `/media/thumbs/${videoId}.jpg`)
+    getVideoThumbUrl(pdfId) {
+      let imgPath = path.join(this.pathToUserData, `/media/thumbs/${pdfId}.jpg`)
       return 'file://' + this.checkVideoImageExist(imgPath)
     },
     checkVideoImageExist(imgPath) {
       if (fs.existsSync(imgPath)) return imgPath
       else return path.join(__static, '/img/default.png')
     },
-    playVideo(video, typeVideos) {
-      if (!fs.existsSync(video.path)) {
+    playVideo(pdf, typeVideos) {
+      if (!fs.existsSync(pdf.path)) {
         this.$store.state.Videos.dialogErrorPlayVideo = true
-        this.$store.state.Videos.errorPlayVideoPath = video.path
+        this.$store.state.Videos.errorPlayVideoPath = pdf.path
         return
       }
-      if (this.$store.state.Settings.isPlayVideoInSystemPlayer) shell.openPath(video.path) 
+      if (this.$store.state.Settings.isPlayVideoInSystemPlayer) shell.openPath(pdf.path) 
       else {
-        let data = { videos: this[typeVideos], id: video.id }
+        let data = { pdfs: this[typeVideos], id: pdf.id }
         ipcRenderer.send('openPlayer', data)
       }
-      let views = video.views || 0
+      let views = pdf.views || 0
       if (this.$store.state.Settings.countNumberOfViews) ++views 
-      this.$store.getters.videos.find({id: video.id}).assign({
+      this.$store.getters.pdfs.find({id: pdf.id}).assign({
         views: views,
         viewed: Date.now(),
       }).write()

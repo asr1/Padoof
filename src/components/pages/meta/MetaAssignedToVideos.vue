@@ -75,7 +75,7 @@
             <v-chip small class="mx-2">
               <v-icon small left>mdi-{{getMeta(metaAssignedToVideos[selectedMetaIndex].id).settings.icon}}</v-icon>
               <b>{{getMeta(metaAssignedToVideos[selectedMetaIndex].id).settings.name}}</b>
-            </v-chip> from videos?
+            </v-chip> from pdfs?
           </div>
         </v-card-text>
       </v-card>

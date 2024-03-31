@@ -1,8 +1,8 @@
 <script>
 export default {
   methods: {
-    getVideosTotalSize(videos) {
-      let sizes = videos.map(video=>(video.size))
+    getVideosTotalSize(pdfs) {
+      let sizes = pdfs.map(pdf=>(pdf.size))
       let total = 0
       for (let i=0; i<sizes.length; i++) total += sizes[i]
       return this.calcSize(total)

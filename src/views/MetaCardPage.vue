@@ -3,7 +3,7 @@
     <div @dragover="showDrop">
       <v-responsive :aspect-ratio="2.3" :key="metaCardKey" class="header-images" :class="[{'above':checkImageSettings('header')&&checkImageExists('header')&&showHeaderImageAboveProfile}]">
         <div v-if="!checkImageExists('alt')" class="thumbs">
-          <v-img v-for="(imgUrl, i) in videoThumbImgUrls" :key="i" 
+          <v-img v-for="(imgUrl, i) in pdfThumbImgUrls" :key="i" 
             :src="imgUrl" :aspect-ratio="16/9" width="20%" />
         </div>
         <img v-else-if="checkImageSettings('header')&&checkImageExists('header')" :src="getImgUrl('header')" class="header-image">
@@ -201,12 +201,12 @@
         </v-container>
 
         <v-container v-if="filteredVideosNumber" fluid class="pagination-container">
-          <v-overflow-btn v-model="videosPerPage" hint="items per page" persistent-hint
-            :items="videosPerPagePreset" dense height="36" solo disable-lookup hide-no-data
+          <v-overflow-btn v-model="pdfsPerPage" hint="items per page" persistent-hint
+            :items="pdfsPerPagePreset" dense height="36" solo disable-lookup hide-no-data
             class="items-per-page-dropdown"
           ></v-overflow-btn>
           <v-spacer></v-spacer>
-          <v-pagination v-model="videosCurrentPage" :length="videosPagesSum"
+          <v-pagination v-model="pdfsCurrentPage" :length="pdfsPagesSum"
             :total-visible="getNumberOfPagesLimit" style="z-index:1"/>
           <v-spacer></v-spacer>
           <v-text-field
@@ -217,22 +217,22 @@
         </v-container>
       
         <div v-if="numberVideosMetaCard==0" class="text-center">
-          <div><v-icon size="100" class="ma-10">mdi-video</v-icon></div>
-          It's so empty... add this {{meta.settings.nameSingular.toLowerCase()}} to your videos so they appear here,
-          also you can drag a folder or video files here to add them to the database
+          <div><v-icon size="100" class="ma-10">mdi-pdf</v-icon></div>
+          It's so empty... add this {{meta.settings.nameSingular.toLowerCase()}} to your pdfs so they appear here,
+          also you can drag a folder or pdf files here to add them to the database
         </div>
 
         <div v-if="filteredVideosNumber==0&&numberVideosMetaCard>0" class="text-center pt-10">
           <div><v-icon size="100" class="ma-10">mdi-close</v-icon></div>
-          There are no matching videos for the selected filters
+          There are no matching pdfs for the selected filters
         </div>
 
         <Loading />
-        <v-container fluid class="wide-image videos-selection" :class="[cardSize, gapSize, {'card-grid':view==0}, {'line-grid':view==1}]">
-          <VideoCard v-for="(video, i) in videosOnPage" :key="video.id" :video="video" :i="i" :reg="reg"/>
+        <v-container fluid class="wide-image pdfs-selection" :class="[cardSize, gapSize, {'card-grid':view==0}, {'line-grid':view==1}]">
+          <VideoCard v-for="(pdf, i) in pdfsOnPage" :key="pdf.id" :pdf="pdf" :i="i" :reg="reg"/>
         </v-container>
 
-        <v-pagination v-if="filteredVideosNumber" v-model="videosCurrentPage" :length="videosPagesSum" :total-visible="getNumberOfPagesLimit" class="pt-4 pb-10"/>
+        <v-pagination v-if="filteredVideosNumber" v-model="pdfsCurrentPage" :length="pdfsPagesSum" :total-visible="getNumberOfPagesLimit" class="pt-4 pb-10"/>
       </div>
       
       <div v-show="$store.state.Settings.navigationSide=='2'" class="py-6"></div>
@@ -244,7 +244,7 @@
     </div>
 
     <v-card v-show="dropzone" @dragleave="dropzone=false" class="dropzone" @drop="catchDrop($event)" @dragenter.prevent @dragover.prevent>
-      <div class="text">Drop video or folder to add them</div>
+      <div class="text">Drop pdf or folder to add them</div>
     </v-card>
   </vuescroll>
 </template>
@@ -283,7 +283,7 @@ export default {
     })
   },
   beforeDestroy() {
-    this.$store.state.Settings.videoFilters = []
+    this.$store.state.Settings.pdfFilters = []
     this.$store.state.clipboardMeta = {}
   },
   data: () => ({
@@ -308,7 +308,7 @@ export default {
     ],
     isScrollToTopVisible: false,
     // header: '',
-    videos: [],
+    pdfs: [],
     quickFilters: [],
   }),
   computed: {
@@ -348,9 +348,9 @@ export default {
       for (let i of completed) completedValue = completedValue + i
       return Math.ceil(completedValue / completed.length * 100)
     },
-    videosOnPage() { return this.$store.getters.videosOnPage },
+    pdfsOnPage() { return this.$store.getters.pdfsOnPage },
     numberVideosMetaCard() { 
-      return this.$store.getters.videos.filter(v=>{
+      return this.$store.getters.pdfs.filter(v=>{
         let m = v[this.metaId]
         if (m) return m.includes(this.card.id)
         else return false
@@ -358,16 +358,16 @@ export default {
     },
 
     filteredVideosNumber() { return this.$store.state.Videos.filteredVideos.length },
-    cardSize() { return `card-size-${this.$store.state.Settings.videoCardSize}` },
+    cardSize() { return `card-size-${this.$store.state.Settings.pdfCardSize}` },
     pathToUserData() { return this.$store.getters.getPathToUserData },
     tabId() { return this.$route.query.tabId },
     tab() {
       if (this.tabId === 'default') return undefined
       else return this.$store.getters.tabsDb.find({id:this.tabId}).value()   
     },
-    view() { return this.$store.state.Settings.videoView || 0 },
+    view() { return this.$store.state.Settings.pdfView || 0 },
     gapSize() { return `gap-size-${this.$store.state.Settings.gapSize}` },
-    filters() { return this.$store.state.Settings.videoFilters },
+    filters() { return this.$store.state.Settings.pdfFilters },
     isMetaAssignedToVideo() { return _.find(this.$store.state.Settings.metaAssignedToVideos, {id: this.meta.id}) !== undefined },
     complexMetaAssignedToVideos() { return _.filter(this.$store.state.Settings.metaAssignedToVideos, {type:'complex'}) },
     metaForProfile() { 
@@ -379,9 +379,9 @@ export default {
       }
       return this.metaInCard.filter(i=>checkMetaForCareer(i))
     },
-    videoThumbImgUrls() {
-      let videos = this.$store.getters.videos.filter(video=>video[this.meta.id]===undefined?false:video[this.meta.id].includes(this.card.id))
-      let imgUrls = videos.orderBy('rating',['desc']).take(40).value().map(v=>{
+    pdfThumbImgUrls() {
+      let pdfs = this.$store.getters.pdfs.filter(pdf=>pdf[this.meta.id]===undefined?false:pdf[this.meta.id].includes(this.card.id))
+      let imgUrls = pdfs.orderBy('rating',['desc']).take(40).value().map(v=>{
         let imgPath = path.join(this.pathToUserData, `/media/thumbs/${v.id}.jpg`)
         if (fs.existsSync(imgPath)) return 'file://' + imgPath
         else return ''
@@ -469,35 +469,35 @@ export default {
         flag: null,
         lock: true,
       }]
-      let videoFilters = this.initVideoFilters()
-      defaultFilters = [...defaultFilters, ...videoFilters]
+      let pdfFilters = this.initVideoFilters()
+      defaultFilters = [...defaultFilters, ...pdfFilters]
       if (this.tabId === 'default' || typeof this.tab === 'undefined') {
-        this.$store.state.Settings.videoFilters = _.cloneDeep(defaultFilters)
-        this.$store.state.Settings.videoSortBy = 'name'
-        this.$store.state.Settings.videoSortDirection = 'asc'
-        this.$store.state.Settings.videoPage = 1
+        this.$store.state.Settings.pdfFilters = _.cloneDeep(defaultFilters)
+        this.$store.state.Settings.pdfSortBy = 'name'
+        this.$store.state.Settings.pdfSortDirection = 'asc'
+        this.$store.state.Settings.pdfPage = 1
       } else {
-        this.$store.state.Settings.videoFilters = _.cloneDeep(this.tab.filters) || _.cloneDeep(defaultFilters)
-        this.$store.state.Settings.videoSortBy = this.tab.sortBy || 'name'
-        this.$store.state.Settings.videoSortDirection = this.tab.sortDirection || 'asc'
-        this.$store.state.Settings.videoPage = this.tab.page || 1
+        this.$store.state.Settings.pdfFilters = _.cloneDeep(this.tab.filters) || _.cloneDeep(defaultFilters)
+        this.$store.state.Settings.pdfSortBy = this.tab.sortBy || 'name'
+        this.$store.state.Settings.pdfSortDirection = this.tab.sortDirection || 'asc'
+        this.$store.state.Settings.pdfPage = this.tab.page || 1
       }
 
       this.$store.dispatch('filterVideos', true)
     },
     initVideoFilters() { 
-      this.videos = this.$store.getters.videos.filter(i=>{
+      this.pdfs = this.$store.getters.pdfs.filter(i=>{
         if (i[this.metaId]) return i[this.metaId].includes(this.metaCardId)
         else return false
       }).cloneDeep().value()
-      let videoFilters = []
+      let pdfFilters = []
       for (let meta of this.complexMetaAssignedToVideos) {
         this.quickFilters.push({
           id: meta.id,
           chips: this.getCardsInVideos(meta.id),
           value: [],
         })
-        videoFilters.push({
+        pdfFilters.push({
           by: meta.id,
           cond: 'includes one of',
           val: [],
@@ -506,7 +506,7 @@ export default {
           lock: true,
         })
       }
-      return videoFilters
+      return pdfFilters
     },
     getImgUrl(imgType) {
       let imgUrl = path.join(__static, '/img/default.png')
@@ -529,8 +529,8 @@ export default {
     },
     getCardsInVideos(metaId) {
       let metaIds = []
-      for (let video of this.videos) if (video[metaId]) {
-        metaIds = [...metaIds, ...video[metaId]]
+      for (let pdf of this.pdfs) if (pdf[metaId]) {
+        metaIds = [...metaIds, ...pdf[metaId]]
       }
       metaIds = [...new Set(metaIds)]
       metaIds = metaIds.sort((a,b)=>{
@@ -541,9 +541,9 @@ export default {
       return metaIds
     },
     setCardFilter(e, metaId) {
-      let index = _.findIndex(this.$store.state.Settings.videoFilters, i=>i.by==metaId&&i.flag=='card')
+      let index = _.findIndex(this.$store.state.Settings.pdfFilters, i=>i.by==metaId&&i.flag=='card')
       let metaArr = _.find(this.quickFilters, {id:metaId}).chips
-      if (index > -1) this.$store.state.Settings.videoFilters[index].val = e.map(i=>metaArr[i])
+      if (index > -1) this.$store.state.Settings.pdfFilters[index].val = e.map(i=>metaArr[i])
       this.$store.dispatch('filterVideos', true)
     },
     changeRating(stars) {
@@ -729,7 +729,7 @@ export default {
     opacity: 0;
     z-index: -5;
   }
-  .tags-from-videos {
+  .tags-from-pdfs {
     .v-slide-group__content {
       justify-content: center;
       .active-chip {

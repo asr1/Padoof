@@ -5,8 +5,8 @@
         <template v-slot:activator="{ on, attrs }">
           <v-icon v-bind="attrs" v-on="on" right>mdi-help-circle-outline</v-icon>
         </template>
-        <span>Add folders with your videos so that app can watch
-          <br> new videos and check deleted ones</span>
+        <span>Add folders with your pdfs so that app can watch
+          <br> new pdfs and check deleted ones</span>
       </v-tooltip>
     </div>
     <v-list dense v-if="folders.length" shaped class="pb-0 pl-2">

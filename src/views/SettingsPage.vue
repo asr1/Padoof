@@ -8,7 +8,7 @@
       <v-tab href="#app-settings" draggable="false">App<v-icon>mdi-application</v-icon></v-tab>
       <v-tab href="#appearance-settings" draggable="false">Appearance<v-icon>mdi-palette</v-icon></v-tab>
       <v-tab href="#meta-settings" draggable="false">Meta<v-icon>mdi-shape</v-icon></v-tab>
-      <v-tab href="#videos-settings" draggable="false">PDFs<v-icon>mdi-video</v-icon></v-tab>
+      <v-tab href="#pdfs-settings" draggable="false">PDFs<v-icon>mdi-pdf</v-icon></v-tab>
       <v-tab href="#privacy-settings" draggable="false">Privacy<v-icon>mdi-key</v-icon></v-tab>
       <v-tab href="#database-settings" draggable="false">Database<v-icon>mdi-database</v-icon></v-tab>
       <v-tab href="#about-settings" draggable="false">About<v-icon>mdi-information-variant</v-icon></v-tab>
@@ -66,7 +66,7 @@
                     <template v-slot:activator="{ on, attrs }">
                       <v-icon v-bind="attrs" v-on="on" left>mdi-help-circle-outline</v-icon>
                     </template>
-                    <span>Disable this option if stuttering occurs at the end of the process of adding new videos</span>
+                    <span>Disable this option if stuttering occurs at the end of the process of adding new pdfs</span>
                   </v-tooltip>
                   <span class="mr-6">Update data after adding new PDFs:</span>
                   <v-switch v-model="updateDataAfterAddingnewPdfs" :label="updateDataAfterAddingnewPdfs?'Yes':'No'" inset class="d-inline mt-0 pt-0" hide-details/>
@@ -93,7 +93,7 @@
                 </template>
                 <!-- TODO system player is here -->
               </v-tooltip>
-              <span class="mr-6">Play video in:</span>
+              <span class="mr-6">Play pdf in:</span>
               <v-switch v-model="isPlayVideoInSystemPlayer" inset class="d-inline mt-0 pt-0" hide-details
                 :label="isPlayVideoInSystemPlayer? 'System player':'App`s player'"/>
             </div>
@@ -105,7 +105,7 @@
                 <div class="d-flex flex-column type-hint">
                   <span>Item filters when typing. Useful when you have a lot of items.</span>
                   <span>How it works (the letters you type and the result): </span>
-                  <span>Exact: <b>favo</b> -> my <b>favo</b>rite video</span>
+                  <span>Exact: <b>favo</b> -> my <b>favo</b>rite pdf</span>
                   <span>Inaccurate: <b>yrid</b> -> m<b>y</b> favo<b>ri</b>te vi<b>d</b>eo</span>
                 </div>
               </v-tooltip>
@@ -122,7 +122,7 @@
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon v-bind="attrs" v-on="on" left>mdi-help-circle-outline</v-icon>
                 </template>
-                <div>Features that do not work or are in the early stages of development. <br> For example: video folder tree, nested meta cards.</div>
+                <div>Features that do not work or are in the early stages of development. <br> For example: pdf folder tree, nested meta cards.</div>
               </v-tooltip>
               <span class="mr-6">Show experimental features:</span>
               <v-switch v-model="showExperimentalFeatures" :label="showExperimentalFeatures?'Yes':'No'" inset class="d-inline mt-0 pt-0" hide-details/>
@@ -174,9 +174,9 @@
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon v-bind="attrs" v-on="on" left>mdi-help-circle-outline</v-icon>
                 </template>
-                <span>If you have moved the video, you can change the path manually</span>
+                <span>If you have moved the pdf, you can change the path manually</span>
               </v-tooltip>
-              <div class="headline"> Update path in videos </div>
+              <div class="headline"> Update path in pdfs </div>
               <v-spacer></v-spacer>
               <v-btn @click="dialogUpdatePath=false" outlined> <v-icon left>mdi-close</v-icon> close </v-btn>
             </v-toolbar>
@@ -186,7 +186,7 @@
                   <v-col cols="6">
                     <v-text-field 
                       v-model="pathForSearch" dense outlined clearable hide-details
-                      placeholder="Write file path here" label="Search videos with path"
+                      placeholder="Write file path here" label="Search pdfs with path"
                       append-outer-icon="mdi-clipboard-arrow-right-outline" 
                       @click:append-outer="copyPathToUpload" />
                     <v-btn @click="searchInVideosPath" :disabled="pathForSearch==''" rounded class="mt-2" 
@@ -194,9 +194,9 @@
                   </v-col>
                   <v-col cols="6">
                     <v-text-field v-model="pathForUpdate" dense outlined clearable hide-details
-                      placeholder="Write file path here" label="Update videos with path"/>
+                      placeholder="Write file path here" label="Update pdfs with path"/>
                     <v-btn @click="updatePath" color="primary" rounded class="mt-2" 
-                      :disabled="videosWithSamePath.length===0"> Update </v-btn>
+                      :disabled="pdfsWithSamePath.length===0"> Update </v-btn>
                   </v-col>
                 </v-row>
               </v-container>
@@ -212,9 +212,9 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(video, i) in videosWithSamePath" :key="i">
-                        <td class="caption" v-html="getOldPath(video.path)"></td>
-                        <td class="caption" v-html="getNewPath(video.path)"></td>
+                      <tr v-for="(pdf, i) in pdfsWithSamePath" :key="i">
+                        <td class="caption" v-html="getOldPath(pdf.path)"></td>
+                        <td class="caption" v-html="getNewPath(pdf.path)"></td>
                       </tr>
                     </tbody>
                   </template>
@@ -352,7 +352,7 @@
       <v-tab-item value="meta-settings">
         <MetaList/>
       </v-tab-item>
-      <v-tab-item value="videos-settings">
+      <v-tab-item value="pdfs-settings">
         <v-card flat max-width="800" style="margin: auto;" class="py-10">
           <MetaAssignedToVideos/>
           
@@ -360,7 +360,7 @@
             <div class="headline text-center py-4"> Video preview</div>
             <div class="d-flex align-center">
               <span class="mr-6">Static:</span>
-              <v-radio-group v-model="videoPreviewStatic" mandatory hide-details row class="mt-0 pt-0">
+              <v-radio-group v-model="pdfPreviewStatic" mandatory hide-details row class="mt-0 pt-0">
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs }">
                     <v-radio v-bind="attrs" v-on="on" label="Thumb" value="thumb"/>
@@ -384,7 +384,7 @@
                       <span> This feature uses your CPU 100% during image generation. 
                       <br> Slow operation of the entire system is possible. Use on powerful processors.</span>
                     </v-alert>
-                    <span>Will be generated automatically when the video page is opened.</span>
+                    <span>Will be generated automatically when the pdf page is opened.</span>
                     <span>The spinner in the status bar is displayed while the generation process is in progress.</span>
                     <span>When all the grids are ready, the cards will update automatically.</span>
                   </div>
@@ -396,7 +396,7 @@
               <v-col cols="12">
                 <div class="d-flex align-center">
                   <span class="mr-6">On hover:</span>
-                  <v-radio-group v-model="videoPreviewHover" mandatory hide-details row class="mt-0 pt-0">
+                  <v-radio-group v-model="pdfPreviewHover" mandatory hide-details row class="mt-0 pt-0">
                     <v-radio label="None" value="none"></v-radio>
                     <v-tooltip top>
                       <template v-slot:activator="{ on, attrs }">
@@ -412,25 +412,25 @@
                           <span> This feature uses your CPU 100% during image generation. 
                           <br> Slow operation of the entire system is possible. Use on powerful processors.</span>
                         </v-alert>
-                        <span>A frame from the video appears.</span>
+                        <span>A frame from the pdf appears.</span>
                         <span>The frame depends on the position of the cursor.</span>
-                        <span>Frames will be generated automatically when the video page is opened.</span>
+                        <span>Frames will be generated automatically when the pdf page is opened.</span>
                         <span>The spinner in the status bar is displayed while the generation process is in progress.</span>
                       </div>
                     </v-tooltip>
                     <v-tooltip top>
                       <template v-slot:activator="{ on, attrs }">
-                        <v-radio v-bind="attrs" v-on="on" label="Video" value="video"/>
+                        <v-radio v-bind="attrs" v-on="on" label="Video" value="pdf"/>
                       </template>
                       <div class="d-flex flex-column align-center">
-                        <v-icon dark>mdi-video</v-icon>
-                        <span>Sections from the video are played. <br> Not all video formats are supported</span>
+                        <v-icon dark>mdi-pdf</v-icon>
+                        <span>Sections from the pdf are played. <br> Not all pdf formats are supported</span>
                       </div>
                     </v-tooltip>
                   </v-radio-group>
                 </div>
               </v-col>
-              <v-col v-if="videoPreviewHover=='video'" cols="12">
+              <v-col v-if="pdfPreviewHover=='pdf'" cols="12">
                 <v-slider v-model="delayVideoPreview" :min="0" :max="5"
                   hide-details :thumb-size="24" thumb-label />
                 <div class="caption text-center">Delay before starting playback (in seconds): {{delayVideoPreview}}</div>
@@ -514,7 +514,7 @@
               This will completely delete all data. Data recovery is possible only from a backup.
               Make sure you create a backup before clearing.
             </v-alert>
-            <ClearData dataName="videos" dataType="data" btnText='Videos'/>
+            <ClearData dataName="pdfs" dataType="data" btnText='Videos'/>
             <ClearData dataName="meta" dataType="data" btnText='meta'/>
             <ClearData dataName="saved filters" dataType="data" btnText='saved filters' />
             <ClearData dataName="markers" dataType="data" btnText='markers' />
@@ -623,7 +623,7 @@ export default {
     pathForSearch: '',
     foundedPath: '',
     pathForUpdate: '',
-    videosWithSamePath: [],
+    pdfsWithSamePath: [],
     isCheckingUpdate: false,
     updateApp: false,
     dialogAddMetaCardsTemplate: false,
@@ -773,13 +773,13 @@ export default {
       get() {return this.$store.state.Settings.checkForUpdatesAtStartup},
       set(value) {this.$store.dispatch('updateSettingsState', {key:'checkForUpdatesAtStartup', value})},
     },
-    videoPreviewStatic: {
-      get() {return this.$store.state.Settings.videoPreviewStatic},
-      set(value) {this.$store.dispatch('updateSettingsState', {key:'videoPreviewStatic', value})},
+    pdfPreviewStatic: {
+      get() {return this.$store.state.Settings.pdfPreviewStatic},
+      set(value) {this.$store.dispatch('updateSettingsState', {key:'pdfPreviewStatic', value})},
     },
-    videoPreviewHover: {
-      get() {return this.$store.state.Settings.videoPreviewHover},
-      set(value) {this.$store.dispatch('updateSettingsState', {key:'videoPreviewHover', value})},
+    pdfPreviewHover: {
+      get() {return this.$store.state.Settings.pdfPreviewHover},
+      set(value) {this.$store.dispatch('updateSettingsState', {key:'pdfPreviewHover', value})},
     },
     zoom: {
       get() {
@@ -802,25 +802,25 @@ export default {
     },
     openLink(link) { shell.openExternal(link) },
     searchInVideosPath() {
-      this.videosWithSamePath = _.cloneDeep( this.$store.getters.videos
+      this.pdfsWithSamePath = _.cloneDeep( this.$store.getters.pdfs
         .filter(v => ( v.path.includes(this.pathForSearch) )).value() )
-      if (this.videosWithSamePath) this.foundedPath = this.pathForSearch
+      if (this.pdfsWithSamePath) this.foundedPath = this.pathForSearch
     },
-    getOldPath(videoPath) {
-      let pathParts = videoPath.split(this.foundedPath)
+    getOldPath(pdfPath) {
+      let pathParts = pdfPath.split(this.foundedPath)
       return pathParts.join(`<b>${this.foundedPath}</b>`)
     },
-    getNewPath(videoPath) {
-      let pathParts = videoPath.split(this.foundedPath)
+    getNewPath(pdfPath) {
+      let pathParts = pdfPath.split(this.foundedPath)
       return pathParts.join(`<b>${this.pathForUpdate}</b>`)
     },
     async updatePath() {
-      await this.$store.getters.videos.filter(video => (
-        video.path.includes(this.foundedPath)
-      )).each(video => {
-        video.path = video.path.split(this.foundedPath).join(this.pathForUpdate)
+      await this.$store.getters.pdfs.filter(pdf => (
+        pdf.path.includes(this.foundedPath)
+      )).each(pdf => {
+        pdf.path = pdf.path.split(this.foundedPath).join(this.pathForUpdate)
       }).write()
-      this.videosWithSamePath = []
+      this.pdfsWithSamePath = []
       setTimeout(() => {this.$store.state.updateFoldersData = Date.now()}, 1000)
     },
     copyPathToUpload () {
@@ -947,17 +947,17 @@ export default {
     zoomOut() { this.zoom = (this.zoom - 0.01) || 0.5 },
     zoomIn() { this.zoom = (this.zoom + 0.01) || 2 },
     findVideoDuplicates() { 
-      let videos = this.$store.getters.videos.value()
+      let pdfs = this.$store.getters.pdfs.value()
       const result = _.flow([
         arr => _.groupBy(arr, 'size'), // group elements by id
         g => _.filter(g, o => o.length > 1), // remove groups that have less than two members
         _.flatten // flatten the results to a single array
-      ])(videos)
+      ])(pdfs)
       
       let tabId = Date.now()
       let tab = { 
-        name: 'Duplicate videos', 
-        link: `/videos/:${tabId}?tabId=${tabId}`,
+        name: 'Duplicate pdfs', 
+        link: `/pdfs/:${tabId}?tabId=${tabId}`,
         id: tabId,
         filters: [{
           by: 'path',

@@ -4,7 +4,7 @@
       <v-card>
         <v-toolbar color="primary">
           <div class="headline">
-            <span>Edit multiple videos info </span>
+            <span>Edit multiple pdfs info </span>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-icon v-on="on">mdi-help-circle-outline</v-icon>
@@ -142,7 +142,7 @@
                 </v-col>
                 <v-col v-if="metaAssignedToVideos.length==0" cols="12" class="d-flex align-center justify-center flex-column">
                   <v-icon size="40" class="my-2">mdi-shape-outline</v-icon>
-                  <div>No meta assigned to the video. Please assign them in the settings.</div>
+                  <div>No meta assigned to the pdf. Please assign them in the settings.</div>
                 </v-col>
               </v-row>
             </v-container>
@@ -293,13 +293,13 @@ export default {
       }
     },
     saveVideoInfo() {
-      let videoIds = this.$store.getters.getSelectedVideos
-      videoIds.map(videoId => {
+      let pdfIds = this.$store.getters.getSelectedVideos
+      pdfIds.map(pdfId => {
         let arr = _.pickBy(this.values, (v,k)=>{return this.edits[k]!==0})
         arr = { ...arr, ...{edit: Date.now()} }
-        let video = this.$store.getters.videos.find({ id: videoId }).value()
+        let pdf = this.$store.getters.pdfs.find({ id: pdfId }).value()
         for (let metaId in arr) {
-          let oldArr = video[metaId] || []
+          let oldArr = pdf[metaId] || []
           if (this.edits[metaId]===2) arr[metaId] = _.union(oldArr, arr[metaId])
           if (this.edits[metaId]===3) arr[metaId] = oldArr.filter(i=>arr[metaId].indexOf(i)===-1)
           // sort
@@ -310,9 +310,9 @@ export default {
             return a.localeCompare(b)
           })
         }
-        this.$store.getters.videos.find({ id: videoId }).assign(arr).write()
+        this.$store.getters.pdfs.find({ id: pdfId }).assign(arr).write()
       })
-      this.$store.commit('updateVideos', videoIds)
+      this.$store.commit('updateVideos', pdfIds)
       this.$store.state.Videos.dialogEditVideoInfo = false
     },
     setVal(value, metaId) { 

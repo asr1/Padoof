@@ -138,7 +138,7 @@
           <v-btn @click="dialogAddMeta=false" outlined><v-icon left>mdi-close</v-icon>Cancel</v-btn>
         </v-toolbar>
         <v-alert type="info" text outlined class="ma-4">
-          Meta are pieces of information that you can add to video and meta cards. <br>
+          Meta are pieces of information that you can add to PDF and meta cards. <br>
           There are two types of meta: complex and simple.
         </v-alert>
         <div class="pb-6 px-4 d-flex justify-space-around">
@@ -280,7 +280,7 @@ export default {
       return this.$store.state.Meta.simpleMetaList.map(i=>{
         let assigned = complexMeta.filter(cm=>cm.settings.metaInCard.find(m=>m.id===i.id))
         let assignedToVideos = this.$store.state.Settings.metaAssignedToVideos.find(m=>m.id===i.id)
-        if (assignedToVideos) assigned.push({settings:{name:'Videos',icon:'video'}})
+        if (assignedToVideos) assigned.push({settings:{name:'Videos',icon:'pdf'}})
         return {...i,...{assigned},...{name:i.settings.name}} 
       }) 
     },
@@ -340,7 +340,7 @@ export default {
           let updMeta = _.find(i.settings.metaInCard, {id:meta.id})
           if (updMeta) updMeta.type = 'complex'
         }).write()
-      // change type from simple to complex in assigned video cards
+      // change type from simple to complex in assigned pdf cards
       if (_.find(this.$store.state.Settings.metaAssignedToVideos, {id: meta.id})) {
         let newAssignedMeta = { id: meta.id, type: 'complex' }
         let newMetaInCard = _.unionBy([newAssignedMeta], this.$store.state.Settings.metaAssignedToVideos, 'id')
@@ -349,7 +349,7 @@ export default {
       this.$store.getters.meta.filter({type:'complex'}).each(m=>{ // rename in filters of all meta
         if (m.state.filters) for (let f of m.state.filters) if (f.by === meta.id) type = 'select'
       }).write()
-      this.$store.getters.settings.get('videoFilters').each(f=>{ // rename in filters of videos
+      this.$store.getters.settings.get('pdfFilters').each(f=>{ // rename in filters of pdfs
         if (f.by === meta.id) if (f.by === meta.id) type = 'select'
       }).write()
       this.$store.getters.savedFilters.each(sfType=>{ // rename in filters of saved filters

@@ -407,8 +407,8 @@ export default {
       if (this.meta.settings.color) this.sort.push(color)
       let rating = { name: 'rating', icon: 'star-outline', tip: 'Rating' }
       if (this.meta.settings.rating) this.sort.push(rating)
-      let videos = { name: 'videos', icon: 'video-outline', tip: 'Number of Videos' }
-      if (_.find(this.metaAssignedToVideos, {id:this.metaId})) this.sort.push(videos)
+      let pdfs = { name: 'pdfs', icon: 'pdf-outline', tip: 'Number of Videos' }
+      if (_.find(this.metaAssignedToVideos, {id:this.metaId})) this.sort.push(pdfs)
       this.sort.push({ name: 'views', icon: 'eye-outline', tip: 'Number of Views' })
       for (const m of this.meta.settings.metaInCard) {
         if (m.type === 'simple') {

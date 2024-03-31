@@ -12,7 +12,7 @@
         <vuescroll>
           <v-card-text style="white-space: pre-wrap;">
             <div>
-              You want to delete video<span v-if="selectedVideosLength>1">s
+              You want to delete pdf<span v-if="selectedVideosLength>1">s
               ({{selectedVideosLength}})</span>:
             </div> {{selectedVideos(true)}}
           </v-card-text>
@@ -23,7 +23,7 @@
 		<v-dialog v-model="$store.state.Videos.dialogErrorPlayVideo" max-width="600">
       <v-card>
         <v-toolbar color="error">
-          <div class="headline"> Error play video </div>
+          <div class="headline"> Error play pdf </div>
           <v-spacer></v-spacer>
           <v-btn @click="$store.state.Videos.dialogErrorPlayVideo=false" outlined> <v-icon left>mdi-close</v-icon> close </v-btn>
         </v-toolbar>
@@ -52,8 +52,8 @@ export default {
   name: 'VideosGridElements',
   components: {
     vuescroll,
-    DialogEditSingleVideoInfo: () => import('@/components/pages/videos/DialogEditSingleVideoInfo.vue'),
-    DialogEditMultipleVideosInfo: () => import('@/components/pages/videos/DialogEditMultipleVideosInfo.vue'),
+    DialogEditSingleVideoInfo: () => import('@/components/pages/pdfs/DialogEditSingleVideoInfo.vue'),
+    DialogEditMultipleVideosInfo: () => import('@/components/pages/pdfs/DialogEditMultipleVideosInfo.vue'),
   },
   mounted() {
     this.$nextTick(function () {
@@ -69,7 +69,7 @@ export default {
     selectedVideosLength() { return this.$store.getters.getSelectedVideos.length },
     selectedVideosPaths() {
       let ids = this.$store.getters.getSelectedVideos
-      let vids = this.$store.getters.videos
+      let vids = this.$store.getters.pdfs
       if (ids.length!==0) {
         let paths = ids.map(i => (vids.find({id:i}).value().path))
         return paths.join(', ')
@@ -80,7 +80,7 @@ export default {
   methods: {
 		initSelection() {
 			this.$store.state.Videos.selection = new Selection({
-        boundaries: ['.videos-selection'],
+        boundaries: ['.pdfs-selection'],
         selectables: ['.select-item'],
       }).on('beforestart', ({store, event}) => {
         const targetEl = event.target.closest('.select-item')
@@ -110,7 +110,7 @@ export default {
     },
 		selectedVideos(list) {
       let ids = this.$store.getters.getSelectedVideos
-      let vids = this.$store.getters.videos
+      let vids = this.$store.getters.pdfs
       if (ids.length!==0) {
         let paths = ids.map(i => {
           let filePath = vids.find({id:i}).value().path
@@ -125,7 +125,7 @@ export default {
     },
 		getTextFromSelectedVideos(textType) {
       let ids = this.$store.getters.getSelectedVideos
-      let vids = this.$store.getters.videos
+      let vids = this.$store.getters.pdfs
       if (ids.length!==0) {
         let all = []
         for (let i=0; i<ids.length; i++) {

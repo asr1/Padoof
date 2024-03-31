@@ -77,10 +77,6 @@ const Meta = {
   },
   actions: {
     addComplexMeta({commit, getters, rootState}, metaObject) {
-      console.log("Adding complex meta", metaObject);
-      console.log(commit);
-      console.log(getters);
-      console.log(rootState);
       let meta = { ...defaultMeta, ...{date: Date.now(),edit: Date.now()}, ...metaObject }
       getters.meta.push(meta).write()
       getters.metaCards.set(meta.id, []).write()
@@ -164,12 +160,12 @@ const Meta = {
       getters.metaCards.each(mc=>{delete mc.meta[id]}).write() // delete from meta cards
     },
     removeMetaFromVideos({getters, commit}, id) {
-      getters.videos.each(video=>{delete video[id]}).write() // remove from all videos
-      getters.settings.get('metaAssignedToVideos').remove({id}).write() // remove from assigned videos
+      getters.pdfs.each(pdf=>{delete pdf[id]}).write() // remove from all pdfs
+      getters.settings.get('metaAssignedToVideos').remove({id}).write() // remove from assigned pdfs
       commit('updateSettingsState', 'metaAssignedToVideos')
-      getters.settings.get('videoFilters').remove({by:id}).write() // remove from video filters
-      commit('updateSettingsState', 'videoFilters')
-      getters.settings.get('videoVisibility').unset(id).write() // remove from videos visiblity 
+      getters.settings.get('pdfFilters').remove({by:id}).write() // remove from pdf filters
+      commit('updateSettingsState', 'pdfFilters')
+      getters.settings.get('pdfVisibility').unset(id).write() // remove from pdfs visiblity 
     },
     removeMetaFromSavedFilters({getters, commit, dispatch}, id) {
       getters.savedFilters.unset(id).write() // delete saved filters from database
@@ -191,11 +187,11 @@ const Meta = {
           if (index > -1) mc.meta[metaId].splice(index, 1)
         }
       }).write()
-      getters.videos.each(video => { // remove from videos meta array
-        let arr = video[metaId]
+      getters.pdfs.each(pdf => { // remove from pdfs meta array
+        let arr = pdf[metaId]
         if (arr && arr.length) {
-          let index = video[metaId].indexOf(id)
-          if (index > -1) video[metaId].splice(index, 1)
+          let index = pdf[metaId].indexOf(id)
+          if (index > -1) pdf[metaId].splice(index, 1)
         }
       }).write()
       getters.meta.filter({type:'complex'}).each(m=>{ // remove from filters of all meta
@@ -207,7 +203,7 @@ const Meta = {
           }
         }
       }).write()
-      getters.settings.get('videoFilters').each(f=>{ // remove from filters of videos
+      getters.settings.get('pdfFilters').each(f=>{ // remove from filters of pdfs
         if (f.by === metaId) {
           let index = f.val.indexOf(id)
           if (index > -1) f.val.splice(index, 1)
@@ -300,7 +296,7 @@ const Meta = {
 
         if (type === 'number' || type === 'date') {
           if (by === 'date') val = new Date(val).getTime()
-          if (by=='videos'||by=='views') mc = mc.filter(c => compare(cond, val, c[by]))
+          if (by=='pdfs'||by=='views') mc = mc.filter(c => compare(cond, val, c[by]))
           else mc = mc.filter(c => compare(cond, val, c.meta[by]))
           continue
         }
@@ -359,7 +355,7 @@ const Meta = {
       let sortBy = state.sortBy || 'name'
       let sortDirection = state.sortDirection || 'asc'
       if (sortBy == 'name') mc = mc.orderBy(i=>i.meta.name.toLowerCase(), [sortDirection])
-      else if (['date','edit','videos','views'].includes(sortBy)) mc = mc.orderBy(i=>i[sortBy]||false, [sortDirection])
+      else if (['date','edit','pdfs','views'].includes(sortBy)) mc = mc.orderBy(i=>i[sortBy]||false, [sortDirection])
       else {
         let meta = getters.meta.find({id:sortBy}).value()
         let defaultValue = false

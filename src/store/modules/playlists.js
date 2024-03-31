@@ -11,7 +11,7 @@ import router from '@/router'
 let defaultPlaylist = {
   id: "123123123",
   name: "Watch later",
-  videos: [],
+  pdfs: [],
   date: Date.now(),
   edit: Date.now(),
   favorite: false,

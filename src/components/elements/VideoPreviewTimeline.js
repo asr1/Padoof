@@ -5,7 +5,7 @@ ffmpeg.setFfmpegPath(pathToFfmpeg)
 
 class VideoPreviewTimeline {
   constructor(opts) {
-    this.video = opts.video
+    this.pdf = opts.pdf
     this.pathToUserData = opts.pathToUserData
   }
 
@@ -13,7 +13,7 @@ class VideoPreviewTimeline {
     return new Promise((resolve, reject) => {
       ffmpeg()
         .addOption('-ss', timestamp)
-        .addOption('-i', this.video.path)
+        .addOption('-i', this.pdf.path)
         .addOption('-frames:v', '1')
         .addOption('-vf',`scale=-1:180`)
         .save(output)
@@ -28,12 +28,12 @@ class VideoPreviewTimeline {
 
   async generate () {
     let parts = [5, 15, 25, 35, 45, 55, 65, 75, 85, 95]
-    let timestamps = parts.map(i=>(new Date(Math.floor(this.video.duration*(i/100)*1000)).toISOString().substr(11, 8))) 
+    let timestamps = parts.map(i=>(new Date(Math.floor(this.pdf.duration*(i/100)*1000)).toISOString().substr(11, 8))) 
     let framePromises = []
     
     const timelinesPath = path.join(this.pathToUserData, `/media/timelines/`)
     for (let i = 0; i < timestamps.length; i++) {
-      let output = path.join(timelinesPath, `${this.video.id}_${parts[i]}.jpg`)
+      let output = path.join(timelinesPath, `${this.pdf.id}_${parts[i]}.jpg`)
       framePromises.push(this.createFrame(timestamps[i], output))
     }
 

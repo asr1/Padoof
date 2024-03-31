@@ -5,7 +5,7 @@ const HomeAppbar = () => import('../components/pages/home/HomeAppbar.vue')
 const Files = () => import('../views/FilesPage.vue')
 const FilesAppbar = () => import('../components/pages/files/FilesAppbar.vue')
 const Videos = () => import('../views/VideosPage.vue')
-const VideosAppbar = () => import('../components/pages/videos/VideosAppbar.vue')
+const VideosAppbar = () => import('../components/pages/pdfs/VideosAppbar.vue')
 const Playlists = () => import('../views/PlaylistsPage.vue')
 const PlaylistsAppbar = () => import('../components/pages/playlists/PlaylistsAppbar.vue')
 const Settings = () => import('../views/SettingsPage.vue')
@@ -39,7 +39,7 @@ const routes = [
     }
   },
   {
-    path: '/videos/:id?',
+    path: '/pdfs/:id?',
     name: 'PDFsaaa',
     components: {
       default: Videos,

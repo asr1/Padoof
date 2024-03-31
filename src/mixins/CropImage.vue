@@ -98,7 +98,7 @@ export default {
       }
     },
     getImagePath(imgFolder, imgType, id) {
-      if (imgFolder==='thumb') return path.join(this.pathToUserData, `/media/thumbs/${this.video.id}.jpg`)
+      if (imgFolder==='thumb') return path.join(this.pathToUserData, `/media/thumbs/${this.pdf.id}.jpg`)
       if (imgFolder.includes('meta')) return path.join(this.pathToUserData,'/media/',`${imgFolder}/`,`${id}_${imgType}.jpg`)
       return path.join(this.pathToUserData, `/media/${imgFolder}s/${this[imgFolder].id}_${imgType}.jpg`)
     },

@@ -62,16 +62,16 @@
               </v-col>
               <v-col cols="12" class="pt-0">
                 <div class="overline text-center mb-4">Videos</div>
-                <draggable v-model="videosList" v-bind="dragOptions" @start="drag=true" @end="drag=false">
+                <draggable v-model="pdfsList" v-bind="dragOptions" @start="drag=true" @end="drag=false">
                   <transition-group type="transition" :name="!drag ? 'flip-tabs' : null" class="thumbs-grid">
-                    <v-card v-for="(video, i) in videosList" :key="video.id" >
+                    <v-card v-for="(pdf, i) in pdfsList" :key="pdf.id" >
                       <v-badge class="position" color="primary" :content="i+1"/>
-                      <v-btn @mouseup="remove(video.id)" color="#ff2323" class="delete"
+                      <v-btn @mouseup="remove(pdf.id)" color="#ff2323" class="delete"
                          dark fab x-small width="24" height="24" title="Remove">
                         <v-icon>mdi-delete</v-icon>
                       </v-btn>
-                      <v-img :src="getImgUrl(video.id)" :aspect-ratio="16/9"/>
-                      <v-card-title class="py-1 px-2">{{getFileName(video.path)}}
+                      <v-img :src="getImgUrl(pdf.id)" :aspect-ratio="16/9"/>
+                      <v-card-title class="py-1 px-2">{{getFileName(pdf.path)}}
                       </v-card-title>
                     </v-card>
                   </transition-group>
@@ -103,7 +103,7 @@ export default {
     this.$nextTick(function () {
       this.favorite = this.playlist.favorite
       this.playlistName = this.playlist.name
-      this.videosList = _.cloneDeep(this.videos)
+      this.pdfsList = _.cloneDeep(this.pdfs)
     })
   },
   updated() {
@@ -121,7 +121,7 @@ export default {
       disabled: false,
       ghostClass: "ghost"
     },
-    videosList: [],
+    pdfsList: [],
   }),
   computed: {
     playlist() {
@@ -147,11 +147,11 @@ export default {
       let date = new Date(this.playlist.edit)
       return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
     },
-    videos() {
-      let videos = this.$store.getters.videos.filter(v=>(this.playlist.videos.includes(v.id))).value()
-      return _.sortBy(videos, (video) => {
-        let index = _.indexOf(this.playlist.videos, video.id)
-        return (index === -1) ? this.playlist.videos.length : index;
+    pdfs() {
+      let pdfs = this.$store.getters.pdfs.filter(v=>(this.playlist.pdfs.includes(v.id))).value()
+      return _.sortBy(pdfs, (pdf) => {
+        let index = _.indexOf(this.playlist.pdfs, pdf.id)
+        return (index === -1) ? this.playlist.pdfs.length : index;
       })
     },
     isPlaylistWatchLater() {
@@ -194,7 +194,7 @@ export default {
           name: this.playlistName,
           favorite: this.favorite,
           edit: Date.now(),
-          videos: _.cloneDeep(this.videosList.map(video=>(video.id))),
+          pdfs: _.cloneDeep(this.pdfsList.map(pdf=>(pdf.id))),
         }).write()
 
       this.$store.commit('addLog', {type:'info',text:`📃 Playlist "${this.playlistName}" has been edited ✏️`})
@@ -206,8 +206,8 @@ export default {
       let playlistName = this.playlist.name
       clipboard.writeText(playlistName)
     },
-    getImgUrl(videoId) {
-      let imgPath = path.join(this.pathToUserData, `/media/thumbs/${videoId}.jpg`)
+    getImgUrl(pdfId) {
+      let imgPath = path.join(this.pathToUserData, `/media/thumbs/${pdfId}.jpg`)
       return 'file://' + this.checkImageExist(imgPath)
     },
     checkImageExist(imgPath) {
@@ -217,11 +217,11 @@ export default {
         return path.join(__static, '/img/default.png')
       }
     },
-    getFileName(videoPath) {
-      return path.parse(videoPath).name
+    getFileName(pdfPath) {
+      return path.parse(pdfPath).name
     },
-    remove(videoId) {
-      this.videosList = _.filter(this.videosList, video=>(video.id!==videoId))
+    remove(pdfId) {
+      this.pdfsList = _.filter(this.pdfsList, pdf=>(pdf.id!==pdfId))
     },
   },
 }

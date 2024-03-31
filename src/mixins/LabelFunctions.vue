@@ -2,11 +2,11 @@
 export default {
   // TODO check functions and remove this file
   methods: {
-    videoLink(videoPath) {
-      return `/video/:${this.getVideoId(videoPath)}?tabId=default`
+    pdfLink(pdfPath) {
+      return `/pdf/:${this.getVideoId(pdfPath)}?tabId=default`
     },
-    getVideoId(videoPath) {
-      return this.$store.getters.videos.find({path: videoPath}).value().id
+    getVideoId(pdfPath) {
+      return this.$store.getters.pdfs.find({path: pdfPath}).value().id
     },
     creatorLink(itemName) {
       return `/creator/:${this.getCreatorId(itemName)}?tabId=default`
