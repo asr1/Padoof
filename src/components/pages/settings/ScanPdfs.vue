@@ -487,66 +487,36 @@ export default {
         const convert = pdf2pic.fromPath(pathToFile, options);
         const pageToConvertAsImage = 1;
 
-  // Need this to not be named ".1" at the end. Could use fs to rename it. Is there a way to do it natively?
+        // Need this to not be named ".1" at the end. Could use fs to rename it. Is there a way to do it directly within pdf2pic?
         convert(pageToConvertAsImage, { responseType: "image" })
           .then((resolve) => {
                     console.log("Page 1 is now converted as image");
 
-
-// This works for just one file
-                  //pdf2pic adds a .x to the file name, where x is the page number. Unacceptable.
-                  // const oldpath = outputPathThumbs + this.fileInfo.id + '.1.jpg';
-                  // console.log("old ", oldpath);
-                  // const newpath = outputPathThumbs + this.fileInfo.id + '.jpg';
-                  // console.log(newpath);
-                  // fs.rename(oldpath, newpath, () => {
-                  //   console.log("Renamed thumbnail to proper name");
-                  // })
-
-
-
-            // Try this:
-
-
-                // Read directory
+                // It's asinine that we have to do such a clunky workaround just to get the pdf file to be named what we specified.
                 fs.readdir(outputPathThumbs, (err, files) => {
                   for (const file of files) {
                     const regex = /^(.*)\.1\.jpg$/g;
-                    const match = Array.from(file.matchAll(regex), m=> m[1]);
-                    console.log(match);
-                    if (match) {
-                      // Add more logic to rename file
-                      fs.rename(file, match[0], (err) => {
-                        console.log('Renaming', file, "to", match[0])
-                        if (err) throw err
-                      })
+                    const match = [...file.matchAll(regex)];
+                    console.log("");
+                    console.log("file", file);
+                    if(match.length) {
+                      console.log(match);
+                        // Add more logic to rename file. 
+                        // Equally asinine that fs doesn't work without reminding it of the path when it's ACTIVELY LISTING FILES
+                        const oldName = path.join(outputPathThumbs, file);
+                        const newName = path.join(outputPathThumbs, match[0][1] + '.jpg')
+
+                        fs.rename(oldName, newName, (err) => {
+                          console.log('Renaming', file, "to", match[0][1] + '.jpg')
+                          if (err) throw err
+                        })
                     }
+
                   }
                 })
 
             return resolve;
           });
-
-
-
-
-
-      // TODO create thumb from PDF
-        // ffmpeg()
-        //   .input(pathToFile)
-        //   .screenshots({
-        //     count: 1, 
-        //     filename: `${this.fileInfo.id}.jpg`,
-        //     folder: outputPathThumbs,
-        //     size: '?x320' 
-        //   })
-        //   .on('end', () => {
-        //     // console.log(`thumb created: ${outputPathThumbs + this.fileInfo.id}.jpg`)
-        //     resolve(pdfMetadata)
-        //   })
-        //   .on('error', (err) => {
-        //     reject(err.message)
-        //   })
 
         resolve(pdfMetadata);
       })
