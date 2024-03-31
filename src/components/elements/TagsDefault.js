@@ -2,19 +2,16 @@ const Tags = [
   {
     "name": "Cyberpunk",
     "synonyms": [
-      ""
     ]
   },
   {
     "name": "D20",
     "synonyms": [
-      ""
     ]
   },
   {
     "name": "Fantasy",
     "synonyms": [
-      ""
     ]
   },
   {
@@ -44,7 +41,12 @@ const Tags = [
   {
     "name": "Sci-Fi",
     "synonyms": [
-      "Supers"
+    ]
+  },
+  {
+    "name": "Solo",
+    "synonyms": [
+      "Journaling"
     ]
   },
   {

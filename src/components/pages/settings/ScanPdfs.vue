@@ -497,17 +497,13 @@ export default {
                   for (const file of files) {
                     const regex = /^(.*)\.1\.jpg$/g;
                     const match = [...file.matchAll(regex)];
-                    console.log("");
-                    console.log("file", file);
                     if(match.length) {
-                      console.log(match);
                         // Add more logic to rename file. 
                         // Equally asinine that fs doesn't work without reminding it of the path when it's ACTIVELY LISTING FILES
                         const oldName = path.join(outputPathThumbs, file);
                         const newName = path.join(outputPathThumbs, match[0][1] + '.jpg')
 
                         fs.rename(oldName, newName, (err) => {
-                          console.log('Renaming', file, "to", match[0][1] + '.jpg')
                           if (err) throw err
                         })
                     }
