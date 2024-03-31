@@ -31,21 +31,14 @@
         > <v-icon :color="isFavorite===false?'grey':'pink'">mdi-heart-outline</v-icon>
         </v-btn>
         
-        <div v-if="!isDurationHidden" class="duration">{{calcDur(pdf.duration)}}</div>
+        <div v-if="!isDurationHidden" class="duration">{{pdf.duration}} pages</div>
 
-        <div v-if="!isQualityLabelHidden" label outlined class="resolution">
-          <div class="text text-no-wrap" :class="calcHeightTitle(pdf.resolution).toLowerCase()">
-            {{calcHeightTitle(pdf.resolution)}}
-          </div>
-          <div class="value">
-            <span>{{calcHeightValue(pdf.resolution)}}</span>
-          </div>
-        </div>
         <div class="preview"
           :style="`animation-delay: ${delayVideoPreview}.7s`">
           <pdf ref="pdf" autoplay muted loop />
         </div>
 
+<!-- TODO hover behavior -->
         <div v-if="isVideoHovered && pdfPreviewHover=='timeline'" class="timeline">
           <img :src="getTimelineImgUrl(timeline[hoveredSection])">
           <div class="sections">
@@ -63,8 +56,8 @@
           <span class="value">Path</span>
         </div>
         <div label outlined class="prop">
-          <v-icon>mdi-monitor-screenshot</v-icon>
-          {{pdf.resolution}}
+          <v-icon>mdi-book-open-page-variant-outline</v-icon>
+          {{pdf.duration}} pages
         </div>
         <div label outlined class="prop">
           <v-icon>mdi-file-pdf</v-icon>
@@ -134,7 +127,7 @@
         <div class="wrapper" ref="storyWrapper" :class="{'hovered':isVideoHovered}">
           <div v-for="(p, i) in timeline" :key="i" class="frame">
             <img :src="getTimelineImgUrl(p)"/>
-            <div v-if="!isDurationHidden" class="duration">{{calcDur(p/100*pdf.duration)}}</div>
+            <div v-if="!isDurationHidden" class="duration">{{pdf.duration}} pages</div>
           </div>
         </div>
       </div>

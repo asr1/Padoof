@@ -449,7 +449,7 @@ export default {
 console.log("Getting duration");
         this.fileInfo.meta = metadata
         const myFile = fs.readFileSync(pathToFile);
-        PDFDocument.load(myFile).then( (res)=>{
+        PDFDocument.load(myFile, {ignoreEncryption: true}).then( (res)=>{
           const num = res.getPages().length;
           this.fileInfo.duration = num;
           console.log(num);
