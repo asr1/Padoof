@@ -181,7 +181,7 @@ export default {
       return new Promise(async resolve => {
         const metaId = this.settings.publishers.meta
         const synonyms = this.getMeta(metaId).settings.synonyms
-        for (const w of publishers) {
+        for (const w of Publishers) {
           let card = {
             id: shortid.generate(),
             metaId,
