@@ -6,7 +6,6 @@ Remove scrape
 
 Remove ffmpeg
 
-Generate thumbnail from PDF cover
 
 Set duration to page count
 
@@ -16,3 +15,4 @@ Total size on disk, total number fo PDFs both showing as 0
 
 
 One video hover it should show a pdf icon instead of a play triangle, and on click should open the pdf in either a pdf reader or a system one.
+
