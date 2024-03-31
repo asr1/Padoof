@@ -43,17 +43,21 @@ export default {
     async createAllMeta() {
         let pId = shortid.generate()
         let tagsId = shortid.generate()
+        const publishersId = shortid.generate();
 
         await this.createCreators(pId, tagsId)
         await this.createTags(tagsId)
+        await this.createPublishers(publishersId);
      
         this.$store.getters.settings.get('metaAssignedToVideos')
           .push({ id: pId, type: 'complex' })
           .push({ id: tagsId, type: 'complex' })
+          .push({ id: publishersId, type: 'complex' })
           .write()
         
         this.createMetaFolder(pId)
         this.createMetaFolder(tagsId)
+        this.createMetaFolder(publishersId)
       this.$store.state.Settings.metaAssignedToVideos = this.$store.getters.settings.get('metaAssignedToVideos').value()
 
       ipcRenderer.invoke('getAppVersion').then((result) => {
@@ -164,6 +168,7 @@ export default {
       })
     },
     async createTags(tagsId) {
+      console.log("Creating tags");
       return new Promise(async resolve => {
         //-complex meta
         let complexMetaTags = {
@@ -202,17 +207,17 @@ export default {
         resolve()
       })
     },
-    async createWebsites(websitesId) {
+    async createPublishers(publishersId) {
       return new Promise(async resolve => {
         let simpleMetaUrlId = shortid.generate() 
 
         //-complex meta
-        let complexMetaWebsites = {
-          id: websitesId,
+        let complexMetaPublishers = {
+          id: publishersId,
           type: 'complex',
           settings: { 
-            name: 'Websites',
-            nameSingular: 'Website',
+            name: 'Publishers',
+            nameSingular: 'Publisher',
             hint: 'Studios',
             icon: 'web',
             hidden: false,
@@ -244,7 +249,7 @@ export default {
             },
           },
         }
-        this.$store.dispatch('addComplexMeta', complexMetaWebsites)
+        this.$store.dispatch('addComplexMeta', complexMetaPublishers)
 
         //-simple meta
         let simpleMetaUrl = {

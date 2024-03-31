@@ -7,7 +7,7 @@
           <template v-slot:activator="{ on }">
             <v-icon v-on="on" right>mdi-help-circle-outline</v-icon>
           </template>
-          <span>You can filter videos by selected folders. <br>
+          <span>You can filter PDFs by selected folders. <br>
             An experimental feature to be improved.</span>
         </v-tooltip>
         <v-spacer></v-spacer>

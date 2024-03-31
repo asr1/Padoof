@@ -77,6 +77,10 @@ const Meta = {
   },
   actions: {
     addComplexMeta({commit, getters, rootState}, metaObject) {
+      console.log("Adding complex meta", metaObject);
+      console.log(commit);
+      console.log(getters);
+      console.log(rootState);
       let meta = { ...defaultMeta, ...{date: Date.now(),edit: Date.now()}, ...metaObject }
       getters.meta.push(meta).write()
       getters.metaCards.set(meta.id, []).write()
@@ -118,6 +122,7 @@ const Meta = {
       commit('addLog', {type:'info', color:'red', text:`Deleted simple meta "${name}"`})
     },
     addMetaCard({commit, getters}, newMetaCard) {
+      console.log("Adding meta card");
       let metaCard = { ...defaultMetaCard, ...{date: Date.now(),edit: Date.now()},...newMetaCard }
       getters.metaCards.push(metaCard).write()
       const metaName = getters.meta.find({id:metaCard.metaId}).value().settings.nameSingular.toLowerCase()

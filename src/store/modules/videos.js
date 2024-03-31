@@ -160,7 +160,7 @@ const Videos = {
           })
         }
       }
-      // sort videos
+      // sort PDFs
       let sortBy = rootState.Settings.videoSortBy || 'name'
       let sortDirection = rootState.Settings.videoSortDirection || 'asc'
       if (sortBy === 'name') videos = videos.orderBy(i=>path.basename(i.path), [sortDirection])

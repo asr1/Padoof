@@ -242,7 +242,7 @@ export default {
         contextMenu.push({ name: `Edit Images of ${this.meta.settings.nameSingular}`, type: 'item', icon: 'image-edit', function: ()=>{this.$store.state.Meta.dialogEditMetaCardImages=true}, disabled: !this.isSelectedSingleMetaCard })
         contextMenu.push({ type: 'divider' })
         if (this.isMetaAssignedToVideo) contextMenu.push({ name: `Open ${this.meta.settings.nameSingular} in New Tab`, type: 'item', icon: 'tab-plus', function: ()=>{this.addNewTabMetaCard()}, disabled: !this.isSelectedSingleMetaCard },
-          { name: `Filter Videos by ${this.meta.settings.nameSingular}`, type: 'item', icon: 'filter', function: ()=>{this.filterVideosBy()} },{ type: 'divider' })
+          { name: `Filter PDFs by ${this.meta.settings.nameSingular}`, type: 'item', icon: 'filter', function: ()=>{this.filterVideosBy()} },{ type: 'divider' })
         contextMenu.push({ name: `Delete ${this.meta.settings.nameSingular}`, type: 'item', icon: 'delete', color: 'red', function: ()=>{this.$store.state.Meta.dialogDeleteMetaCard=true} })
         this.$store.state.contextMenuContent = contextMenu
         this.$store.state.contextMenu = true

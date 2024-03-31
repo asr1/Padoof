@@ -504,7 +504,7 @@ export default {
         if (!fs.existsSync(outputPathThumbs)) fs.mkdirSync(outputPathThumbs)
         // creating the thumb of the video
         fs.appendFile(`${outputPathThumbs}\\${this.fileInfo.id}.jpg`, '1', function(err) {
-          console.log("Error 5");
+         if(err) console.log("Error 5");
           console.log(err);
           if(err) throw err;
         })

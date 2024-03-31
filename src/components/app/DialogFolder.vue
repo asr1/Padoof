@@ -32,11 +32,11 @@
           <v-icon left>mdi-format-list-numbered</v-icon> Toggle full list
         </v-btn>
         <v-alert dense text color="blue" class="mb-0 ml-6">
-          Number of videos new: {{folder.newFiles.length}}
+          Number of PDFs new: {{folder.newFiles.length}}
         </v-alert>
         <v-spacer></v-spacer>
         <v-btn @click="addnewPdfs" color="green" dark>
-          <v-icon left>mdi-plus</v-icon> Add new videos
+          <v-icon left>mdi-plus</v-icon> Add new PDFs
         </v-btn>
       </v-card-actions>
       <vuescroll v-if="listNewFiles">

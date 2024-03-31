@@ -9,13 +9,13 @@
             <h2 class="my-8">Welcome to Padoof application!</h2>
         
             <div v-if="metaNumber==0" cols="12">
-              <div class="mb-4"> First, create a meta for your PDFss. 
+              <div class="mb-4"> First, create a meta for your PDFs. 
                 You can view and customize the meta in the settings </div>
               <v-btn @click="createAllMeta=true" :disabled="isAllMetaCreated" class="mb-4" color="primary" x-large rounded block>
                 <v-icon left>mdi-auto-fix</v-icon> Create all meta </v-btn>
             </div>
 
-            <div class="mb-4 mt-10">Then add PDFs from your computer by selecting folders. You can also drag and drop videos</div>
+            <div class="mb-4 mt-10">Then add PDFs from your computer by selecting folders. You can also drag and drop files</div>
             <v-btn @click="$store.state.Settings.dialogScanPdfs=true" color="primary" class="mb-6" x-large rounded block>
               <v-icon left>mdi-plus</v-icon> Add PDFs </v-btn>
           </v-col>
@@ -270,7 +270,7 @@ export default {
     customization: false,
     series: [],
     chartOptions: {},
-    dialogAddMetaCardsTemplate: false,
+    dialogAddMetaCardsTemplate: true,
   }),
   computed: {
     settings() { return this.$store.getters.settings.value() },

@@ -7,7 +7,7 @@
           <v-icon>mdi-filter</v-icon> </v-badge>
         </v-btn>
       </template>
-      <span>Filter videos</span>
+      <span>Filter PDFs</span>
     </v-tooltip>
     
     <v-menu offset-y nudge-bottom="10" :close-on-content-click="false">
@@ -67,7 +67,7 @@
               </v-btn>
             </v-badge>
           </template>
-          <span>Sort Videos</span>
+          <span>Sort PDFs</span>
         </v-tooltip>
       </template>
         <v-card class="d-flex">

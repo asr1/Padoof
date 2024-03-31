@@ -3,7 +3,7 @@
     <v-dialog v-model="$store.state.Videos.dialogFilterVideos" scrollable width="1000">
       <v-card>
         <v-toolbar color="primary">
-          <span class="headline">Filter Videos</span>
+          <span class="headline">Filter PDFs</span>
           <v-spacer></v-spacer>
           <v-btn @click="$store.state.SavedFilters.dialogSavedFilters=true" class="mx-4" outlined>
             <v-icon left>mdi-content-save</v-icon> Save / load filters </v-btn>

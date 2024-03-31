@@ -12,3 +12,9 @@ Generate thumbnail from PDF cover
 
 Set duration to page count
 
+PDFs should have companies in their meta.
+
+Default tags not appearings
+  probably the difference between create and create adult! Take a look!
+
+\# Add publisher to default parse tags (search for metaAssignedToVideos)

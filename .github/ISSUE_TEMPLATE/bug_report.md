@@ -3,7 +3,7 @@ name: Bug report
 about: Create a report to help me improve the app
 title: ''
 labels: bug
-assignees: fupdec
+assignees: asr1
 
 ---
 

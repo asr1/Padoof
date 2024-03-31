@@ -501,7 +501,7 @@ export default {
           { name: `Replace Meta from Clipboard`, type: 'menu', icon: 'reload-alert', menu: getMetaClipboard('replace')},
           { name: `Clear Meta`, type: 'menu', icon: 'close-circle-outline', color: 'error', menu: getMetaClipboard('clear')},
           { type: 'divider' },
-          { name: `Filter Videos by`, type: 'menu', icon: 'filter', disabled: !this.isSelectedSingleVideo, menu: getFilterMeta()},
+          { name: `Filter PDFs by`, type: 'menu', icon: 'filter', disabled: !this.isSelectedSingleVideo, menu: getFilterMeta()},
           { name: `Parse Metadata`, type: 'item', icon: 'text-box-search', function: ()=>{this.parseMetadata()}},
           { name: `Update File Information`, type: 'item', icon: 'information-variant', function: ()=>{this.updateFileInfo()}},
           { type: 'divider' },

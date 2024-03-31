@@ -16,13 +16,13 @@
           </v-list-item>
           <v-list-item link @mouseup="$store.state.Settings.dialogScanPdfs=true">
             <v-list-item-title>
-              <v-icon left size="18">mdi-video-plus</v-icon> Add New Videos...
+              <v-icon left size="18">mdi-book-plus</v-icon> Add New PDFs...
             </v-list-item-title>
           </v-list-item>
           <v-divider class="ma-1"></v-divider>
           <v-list-item link @mouseup="isPlayVideoInSystemPlayer=!isPlayVideoInSystemPlayer">
             <v-list-item-title>
-              <v-icon left size="18">mdi-television-play</v-icon> Play Video in System Player
+              <v-icon left size="18">mdi-television-play</v-icon> Read PDF in System Player (TODO)
             </v-list-item-title>
             <v-icon size="20" class="ml-6" :color="isPlayVideoInSystemPlayer?'':'rgba(0,0,0,0)'">mdi-check</v-icon>
           </v-list-item>

@@ -3,12 +3,12 @@
     <div class="d-flex">
       <div>
         <div>Padoof v0.0.1-beta</div>
-        <div class="text--secondary">by fupdec</div>
+        <div class="text--secondary">by Alex Rinehart</div>
       </div>
       <v-spacer></v-spacer>
       <div class="text-center d-flex flex-column">
         <img :src="logoPath" alt="Padoof" width="82" height="82">
-        <span>2022</span>
+        <span>2024</span>
       </div>
     </div>
     <div>Links</div>
@@ -20,7 +20,7 @@
     </div>
     <v-divider class="my-4"></v-divider>
     <div class="d-flex flex-column">
-      <div>Thanks to the people who worked on these wonderful libraries:</div>
+      <div>Thanks to fupdec, who made MedicaChip, and all of the people who worked on these wonderful libraries:</div>
       <div class="d-flex flex-wrap">
         <span @click="openLink('https://github.com/electron')" class="link">Electron</span>
         <span @click="openLink('https://github.com/vuejs/vue')" class="link">vue</span>
@@ -53,11 +53,6 @@
         <span @click="openLink('https://github.com/mirari/v-viewer')" class="link">v-viewer</span>
       </div>
       <div class="mt-4">Thanks to these wonderful artists for the images:</div>
-      <div class="d-flex flex-column flex-wrap">
-        <span @click="openLink('https://www.vecteezy.com/members/dollyheidi')" class="link">Contour Topography Background by dollyheidi from Vecteezy</span>
-        <span @click="openLink('https://www.flaticon.com/authors/payungkead')" class="link">Image Icon made by Payungkead from Flaticon</span>
-      </div>
-      <div @click="openLink('https://aardvark-hosting.nl/')" class="link mt-4">Thanks to Aardvark Hosting</div>
     </div>
   </v-card>
 </template>

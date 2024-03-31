@@ -165,9 +165,9 @@
                         <template v-slot:activator="{ on, attrs }">
                         <v-icon v-bind="attrs" v-on="on" left small>mdi-help-circle-outline</v-icon>
                       </template>
-                      <span>Click on chip for filter videos</span>
+                      <span>Click on chip for filter PDFs</span>
                     </v-tooltip>
-                    <span>Quick filters for videos</span>
+                    <span>Quick filters for PDFs</span>
                   </v-col>
                   <v-col v-for="(qf,i) in quickFilters" :key="qf.id+i" cols="12" class="text-center py-0">
                     <v-chip-group :value="qf.value" @change="setCardFilter($event, qf.id)" active-class="active-chip" multiple column>

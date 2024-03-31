@@ -351,7 +351,7 @@ export default {
       setTimeout(() => {
         this.$store.dispatch('updateDataFromVideos')
         this.$store.commit('removeBackgroundProcess', bpId)
-        this.$store.commit('addLog', {type:'info',text:`Data from videos updated`})
+        this.$store.commit('addLog', {type:'info',text:`Data from PDFs updated`})
       }, 1000)
     },
     lock() {

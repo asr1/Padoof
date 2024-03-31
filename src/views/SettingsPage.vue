@@ -18,7 +18,7 @@
       <v-tab-item value="app-settings">
         <v-card flat max-width="800" style="margin: auto;" class="py-10">
           <v-btn @click="$store.state.Settings.dialogScanPdfs=true" class="mb-10" block color="primary" x-large rounded>
-            <v-icon large class="mr-4">mdi-video-plus</v-icon> Add new videos </v-btn>
+            <v-icon large class="mr-4">mdi-book-plus</v-icon> Add new PDFs </v-btn>
 
           <WatchedFolders/>
           
@@ -132,7 +132,7 @@
                 <template v-slot:activator="{ on, attrs }">
                   <v-icon v-bind="attrs" v-on="on" left>mdi-help-circle-outline</v-icon>
                 </template>
-                <div>Each time a video or meta page is opened, one view is added</div>
+                <div>Each time a PDF or meta page is opened, one view is added</div>
               </v-tooltip>
               <span class="mr-6">Count number of views:</span>
               <v-switch v-model="countNumberOfViews" :label="countNumberOfViews?'Yes':'No'" inset class="d-inline mt-0 pt-0" hide-details/>
@@ -151,7 +151,7 @@
         <v-dialog v-model="dialogUpdateNumberOfVideos" width="600" scrollable persistent>
           <v-card>
             <v-toolbar color="primary">
-              <div class="headline"> Updating data from video </div>
+              <div class="headline"> Updating data from PDF </div>
               <v-spacer></v-spacer>
               <v-btn @click="dialogUpdateNumberOfVideos=false" :disabled="updatingNumberOfVideos" outlined> <v-icon left>mdi-close</v-icon> Close </v-btn>
             </v-toolbar>
@@ -524,9 +524,6 @@
       <v-tab-item value="about-settings">
         <v-card flat max-width="800" style="margin: auto;" class="py-10">
           <v-card outlined class="pa-4 mb-10">
-            <Registration />
-          </v-card>
-          <v-card outlined class="pa-4 mb-10">
             <div class="headline text-center pb-4">Updates</div>
             <v-row>
               <v-col cols="12" sm="6">
@@ -570,7 +567,6 @@ import MetaList from '@/components/pages/meta/MetaList.vue'
 import MetaAssignedToVideos from '@/components/pages/meta/MetaAssignedToVideos.vue'
 import ThemeColors from '@/components/pages/settings/ThemeColors.vue'
 import ClearData from '@/components/pages/settings/ClearData.vue'
-import Registration from '@/components/pages/settings/Registration.vue'
 import vuescroll from 'vuescroll'
 import { async } from 'node-stream-zip'
 
@@ -585,7 +581,6 @@ export default {
     ManageBackups: () => import('@/components/pages/settings/ManageBackups.vue'),
     ClearData,
     vuescroll,
-    Registration,
     About: () => import('@/components/app/About.vue'),
     DialogAddMetaCardsTemplate: () => import("@/components/pages/meta/DialogAddMetaCardsTemplate.vue"),
   },

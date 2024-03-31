@@ -4,10 +4,10 @@
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-btn icon tile @click="$store.state.Settings.dialogScanPdfs=true" v-on="on">
-            <v-icon>mdi-video-plus</v-icon>
+            <v-icon>mdi-book-plus</v-icon>
           </v-btn>
         </template>
-        <span>Add new videos</span>
+        <span>Add new PDFs</span>
       </v-tooltip>
     </div>
     <VideosAppbarActions />

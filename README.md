@@ -10,11 +10,15 @@ This is a fork of Mediachips, which was designed for videos.
 
 ## Requirements
 
-Note: Imagemagick-CLI is rquired
-  [Download it and, on Windows](https://imagemagick.org/script/download.php#windows), **MAKE SURE YOU CLICK INSTALL LEGACY UTILITIES (E.G. CONVERT)**
+Need to install GhostScript and GraphicsMagick, follow instructions [here](https://github.com/yakovmeister/pdf2image/blob/HEAD/docs/gm-installation.md)
 
-  ![Imagemagick installer](image.png)
 
-On Mac, you can use `brew install imagemagick`
+~~Note: Imagemagick-CLI is rquired~~
+  ~~[Download it and, on Windows](https://imagemagick.org/script/download.php#windows), **MAKE SURE YOU CLICK INSTALL LEGACY UTILITIES (E.G. CONVERT)**~~
 
-On Linux, run `sudo apt install imagemagick`
+  ~~![Imagemagick installer](image.png)~~
+
+~~On Mac, you can use `brew install imagemagick`~~
+
+~~On Linux, run `sudo apt install imagemagick`~~
+

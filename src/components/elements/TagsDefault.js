@@ -6,6 +6,12 @@ const Tags = [
     ]
   },
   {
+    "name": "D20",
+    "synonyms": [
+      ""
+    ]
+  },
+  {
     "name": "Fantasy",
     "synonyms": [
       ""
@@ -15,6 +21,13 @@ const Tags = [
     "name": "Forged in the Dark",
     "synonyms": [
       "FITD"
+    ]
+  },
+  {
+    "name": "OSR",
+    "synonyms": [
+      "Old School Revival",
+      "Old School Renaissance"
     ]
   },
   {
