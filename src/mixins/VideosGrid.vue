@@ -79,6 +79,7 @@ export default {
       this.$store.commit('removeBackgroundProcess', bpId)
     },
     async createVideoGrid(inputVideoPath, pdfId, pdfDuration) {
+      console.log("The current duration is " + inputVideoPath, pdfDuration);
       let opts = {
         input: inputVideoPath,
         output: path.join(this.pathToUserData, `/media/grids/${pdfId}.jpg`),

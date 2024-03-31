@@ -628,42 +628,14 @@ export default {
         console.log("Getting video metadata");
         return new Promise((resolve, reject) => {
 
-            // PDFJSLib approach
-        //   return pdfjsLib.getDocument(pathToFile).promise.then(function (doc) {
-        //       var numPages = doc.numPages;
-        //       console.log('# Document Loaded');
-        //       console.log('Number of Pages: ' + numPages);
-        //       return resolve(numPages);
-        //   })
-        // })
-        
+// TODO can delete all of this.
+        const { PDFDocument } = require('pdf-lib');
 
-        // PDF-lib solution
-            const readFile = (file) => {
-
-              return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-                reader.readAsArrayBuffer(file);
-              });
-            }
-
-
-            const getPageCount = async (file) => {
-              const arrayBuffer = await readFile(file);
-              const pdf = await PDFDocument.load(arrayBuffer);
-              return pdf.getPageCount();
-            }
-
-            const numPages =  getPageCount(input.files[0]).then((res)=>
-            {
-              console.log("Pages ", res);
-              return resolve(res);
-            });
-            console.log("Returning number of pages");
-          return resolve(numPages);
-
+          const myFile = fs.readFileSync(pathToFile);
+          PDFDocument.load(myFile).then( (res)=>{
+            const num = res.getPages().length;
+            resolve(num);
+          })
         })
       }
       let successfullyUpdatedIds = []
@@ -677,12 +649,12 @@ export default {
           console.log("About to get metadata canada");
           let metadata = await getVideoMetadata(pdf.path)
           console.log(metadata);
-          let duration = 2; // Math.floor(metadata.format.duration) // TODO get number of pages of document
+          let duration = metadata; // get number of pages of document
 
           let updatedMetadata = {
             duration: duration,
             size: 10, // metadata.format.size,
-            resolution: "600x600",// resolution,
+            resolution: "600x600",
             edit: Date.now(),
           }
           this.$store.getters.pdfs.find({ id }).assign(updatedMetadata).write()

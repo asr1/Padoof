@@ -195,6 +195,7 @@ const {ipcRenderer} = require('electron')
 const fs = require('fs')
 const path = require('path')
 const shortid = require('shortid')
+const { PDFDocument } = require('pdf-lib');
 
 import vuescroll from 'vuescroll'
 import MetaGetters from '@/mixins/MetaGetters'
@@ -442,53 +443,17 @@ export default {
       return fileProcResult
     },
     getVideoMetadata (pathToFile) {
-      console.log("Getting metadata amsterdam");
       return new Promise((resolve, reject) => {
         const metadata = fs.statSync(pathToFile, {});
 
+console.log("Getting duration");
         this.fileInfo.meta = metadata
-
-
-
-
-
-// console.log("Going 1");
-//         // PDF-lib solution
-//             const readFile = (file) => {
-// console.log("Going 2");
-//               return new Promise((resolve, reject) => {
-//                 const reader = new FileReader();
-//                 reader.onload = () => resolve(reader.result);
-//                 reader.onerror = error => reject(error);
-//                 reader.readAsArrayBuffer(file);
-//               });
-//             }
-
-// console.log("Going 3");
-//             const getPageCount = async (file) => {
-//               console.log("Going 5");
-//               const arrayBuffer = await readFile(file);
-//               const pdf = await PDFDocument.load(arrayBuffer);
-//               return pdf.getPageCount();
-//             }
-
-//               console.log("Going 4");
-//             const numPages =  getPageCount(input.files[0]).then((res)=>
-//             {
-//               console.log("Pages ", res);
-//               return resolve(res);
-//             });
-//             console.log("data". this.fileInfo.meta);
-//         this.fileInfo.meta.duration = numPages;
-//             console.log("data after". this.fileInfo.meta);
-// console.log("");
-
-
-
-
-
-
-
+        const myFile = fs.readFileSync(pathToFile);
+        PDFDocument.load(myFile).then( (res)=>{
+          const num = res.getPages().length;
+          this.fileInfo.duration = num;
+          console.log(num);
+        })
 
         return resolve();
       })
@@ -496,12 +461,13 @@ export default {
     createInfoForDb(pathToFile) { // create info of PDF file, generating thumb.jpg and return object with PDF file info
       return new Promise ((resolve, reject) => {
         let size = Math.floor(this.fileInfo.meta.size)
-
+console.log("Creating db info", this.fileInfo);
         // get file info 
         let pdfMetadata = {
           id: this.fileInfo.id,
           path: pathToFile,
           size: size,
+          duration: this.fileInfo.duration,
           resolution: "600x600",// resolution,
           rating: 0,
           favorite: false,

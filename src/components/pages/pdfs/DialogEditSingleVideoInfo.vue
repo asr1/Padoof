@@ -34,10 +34,6 @@
             </v-btn>
             <v-card class="file-info">
               <div>
-                <v-icon left size="18">mdi-monitor-screenshot</v-icon>
-                Resolution: {{pdf.resolution}}
-              </div>
-              <div>
                 <v-icon left size="18">mdi-file-pdf</v-icon>
                 File extension: .{{fileExtension}}
               </div>
