@@ -12,10 +12,5 @@ Generate thumbnail from PDF cover
 
 Set duration to page count
 
-PDFs should have publishers in their meta.
-
-Default tags not appearings
 
 Total size on disk showing as 0
-
-\# Add publisher to default parse tags (search for metaAssignedToVideos)

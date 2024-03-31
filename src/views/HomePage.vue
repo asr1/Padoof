@@ -270,7 +270,7 @@ export default {
     customization: false,
     series: [],
     chartOptions: {},
-    dialogAddMetaCardsTemplate: true,
+    dialogAddMetaCardsTemplate: false,
   }),
   computed: {
     settings() { return this.$store.getters.settings.value() },
@@ -376,6 +376,7 @@ export default {
     finishCreationAllMeta() {
       this.createAllMeta = false
       this.isAllMetaCreated = true
+      this.dialogAddMetaCardsTemplate = true
     },
     finishAddMetaCardsTemplate() {
       this.dialogAddMetaCardsTemplate = false

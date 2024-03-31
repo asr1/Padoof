@@ -39,7 +39,6 @@ const Tags = [
   {
     "name": "Mecha",
     "synonyms": [
-      "upers"
     ]
   },
   {
