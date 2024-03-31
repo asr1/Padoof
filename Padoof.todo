@@ -4,13 +4,12 @@ See if you can scrape from RPG Geek instead of the current place
 
 Remove scrape
 
-Remove references to pdfs,
-
 Remove ffmpeg
 
 Generate thumbnail from PDF cover
 
 Set duration to page count
 
+Remove "resolution" from the chips
 
-Total size on disk showing as 0
+Total size on disk, total number fo PDFs both showing as 0
