@@ -191,9 +191,6 @@
 </template>
 
 <script>
-// const { PdfReader } = require('pdfreader');
-// const PDFParser = require('pdf2json');
-// const pdfParser = new PDFParser();
 const {ipcRenderer} = require('electron')
 const fs = require('fs')
 const path = require('path')
@@ -350,13 +347,9 @@ export default {
           ++vm.currentNumberOfScanPdfs
           vm.pdfScanProgressBar += percentsPerFile
           if (vm.pdfScanProgressBar > 100) vm.pdfScanProgressBar = 100
-          // console.log(vm.pdfScanProgressBar)
-          // console.log(fileProcResult)
           await sleep(10)
         }
         vm.isPdfScanFinished = true
-        // console.log(vm.updateVideosInStore);
-        // console.log('Files scanned!');
       }
 
       processArray(filesArray).then(()=>{
@@ -451,13 +444,6 @@ export default {
     getVideoMetadata (pathToFile) {
       return new Promise((resolve, reject) => {
         const metadata = fs.statSync(pathToFile, {});
-        
-      // pdfParser.on('pdfParser_dataReady', function(data) {
-      //     const doc = data.PDFJS && data.PDFJS.pdfDocument && data.PDFJS.pdfDocument.numPages;
-      //     console.log('Number of pages:', doc);
-      // });
-      // pdfParser.loadPDF(pathToFile);
-      // console.log(doc);
 
         this.fileInfo.meta = metadata
         return resolve();
@@ -487,12 +473,64 @@ export default {
         
         let outputPathThumbs = path.join(this.pathToUserData, '/media/thumbs/')
         if (!fs.existsSync(outputPathThumbs)) fs.mkdirSync(outputPathThumbs)
+
         // creating the thumb of the pdf
-        fs.appendFile(`${outputPathThumbs}\\${this.fileInfo.id}.jpg`, '1', function(err) {
-         if(err) console.log("Error 5");
-          console.log(err);
-          if(err) throw err;
-        })
+        const options = {
+            density: 100,
+            saveFilename: `${this.fileInfo.id}`,
+            savePath: outputPathThumbs,
+            format: "jpg",
+            width: 600,
+            height: 600
+          };
+        const pdf2pic = require('pdf2pic');
+        const convert = pdf2pic.fromPath(pathToFile, options);
+        const pageToConvertAsImage = 1;
+
+  // Need this to not be named ".1" at the end. Could use fs to rename it. Is there a way to do it natively?
+        convert(pageToConvertAsImage, { responseType: "image" })
+          .then((resolve) => {
+                    console.log("Page 1 is now converted as image");
+
+
+// This works for just one file
+                  //pdf2pic adds a .x to the file name, where x is the page number. Unacceptable.
+                  // const oldpath = outputPathThumbs + this.fileInfo.id + '.1.jpg';
+                  // console.log("old ", oldpath);
+                  // const newpath = outputPathThumbs + this.fileInfo.id + '.jpg';
+                  // console.log(newpath);
+                  // fs.rename(oldpath, newpath, () => {
+                  //   console.log("Renamed thumbnail to proper name");
+                  // })
+
+
+
+            // Try this:
+
+
+                // Read directory
+                fs.readdir(outputPathThumbs, (err, files) => {
+                  for (const file of files) {
+                    const regex = /^(.*)\.1\.jpg$/g;
+                    const match = Array.from(file.matchAll(regex), m=> m[1]);
+                    console.log(match);
+                    if (match) {
+                      // Add more logic to rename file
+                      fs.rename(file, match[0], (err) => {
+                        console.log('Renaming', file, "to", match[0])
+                        if (err) throw err
+                      })
+                    }
+                  }
+                })
+
+            return resolve;
+          });
+
+
+
+
+
       // TODO create thumb from PDF
         // ffmpeg()
         //   .input(pathToFile)
@@ -509,6 +547,7 @@ export default {
         //   .on('error', (err) => {
         //     reject(err.message)
         //   })
+
         resolve(pdfMetadata);
       })
     },

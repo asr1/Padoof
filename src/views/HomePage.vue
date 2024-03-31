@@ -6,7 +6,7 @@
         <v-row v-if="pdfNumber==0">
           <v-col cols="12">
             <img alt="Padoof" width="200" height="200" :src="logoPath">
-            <h2 class="my-8">Welcome to Padoof application!</h2>
+            <h2 class="my-8">Welcome to Padoof!</h2>
         
             <div v-if="metaNumber==0" cols="12">
               <div class="mb-4"> First, create a meta for your PDFs. 

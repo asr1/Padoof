@@ -22,7 +22,6 @@ export default {
       return value
     },
     calcHeightTitle(resolution) {
-      console.log("Resolution", resolution);
       const width = +resolution.match(/\d*/)[0]
       const height = +resolution.match(/\x(.*)/)[1]
       if (width > height) {

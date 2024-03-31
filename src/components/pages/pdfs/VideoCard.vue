@@ -508,7 +508,7 @@ export default {
           { name: `Reveal in File Explorer`, type: 'item', icon: 'folder-open', function: ()=>{this.revealInFileExplorer()}, disabled: !this.isSelectedSingleVideo},
           { name: `Move File to...`, type: 'item', icon: 'file-move', function: ()=>{this.moveFile()}, disabled: this.$store.state.movingFiles},
           { type: 'divider' },
-          { name: `Delete Video`, type: 'item', icon: 'delete', color: 'error', function: ()=>{this.$store.state.Videos.dialogDeleteVideo=true},},
+          { name: `Remove File`, type: 'item', icon: 'delete', color: 'error', function: ()=>{this.$store.state.Videos.dialogDeleteVideo=true},},
         ]
         this.$store.state.contextMenuContent = contextMenu
         this.$store.state.contextMenu = true
