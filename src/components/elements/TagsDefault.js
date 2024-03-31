@@ -21,6 +21,11 @@ const Tags = [
     ]
   },
   {
+    "name": "Horror",
+    "synonyms": [
+    ]
+  },
+  {
     "name": "OSR",
     "synonyms": [
       "Old School Revival",

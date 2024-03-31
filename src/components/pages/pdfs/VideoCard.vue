@@ -131,12 +131,6 @@
       <div @click="playVideo" @mousemove.capture="scrollStory($event)" @mouseleave="stopScrollStory" ref="story" class="story">
         <v-sheet v-if="!isFileNameHidden" class="pdf-card-title" v-html="fileName"/>
         <div v-if="!isVideoExist" class="path-error"> <div class="error">No PDF found. Please update the path.</div> </div>
-        <div v-if="!isQualityLabelHidden" label outlined class="resolution">
-          <div class="text text-no-wrap" :class="calcHeightTitle(pdf.resolution).toLowerCase()">
-            {{calcHeightTitle(pdf.resolution)}}
-          </div>
-          <div class="value" v-html="calcHeightValue(pdf.resolution)"/>
-        </div>
         <div class="wrapper" ref="storyWrapper" :class="{'hovered':isVideoHovered}">
           <div v-for="(p, i) in timeline" :key="i" class="frame">
             <img :src="getTimelineImgUrl(p)"/>
@@ -227,6 +221,8 @@ import Functions from '@/mixins/Functions'
 import ShowImageFunction from '@/mixins/ShowImageFunction'
 import LabelFunctions from '@/mixins/LabelFunctions'
 import MetaGetters from '@/mixins/MetaGetters'
+import {PDFDocument} from 'pdf-lib';
+// const pdfjsLib = require('pdfjs-dist');
 
 export default {
   name: 'VideoCard',
@@ -629,13 +625,45 @@ export default {
     },
     updateFileInfo() {
       function getVideoMetadata (pathToFile) {
+        console.log("Getting video metadata");
         return new Promise((resolve, reject) => {
-          // TODO replace ffmpeg with imagemagick
-          return ffmpeg.ffprobe(pathToFile, (error, info) => {
-            if (error) return reject(error)
-            else if (info.streams[0].duration < 1) return reject('duration less than 1 sec.')
-            else return resolve(info)
-          })
+
+            // PDFJSLib approach
+        //   return pdfjsLib.getDocument(pathToFile).promise.then(function (doc) {
+        //       var numPages = doc.numPages;
+        //       console.log('# Document Loaded');
+        //       console.log('Number of Pages: ' + numPages);
+        //       return resolve(numPages);
+        //   })
+        // })
+        
+
+        // PDF-lib solution
+            const readFile = (file) => {
+
+              return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsArrayBuffer(file);
+              });
+            }
+
+
+            const getPageCount = async (file) => {
+              const arrayBuffer = await readFile(file);
+              const pdf = await PDFDocument.load(arrayBuffer);
+              return pdf.getPageCount();
+            }
+
+            const numPages =  getPageCount(input.files[0]).then((res)=>
+            {
+              console.log("Pages ", res);
+              return resolve(res);
+            });
+            console.log("Returning number of pages");
+          return resolve(numPages);
+
         })
       }
       let successfullyUpdatedIds = []
@@ -646,18 +674,15 @@ export default {
           return
         } 
         try {
+          console.log("About to get metadata canada");
           let metadata = await getVideoMetadata(pdf.path)
-          let duration = 2; // Math.floor(metadata.format.duration)
-          let resolution;
-          for (let i = 0; i < metadata.streams.length; i++) {
-            if (metadata.streams[i].codec_type === 'pdf') {
-              resolution = metadata.streams[i].width + 'x' + metadata.streams[i].height
-            } 
-          }
+          console.log(metadata);
+          let duration = 2; // Math.floor(metadata.format.duration) // TODO get number of pages of document
+
           let updatedMetadata = {
             duration: duration,
             size: 10, // metadata.format.size,
-            resolution: "300x300",// resolution,
+            resolution: "600x600",// resolution,
             edit: Date.now(),
           }
           this.$store.getters.pdfs.find({ id }).assign(updatedMetadata).write()

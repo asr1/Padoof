@@ -442,10 +442,54 @@ export default {
       return fileProcResult
     },
     getVideoMetadata (pathToFile) {
+      console.log("Getting metadata amsterdam");
       return new Promise((resolve, reject) => {
         const metadata = fs.statSync(pathToFile, {});
 
         this.fileInfo.meta = metadata
+
+
+
+
+
+// console.log("Going 1");
+//         // PDF-lib solution
+//             const readFile = (file) => {
+// console.log("Going 2");
+//               return new Promise((resolve, reject) => {
+//                 const reader = new FileReader();
+//                 reader.onload = () => resolve(reader.result);
+//                 reader.onerror = error => reject(error);
+//                 reader.readAsArrayBuffer(file);
+//               });
+//             }
+
+// console.log("Going 3");
+//             const getPageCount = async (file) => {
+//               console.log("Going 5");
+//               const arrayBuffer = await readFile(file);
+//               const pdf = await PDFDocument.load(arrayBuffer);
+//               return pdf.getPageCount();
+//             }
+
+//               console.log("Going 4");
+//             const numPages =  getPageCount(input.files[0]).then((res)=>
+//             {
+//               console.log("Pages ", res);
+//               return resolve(res);
+//             });
+//             console.log("data". this.fileInfo.meta);
+//         this.fileInfo.meta.duration = numPages;
+//             console.log("data after". this.fileInfo.meta);
+// console.log("");
+
+
+
+
+
+
+
+
         return resolve();
       })
     },
@@ -458,7 +502,7 @@ export default {
           id: this.fileInfo.id,
           path: pathToFile,
           size: size,
-          resolution: "300x300",// resolution,
+          resolution: "600x600",// resolution,
           rating: 0,
           favorite: false,
           bookmark: '',
@@ -490,8 +534,6 @@ export default {
         // Need this to not be named ".1" at the end. Could use fs to rename it. Is there a way to do it directly within pdf2pic?
         convert(pageToConvertAsImage, { responseType: "image" })
           .then((resolve) => {
-                    console.log("Page 1 is now converted as image");
-
                 // It's asinine that we have to do such a clunky workaround just to get the pdf file to be named what we specified.
                 fs.readdir(outputPathThumbs, (err, files) => {
                   for (const file of files) {
@@ -507,7 +549,6 @@ export default {
                           if (err) throw err
                         })
                     }
-
                   }
                 })
 
