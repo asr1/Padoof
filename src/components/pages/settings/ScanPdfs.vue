@@ -484,45 +484,58 @@ console.log("Creating db info", this.fileInfo);
         let outputPathThumbs = path.join(this.pathToUserData, '/media/thumbs/')
         if (!fs.existsSync(outputPathThumbs)) fs.mkdirSync(outputPathThumbs)
 
-        // creating the thumb of the pdf
-        const options = {
-            density: 100,
-            saveFilename: `${this.fileInfo.id}`,
-            savePath: outputPathThumbs,
-            format: "jpg",
-            width: 600,
-            height: 600
-          };
-        const pdf2pic = require('pdf2pic');
-        const convert = pdf2pic.fromPath(pathToFile, options);
-        const pageToConvertAsImage = 1;
 
-        // Need this to not be named ".1" at the end. Could use fs to rename it. Is there a way to do it directly within pdf2pic?
-        convert(pageToConvertAsImage, { responseType: "image" })
-          .then((resolve) => {
-                // It's asinine that we have to do such a clunky workaround just to get the pdf file to be named what we specified.
-                fs.readdir(outputPathThumbs, (err, files) => {
-                  for (const file of files) {
-                    const regex = /^(.*)\.1\.jpg$/g;
-                    const match = [...file.matchAll(regex)];
-                    if(match.length) {
-                        // Add more logic to rename file. 
-                        // Equally asinine that fs doesn't work without reminding it of the path when it's ACTIVELY LISTING FILES
-                        const oldName = path.join(outputPathThumbs, file);
-                        const newName = path.join(outputPathThumbs, match[0][1] + '.jpg')
+// // New experimental approach
+//     const pdf2img = require('pdf-img-convert');
 
-                        fs.rename(oldName, newName, (err) => {
-                          if (err) throw err
-                        })
-                    }
-                  }
-                })
+//     pdf2img.convert(pathToFile).then( (outputImages) => {
+//       const filename = `${this.fileInfo.id}`+'.jpg';
+//       fs.writeFile(path.join(outputPathThumbs, filename), outputImages[0], (err) => {
+//         if(err) {console.log(err); throw err}
+//       })
+//     })
 
-            return resolve;
-          });
 
-        resolve(pdfMetadata);
-      })
+// Stable, working way
+      //   // creating the thumbs of the pdf
+      //   const options = {
+      //       density: 100,
+      //       saveFilename: `${this.fileInfo.id}`,
+      //       savePath: outputPathThumbs,
+      //       format: "jpg",
+      //       width: 600,
+      //       height: 600
+      //     };
+      //   const pdf2pic = require('pdf2pic');
+      //   const convert = pdf2pic.fromPath(pathToFile, options);
+      //   const pageToConvertAsImage = 1;
+
+      //   // Need this to not be named ".1" at the end. Could use fs to rename it. Is there a way to do it directly within pdf2pic?
+      //   convert(pageToConvertAsImage, { responseType: "image" })
+      //     .then((resolve) => {
+      //           // It's asinine that we have to do such a clunky workaround just to get the pdf file to be named what we specified.
+      //           fs.readdir(outputPathThumbs, (err, files) => {
+      //             for (const file of files) {
+      //               const regex = /^(.*)\.1\.jpg$/g;
+      //               const match = [...file.matchAll(regex)];
+      //               if(match.length) {
+      //                   // Add more logic to rename file. 
+      //                   // Equally asinine that fs doesn't work without reminding it of the path when it's ACTIVELY LISTING FILES
+      //                   const oldName = path.join(outputPathThumbs, file);
+      //                   const newName = path.join(outputPathThumbs, match[0][1] + '.jpg')
+
+      //                   fs.rename(oldName, newName, (err) => {
+      //                     if (err) throw err
+      //                   })
+      //               }
+      //             }
+      //           })
+
+      //       return resolve;
+      //     });
+
+         resolve(pdfMetadata);
+     })
     },
     parsePathForMeta(filePath) {
       function filterString(string) {
