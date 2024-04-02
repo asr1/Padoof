@@ -14,13 +14,3 @@ Need to install GhostScript and GraphicsMagick, follow instructions [here](https
 
 *I know that GraphicsMagick in particular can be a pain to install on Windows. I apologize. If I knew of an easier way to support thumbnails, I would use it. If you're struggling, look for a .exe file [here](https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick-binaries/1.3.43/). There may be a more recent version available.*
 
-
-~~Note: Imagemagick-CLI is rquired~~
-  ~~[Download it and, on Windows](https://imagemagick.org/script/download.php#windows), **MAKE SURE YOU CLICK INSTALL LEGACY UTILITIES (E.G. CONVERT)**~~
-
-  ~~![Imagemagick installer](image.png)~~
-
-~~On Mac, you can use `brew install imagemagick`~~
-
-~~On Linux, run `sudo apt install imagemagick`~~
-
