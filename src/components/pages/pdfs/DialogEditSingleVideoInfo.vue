@@ -459,7 +459,7 @@ export default {
       const pathToVideo = this.pdf.path
       if (fs.existsSync(pathToVideo)) {
         this.pdfExists = false
-        if (this.$store.state.Settings.isPlayVideoInSystemPlayer) shell.openPath(pathToVideo)
+        if (this.$store.state.Settings.isopenPDFInSystemPlayer) shell.openPath(pathToVideo)
         else {
           let data = { pdfs: [this.pdf], id: this.pdf.id, }
           ipcRenderer.send('openPlayer', data)

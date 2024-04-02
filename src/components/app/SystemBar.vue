@@ -20,11 +20,11 @@
             </v-list-item-title>
           </v-list-item>
           <v-divider class="ma-1"></v-divider>
-          <v-list-item link @mouseup="isPlayVideoInSystemPlayer=!isPlayVideoInSystemPlayer">
+          <v-list-item link @mouseup="isopenPDFInSystemPlayer=!isopenPDFInSystemPlayer">
             <v-list-item-title>
               <v-icon left size="18">mdi-television-play</v-icon> Read PDF in System Player (TODO)
             </v-list-item-title>
-            <v-icon size="20" class="ml-6" :color="isPlayVideoInSystemPlayer?'':'rgba(0,0,0,0)'">mdi-check</v-icon>
+            <v-icon size="20" class="ml-6" :color="isopenPDFInSystemPlayer?'':'rgba(0,0,0,0)'">mdi-check</v-icon>
           </v-list-item>
           <v-divider class="ma-1"></v-divider>
           <v-list-item link @mouseup="lock" :disabled="!$store.state.Settings.passwordProtection">
@@ -230,7 +230,7 @@ export default {
       ipcRenderer.on('addnewPdfs', () => { this.$store.state.Settings.dialogScanPdfs=true })
       ipcRenderer.on('checkForUpdates', () => { this.checkForUpdates() })
       ipcRenderer.on('lockApp', () => { this.lock() })
-      ipcRenderer.on('toggleSystemPlayer', () => { this.isPlayVideoInSystemPlayer=!this.isPlayVideoInSystemPlayer })
+      ipcRenderer.on('toggleSystemPlayer', () => { this.isopenPDFInSystemPlayer=!this.isopenPDFInSystemPlayer })
       ipcRenderer.on('toggleDarkMode', () => { this.toggleDarkMode() })
       ipcRenderer.on('aboutApp', () => { this.about() })
       ipcRenderer.on('navigationBack', () => { this.back() })
@@ -242,7 +242,7 @@ export default {
           else this.zoom = 1
         } else this[stateName] = value 
       })
-      ipcRenderer.send('changeMenuItem', 'systemPlayer', this.isPlayVideoInSystemPlayer )
+      ipcRenderer.send('changeMenuItem', 'systemPlayer', this.isopenPDFInSystemPlayer )
       ipcRenderer.send('changeMenuItem', 'lock', this.$store.state.Settings.passwordProtection )
     })
   },
@@ -265,9 +265,9 @@ export default {
       get() {return this.$store.state.Settings.ratingAndFavoriteInCard},
       set(value) {this.$store.dispatch('updateSettingsState', {key:'ratingAndFavoriteInCard', value})},
     },
-    isPlayVideoInSystemPlayer: {
-      get() {return this.$store.state.Settings.isPlayVideoInSystemPlayer},
-      set(value) {this.$store.dispatch('updateSettingsState', {key:'isPlayVideoInSystemPlayer', value})},
+    isopenPDFInSystemPlayer: {
+      get() {return this.$store.state.Settings.isopenPDFInSystemPlayer},
+      set(value) {this.$store.dispatch('updateSettingsState', {key:'isopenPDFInSystemPlayer', value})},
     },
     navigationSide: {
       get() {return this.$store.state.Settings.navigationSide},

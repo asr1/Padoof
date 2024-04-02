@@ -13,7 +13,7 @@
           <v-icon size="60" color="red">mdi-alert</v-icon>
           <div>{{getFileFromPath(pdfs[playIndex].path)}}</div>
           <div class="mb-4">Video format not supported.</div>
-          <v-btn @click="playVideoInSystemPlayer" color="primary" small>
+          <v-btn @click="openPDFInSystemPlayer" color="primary" small>
             <v-icon left>mdi-television-play</v-icon>
             <span>Play in the system player</span>
           </v-btn>
@@ -617,7 +617,7 @@ export default {
       if (this.duration > 200) timeout = 1000
       this.currentTimeTracker = setInterval(() => {this.currentTime = this.player.currentTime}, timeout)
     },
-    playVideoInSystemPlayer() { shell.openPath(this.pdfs[this.playIndex].path) },
+    openPDFInSystemPlayer() { shell.openPath(this.pdfs[this.playIndex].path) },
     playVideo(pdf) {
       this.player.src = pdf.path
       this.player.play()

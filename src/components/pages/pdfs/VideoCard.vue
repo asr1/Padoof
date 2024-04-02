@@ -359,14 +359,14 @@ export default {
         this.$store.state.Videos.errorPlayVideoPath = pathToVideo
         return
       }
-      if (this.$store.state.Settings.isPlayVideoInSystemPlayer) shell.openPath(pathToVideo) 
+      if (this.$store.state.Settings.isopenPDFInSystemPlayer) shell.openPath(pathToVideo) 
       else { 
         let data = { pdfs: this.$store.getters.pdfsOnPage, id: this.pdf.id }
         ipcRenderer.send('openPlayer', data)
       } 
       this.countViewData()
     },
-    playVideoInSystemPlayer() {
+    openPDFInSystemPlayer() {
       const pathToVideo = this.pdf.path
       if (!this.isVideoExist) {
         this.$store.state.Videos.dialogErrorPlayVideo = true
@@ -463,7 +463,7 @@ export default {
         this.$store.state.x = e.clientX
         this.$store.state.y = e.clientY
         let contextMenu = [
-          { name: `Open in System Player`, type: 'item', icon: 'play', function: ()=>{this.playVideoInSystemPlayer()}},
+          { name: `Open in System Player`, type: 'item', icon: 'play', function: ()=>{this.openPDFInSystemPlayer()}},
           { name: `Add to Playlist`, type: 'menu', icon: 'playlist-plus', menu: getPlaylists()},
           { type: 'divider' },
           { name: `Edit Info`, type: 'item', icon: 'pencil', function: ()=>{this.$store.state.Videos.dialogEditVideoInfo=true}},

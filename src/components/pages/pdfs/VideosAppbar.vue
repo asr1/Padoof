@@ -69,7 +69,7 @@ export default {
         this.$store.state.Videos.errorPlayVideoPath = pathToVideo
         return
       }
-      if (this.$store.state.Settings.isPlayVideoInSystemPlayer) shell.openPath(pathToVideo)
+      if (this.$store.state.Settings.isopenPDFInSystemPlayer) shell.openPath(pathToVideo)
       else {
         let data = { pdfs: [pdf], id: pdf.id }
         ipcRenderer.send('openPlayer', data)

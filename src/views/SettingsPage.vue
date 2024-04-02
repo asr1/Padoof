@@ -94,8 +94,8 @@
                 <!-- TODO system player is here -->
               </v-tooltip>
               <span class="mr-6">Play pdf in:</span>
-              <v-switch v-model="isPlayVideoInSystemPlayer" inset class="d-inline mt-0 pt-0" hide-details
-                :label="isPlayVideoInSystemPlayer? 'System player':'App`s player'"/>
+              <v-switch v-model="isopenPDFInSystemPlayer" inset class="d-inline mt-0 pt-0" hide-details
+                :label="isopenPDFInSystemPlayer? 'System player':'App`s player'"/>
             </div>
             <div class="d-flex mt-6">
               <v-tooltip top>
@@ -676,10 +676,10 @@ export default {
       get() {return this.$store.state.Settings.gapSize},
       set(value) {this.$store.dispatch('updateSettingsState', {key:'gapSize', value})},
     },
-    isPlayVideoInSystemPlayer: {
-      get() {return this.$store.state.Settings.isPlayVideoInSystemPlayer},
+    isopenPDFInSystemPlayer: {
+      get() {return this.$store.state.Settings.isopenPDFInSystemPlayer},
       set(value) {
-        this.$store.dispatch('updateSettingsState', {key:'isPlayVideoInSystemPlayer', value})
+        this.$store.dispatch('updateSettingsState', {key:'isopenPDFInSystemPlayer', value})
         ipcRenderer.send('changeMenuItem', 'systemPlayer', value )
       },
     },

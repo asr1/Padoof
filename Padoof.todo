@@ -1,34 +1,38 @@
 Padoof notes
 
-See if you can scrape from RPG Geek instead of the current place
+## See if you can scrape from RPG Geek instead of the current place
 
-Remove scrape
+## Remove scrape
 
-Remove ffmpeg
-
-
-Total size on disk, total number fo PDFs both showing as 0
+## Remove ffmpeg
 
 
-On video hover it should show a pdf icon instead of a play triangle, and on click should open the pdf in either a pdf reader or a system one.
+## Total size on disk, total number fo PDFs both showing as 0
 
-    PDF viewer: https://webdesign.tutsplus.com/how-to-create-a-pdf-viewer-in-javascript--cms-32505t
-https://stackoverflow.com/questions/43220321/electron-pdf-viewer
 
-Rename files or at least change display name.
+## On video hover it should show a pdf icon instead of a play triangle, and on click should open the pdf in either a pdf reader or a system one.
 
-Page count not showing for every file.
+### PDF viewer
+      https://webdesign.tutsplus.com/how-to-create-a-pdf-viewer-in-javascript--cms-32505t
+      
+      https://stackoverflow.com/questions/43220321/electron-pdf-viewer
 
+## Rename files, or at least change display name.
+
+## Page count not showing for every file.
+
+
+## Thumbnails require Ghostscript, GraphicsMagick
 
 This looks promising for better thumbnail solution:
-      https://github.com/freeman-lab/pdf-to-png
+      https://github.com/freeman-lab/pdf-to-png  
       Then this one: https://github.com/dichovsky/pdf-to-png-converter (https://stackoverflow.com/questions/72407394/using-pdf2image-with-node-js-and-centos)
       
       
       One thing we could do is package our own version of ghostscript and ghostmagick under extraResources (using build command) and fork the working version of pdf2pic to point to a local install instead.
       
       PDFJS + Nodecanvas:
-      https://stackoverflow.com/questions/69520419/questions-regarding-pdf-to-image-conversion-with-node-js
+      https://stackoverflow.com/questions/69520419/questions-regarding-pdf-to-image-conversion-with-node-js  
       Related: https://github.com/mozilla/pdf.js/tree/master/examples/node/pdf2png
       
       PDFJS: https://dev.to/masanori_msl/electron-typescript-pdf-js-create-images-from-pdf-55af
@@ -36,4 +40,9 @@ This looks promising for better thumbnail solution:
       Possibly try pdf to base64 code // https://stackoverflow.com/questions/36280818/how-to-convert-file-to-base64-in-javascript
       https://stackoverflow.com/questions/53424884/convert-pdf-to-image-before-uploading-it-to-s3
       
- npx depcheck for unused packages
+      
+      WAIT what if we make an MSI out of ghostscript, and then bundle ghostscript MSI, graphicsMagick MSI and our Padoof MSI all together called like install me first, second, third. Then it's easier.
+      
+## Before Release
+
+* npx depcheck for unused packages

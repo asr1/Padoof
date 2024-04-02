@@ -62,7 +62,7 @@ export default {
         })
         return
       }
-      if (this.$store.state.Settings.isPlayVideoInSystemPlayer) {
+      if (this.$store.state.Settings.isopenPDFInSystemPlayer) {
         let paths = this.playlist.pdfs.map(i=>i.path)
         let plPath = path.join(this.pathToUserData, `playlist.m3u`)
         let text = ''
