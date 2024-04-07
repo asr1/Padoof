@@ -1,7 +1,7 @@
 {
   "name": "padoof",
   "productName": "Padoof",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "author": {
     "name": "Alex Rinehart",
     "email": "alexandersrinehart@gmail.com"
@@ -15,15 +15,17 @@
     "electron:build": "vue-cli-service electron:build",
     "electron:build_portable": "vue-cli-service electron:build --win portable",
     "electron:serve": "vue-cli-service electron:serve",
-    "build": "npm run electron:build"
+    "build": "npm run electron:build",
+    "buildwin": "set NODE_OPTIONS=--openssl-legacy-provider && npm run build"
   },
   "main": "background.js",
   "dependencies": {
-    "@electron/remote": "^2.0.4",
+    "@electron/remote": "^2.1.2",
     "@simonwep/selection-js": "^2.0.1",
     "apexcharts": "^3.28.3",
     "archiver": "^5.3.0",
-    "axios": "^0.21.1",
+    "axios": "^1.6.8",
+    "canvas": "^2.11.2",
     "cheerio": "^1.0.0-rc.10",
     "chokidar": "^3.5.1",
     "chroma-js": "^2.1.2",
@@ -46,9 +48,10 @@
     "pdf-img-convert": "^1.2.1",
     "pdf-lib": "^1.17.1",
     "pdf-manip": "^1.0.3",
-    "pdf-to-png": "^1.0.3",
+    "pdf-to-png": "^1.0.2",
     "pdf-to-png-converter": "^3.2.0",
     "pdf2pic": "^3.1.1",
+    "pdfjs-dist": "2.6.347",
     "rimraf": "^3.0.2",
     "shortid": "^2.2.16",
     "string-crypto": "^2.0.1",
@@ -67,6 +70,8 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.18.6",
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
     "@mdi/font": "^5.9.55",
     "@vue/cli-plugin-babel": "^4.5.11",
     "@vue/cli-plugin-router": "^4.5.10",
@@ -74,7 +79,7 @@
     "@vue/cli-service": "^4.5.11",
     "@vue/devtools": "^5.3.3",
     "css-loader": "^5.0.2",
-    "electron": "^17.0.0",
+    "electron": "^29.2.0",
     "less": "^3.13.1",
     "less-loader": "^5.0.0",
     "sass": "^1.32.8",
@@ -82,6 +87,7 @@
     "vue-cli-plugin-electron-builder": "^2.1.1",
     "vue-cli-plugin-vuetify": "^2.3.1",
     "vue-devtools": "^5.1.4",
+    "vue-loader": "^17.4.2",
     "vue-template-compiler": "^2.6.12",
     "vuetify-loader": "^1.7.2"
   }

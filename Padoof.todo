@@ -29,8 +29,7 @@ This looks promising for better thumbnail solution:
       Then this one: https://github.com/dichovsky/pdf-to-png-converter (https://stackoverflow.com/questions/72407394/using-pdf2image-with-node-js-and-centos)
       
       
-      One thing we could do is package our own version of ghostscript and ghostmagick under extraResources (using build command) and fork the working version of pdf2pic to point to a local install instead.
-      
+
       PDFJS + Nodecanvas:
       https://stackoverflow.com/questions/69520419/questions-regarding-pdf-to-image-conversion-with-node-js  
       Related: https://github.com/mozilla/pdf.js/tree/master/examples/node/pdf2png
@@ -42,6 +41,50 @@ This looks promising for better thumbnail solution:
       
       
       WAIT what if we make an MSI out of ghostscript, and then bundle ghostscript MSI, graphicsMagick MSI and our Padoof MSI all together called like install me first, second, third. Then it's easier.
+      
+
+      
+      If we use 2.6.347 of pdf.js, see https://github.com/mozilla/pdf.js/issues/10997 for worker source. That might work!
+      
+      Could we read the first page of the PDF as base64 and then use  Filepix to convert to jpg? https://www.npmjs.com/package/filepix
+      
+      ### Past Experiments
+      
+      * **pdf-img-convert**: Known issue, doesn't work on electron due to canvas issues. Could POSSIBLY work with node-canvas.
+      
+      * **PDF2pic**. Works great. Requires ghostscript and graphicsMagick. No-go.
+        * One thing we could do is package our own version of ghostscript and ghostmagick under extraResources (using build command) and fork the working version of pdf2pic to point to a local install instead.
+      
+      
+      * **PDFJS and nodecanvs**: The modern version doesn't work (see above re: # build issues). Going to an older version fails on `import * as PDFJSWorker from 'pdfjs-dist/build/pdf.worker.js';`, in the most annoying way possible; the button simply doesn't work. We've encountered similar behavior on failed importas in the past. 
+        * This is a non-starter. Node-canvas has even MORE globably requirements, including GTK 2
+        
+              
+      Try an older version of pdf.js (2.6.347 is stable, otherwise it's the legacy folder).
+      require("pdfjs-dist/legacy/build/pdf.js")
+      
+      One workaround that may work is relying on `pdf.js`, but in order to do that I either need to pull an older version of the library (5+ years), which may not have the functionality I need, and also may have security vulnerabilities, or update Node, which is objectively the correct measure.
+      
+        Updating node past 16 leads to SSL issues I don't really want to get into right now. There is the legacy folder of pdfjs, which is nice except for the fact that I can't directly tell modules to use it without modifying them. Ideally in that case, I'd clone the module for posterity, but let's not get carried away.
+        
+        Went from 14 to 16.20.2
+        
+        Went from 16 to 20. Trying the envolope business. ERR_OSSL_EVP_UNSUPPORTED
+        
+        Looks like we need to update electron to match
+        
+        Even this didn't fix the # error! "need san appropraite handler or loader"
+      
+      Currently running set NODE_OPTIONS=--openssl-legacy-provider && npm run build from command line to get around that build issue.
+      
+      
+      * **I'm favoring the 3-msi approach** -- use Wix to create an MSI around ghostscript.
+        Use Wix's burn transformation to run multiple MSI in a row as one setup.exe? https://stackoverflow.com/questions/50889307/wix-burn-doesnt-allow-to-remove-file/50892350#50892350 from https://stackoverflow.com/questions/62257144/install-multiple-exe-with-wix-toolset accepted answer
+      
+      * **pdf-to-png-converter**: This also includes #Private variables, which our version of node doesn't support. See above, we could update node and investigate the SSL issues.
+      
+      * **Filepix**: Similar issue, unsupported null coaslescance, goes deeper than I can fix.
+
       
 ## Before Release
 

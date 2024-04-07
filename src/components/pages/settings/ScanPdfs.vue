@@ -199,9 +199,35 @@ const { PDFDocument } = require('pdf-lib');
 
 import vuescroll from 'vuescroll'
 import MetaGetters from '@/mixins/MetaGetters'
-//  import pdfjs from 'pdfjs-dist';
-// import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
+// import * as pdfjsLib from 'pdfjs-dist/build/pdf'
+// import * as PDFJSWorker from "pdfjs-dist/build/pdf.worker.entry";
+ import { getDocument } from "pdfjs-dist/build/pdf.js";
+// pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJSWorker;
+// import { createCanvas, loadImage } from 'canvas';
+  // import PDFJS from 'pdfjs-dist';
+  // pdfjs.GlobalWorkerOptions.workerSrc = '../../../node_modules/pdfjs-dist/build/pdf.worker.js';
+  // pdfjs.GlobalWorkerOptions.workerSrc = '//cdn.jsdelivr.net/npm/pdfjs-dist@2.6.347/build/pdf.worker.js';
+  // import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 // import * as pdf from 'pdfjs-dist';
+// import PdfjsWorker from "pdfjs-dist/build/pdf.worker.js";
+// import PDFJS, { getDocument } from "pdfjs-dist";
+// PDFJS.workerSrc = "pdfjs-dist/build/pdf.worker.js";
+// PDFJS.GlobalWorkerOptions.workerSrc = "pdfjs-dist/build/pdf.worker.js";
+// PDFJS.GlobalWorkerOptions.workerPort = new PdfjsWorker();
+
+//  import "pdfjs-dist/legacy/build/pdf.worker.entry";
+
+
+
+// import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry'
+
+// PDFJS.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+
+
+// const PDFJSWorker = require('pdfjs-dist/build/pdf.worker');
+
+
+
 
 export default {
   name: 'ScanPdfs',
@@ -497,12 +523,50 @@ const newFileName = `${this.fileInfo.id}`+'.jpg';
 const newFIlePath = path.join(outputPathThumbs, newFileName);
 
 
+  //  pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJSWorker;
+// pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js'
+
+// (async () => {
 
 
 
+//   try {
+//     console.log("Barbados");
+//     const binaryData = new Uint8Array(fs.readFileSync(pathToFile));
+//     // Initialize PDF.js with the BinaryData
+//     console.log("Alpaca");
+//     const pdfDoc = await getDocument({ data: binaryData }).promise;
+// console.log("Chewbacca");
+//     // Get the first page of the PDF
+//     const page = await pdfDoc.getPage(1);
+
+    
+// console.log("Frogweather");
+//     // Get the dimensions and scale of the PDF page
+//     const viewport = page.getViewport({ scale: 1 });
+
+// console.log("Going");
+
+//     // // Create a canvas and rendering context
+//     // const canvas = createCanvas(viewport.width, viewport.height)
+//     // const context = canvas.getContext('2d');
+
+// console.log("Gone");
+
+//     // Render the PDF page as an image on the canvas
+//     await page.render({ canvasContext: context, viewport }).promise;
+
+//     // Convert the canvas content to a data URL (base64)
+//     const imageDataURL = canvas.toDataURL('image/png'); // Change 'image/png' to the desired format if needed
+
+//     return imageDataURL;
+//   } catch (error) {
+//     // Handle any errors that occur during the conversion
+//     throw new Error(`Error converting PDF to image: ${error}`);
+//   }
 
 
-
+// })();
 
 
 
@@ -537,8 +601,8 @@ const newFIlePath = path.join(outputPathThumbs, newFileName);
 // const pdf2img = require('pdf-img-convert');
 
 
+//FIlepix?
 // const filepix = require("filepix");
-
 // filepix.PDF2img(pdfFilePath, outputPathThumbs);
 
 
@@ -584,8 +648,9 @@ const newFIlePath = path.join(outputPathThumbs, newFileName);
 
 
 
-// pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+  // pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
+// This does not work in electron due to canvas issues. Could POSSIBLY work with node-canvas. 
     // const pdf2img = require('pdf-img-convert');
 
 

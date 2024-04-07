@@ -24,5 +24,7 @@ yarn-error.log*
 #Electron-builder output
 /dist_electron
 
+/Padoof-Wix
+
 # Design files
 *.afdesign
