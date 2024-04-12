@@ -362,6 +362,17 @@ ipcMain.on('changeMenuItem', (event, menuId, value) => {
   else systemMenu.getMenuItemById(menuId).checked = value
 })
 
+
+// ipcMain.handle('newName', async (e, defaultPath) => {
+//   console.log("Handling new name");
+//   let selected
+//   dialog-node.entry("What's the new name?", "Rename file", 30000, (result) => {
+//     console.log(result);
+//     selected = result;
+//   });
+//   return selected;
+// })
+
 // window events from render process
 ipcMain.on('closeApp', () => { win.close() })
 ipcMain.handle('maximize', (e, w) => { 
@@ -387,6 +398,7 @@ ipcMain.handle('chooseDirectory', async (e, defaultPath) => {
   })
   return selected
 })
+
 ipcMain.handle('chooseDirectoryMultiple', async () => { 
   let selected
   await dialog.showOpenDialog(win, {

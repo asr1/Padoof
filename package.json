@@ -28,6 +28,8 @@
     "cheerio": "^1.0.0-rc.10",
     "chokidar": "^3.5.1",
     "chroma-js": "^2.1.2",
+    "core-js": "^3.6.4",
+    "dialog-node": "^0.2.1",
     "ffmpeg-static": "^4.3.0",
     "ffprobe-static": "^3.0.0",
     "filepond": "^4.26.1",
@@ -54,6 +56,7 @@
     "vue-drag-drop": "^1.1.4",
     "vue-filepond": "^6.0.3",
     "vue-router": "^3.5.1",
+    "vue-the-mask": "^0.11.1",
     "vuedraggable": "^2.24.3",
     "vuescroll": "^4.17.3",
     "vuetify": "^2.5.9",
@@ -62,9 +65,20 @@
   "devDependencies": {
     "@mdi/font": "^5.9.55",
     "@vue/cli-plugin-babel": "^4.5.11",
+    "@vue/cli-plugin-router": "^4.5.10",
+    "@vue/cli-plugin-vuex": "^4.5.10",
     "@vue/cli-service": "^4.5.11",
+    "@vue/devtools": "^5.3.3",
+    "css-loader": "^5.0.2",
     "electron": "^29.2.0",
+    "less": "^3.13.1",
+    "less-loader": "^5.0.0",
+    "sass": "^1.32.8",
+    "sass-loader": "^8.0.0",
     "vue-cli-plugin-electron-builder": "^2.1.1",
-    "vue-template-compiler": "^2.6.12"
+    "vue-cli-plugin-vuetify": "^2.3.1",
+    "vue-devtools": "^5.1.4",
+    "vue-template-compiler": "^2.6.12",
+    "vuetify-loader": "^1.7.2"
   }
 }

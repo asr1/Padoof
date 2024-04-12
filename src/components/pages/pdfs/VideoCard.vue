@@ -496,6 +496,7 @@ export default {
           { type: 'divider' },
           { name: `Reveal in File Explorer`, type: 'item', icon: 'folder-open', function: ()=>{this.revealInFileExplorer()}, disabled: !this.isSelectedSingleVideo},
           { name: `Move File to...`, type: 'item', icon: 'file-move', function: ()=>{this.moveFile()}, disabled: this.$store.state.movingFiles},
+          { name: `Rename File`, type: 'item', icon: 'file-move', function: ()=>{this.renameFile()}, disabled: this.$store.state.movingFiles},
           { type: 'divider' },
           { name: `Remove File`, type: 'item', icon: 'delete', color: 'error', function: ()=>{this.$store.state.Videos.dialogDeleteVideo=true},},
         ]
@@ -552,6 +553,55 @@ export default {
         }
       }
       this.$store.commit('removeBackgroundProcess', bpId)
+      this.$store.state.movingFiles = false
+    },
+    async renameFile() {
+      console.log("Renaming");
+      const move = (oldPath, newPath) => {
+        return new Promise((resolve, reject) => {
+          // fs.rename(oldPath, newPath, (err) => {
+            // if (err) reject(err)
+            // else resolve(null)
+            resolve()
+          // })
+        })
+      }
+      console.log("About to invoke");
+      // const result = ipcRenderer.invoke('newName', 'ping'); // Why is node not defined here?
+      // console.log("Invoked", result);
+
+      // ipcMain.handle('newName', async (e, defaultPath) => {
+        let selected
+        var dialog = require('dialog-node');
+        dialog.entry("What's the new name?", "Rename file", 0, (result, ret, err) => {
+          console.log(ret);
+          selected = ret;
+          console.log("Result", selected);
+        });
+
+      // if (result.filePaths.length === 0) return
+      // let filePath = result.filePaths[0]
+      // let ids = this.$store.getters.getSelectedVideos
+      // if (ids.length===0) return
+      // let vids = this.$store.getters.pdfs
+      // let bpId = shortid.generate()
+      // let bp = { id: bpId, text: 'Moving files', icon: 'file-move', }
+      // this.$store.commit('addBackgroundProcess', bp)
+      // this.$store.state.movingFiles = true
+      // for (let i of ids) {
+      //   let oldPath = vids.find({id:i}).value().path
+      //   let fileName = path.basename(oldPath)
+      //   let newPath = path.join(filePath, fileName)
+      //   const moveError = await move(oldPath, newPath)
+      //   if (moveError) {
+      //     this.$store.commit('addLog', { type: 'error', text: `Failed to move file "${fileName}".` })
+      //     throw moveError
+      //   } else {
+      //     vids.find({id:i}).assign({ path: newPath, edit: Date.now() }).write()
+      //     this.$store.commit('addLog', { type: 'info', text: `File "${fileName}" successfully moved!` })
+      //   }
+      // }
+      // this.$store.commit('removeBackgroundProcess', bpId)
       this.$store.state.movingFiles = false
     },
     filterVideosBy(metaId, metaCardId) {
