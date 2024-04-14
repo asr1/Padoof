@@ -412,6 +412,7 @@ export default {
     },
     checkForUpdates() {
       axios.get(`https://github.com/asr1/Padoof/releases`).then((response) => {
+        console.log(response);
         if (response.status === 200) {
           const html = response.data
           const $ = cheerio.load(html)

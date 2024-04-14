@@ -529,6 +529,7 @@ export default {
           })
         })
       }
+      console.log("Choose dir 2");
       const result = await ipcRenderer.invoke('chooseDirectory', path.dirname(this.pdf.path))
       if (result.filePaths.length === 0) return
       let filePath = result.filePaths[0]
@@ -556,28 +557,45 @@ export default {
       this.$store.state.movingFiles = false
     },
     async renameFile() {
-      console.log("Renaming");
-      const move = (oldPath, newPath) => {
+   const move = (oldPath, newPath) => {
         return new Promise((resolve, reject) => {
-          // fs.rename(oldPath, newPath, (err) => {
-            // if (err) reject(err)
-            // else resolve(null)
-            resolve()
-          // })
+          mv(oldPath, newPath, (err) => {
+            if (err) reject(err)
+            else resolve(null)
+          })
         })
       }
-      console.log("About to invoke");
-      // const result = ipcRenderer.invoke('newName', 'ping'); // Why is node not defined here?
-      // console.log("Invoked", result);
+      // Reusing ChooseDirectory because new channels don't seem to be working. This is a hack :)
+      // TODO also pass in the current name as the default
+      const fileName = "oldName" || path.basename(oldPath);
+      console.log("Here we go!");
+      const result = await ipcRenderer.invoke('renameFile', 'RENAME_MODE_PADOOF' + fileName)
 
-      // ipcMain.handle('newName', async (e, defaultPath) => {
-        let selected
-        var dialog = require('dialog-node');
-        dialog.entry("What's the new name?", "Rename file", 0, (result, ret, err) => {
-          console.log(ret);
-          selected = ret;
-          console.log("Result", selected);
-        });
+
+
+//     const prompt = require('electron-prompt');
+
+// prompt({
+//     title: 'Prompt example',
+//     label: 'URL:',
+//     value: 'http://example.org',
+//     inputAttrs: {
+//         type: 'url'
+//     },
+//     type: 'input'
+// })
+// .then((r) => {
+//     if(r === null) {
+//         console.log('user cancelled');
+//     } else {
+//         console.log('result', r);
+//     }
+// })
+// .catch(console.error);
+
+
+
+
 
       // if (result.filePaths.length === 0) return
       // let filePath = result.filePaths[0]
@@ -602,7 +620,7 @@ export default {
       //   }
       // }
       // this.$store.commit('removeBackgroundProcess', bpId)
-      this.$store.state.movingFiles = false
+      // this.$store.state.movingFiles = false
     },
     filterVideosBy(metaId, metaCardId) {
       let filter = {

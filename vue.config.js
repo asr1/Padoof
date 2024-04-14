@@ -26,7 +26,8 @@ module.exports = {
           asar: true,
           asarUnpack: [
             "node_modules/@ffmpeg-installer",
-            "node_modules/@ffprobe-installer"
+            "node_modules/@ffprobe-installer",
+            "node_modules/native-prompt"
           ],
         },
         nsis: {

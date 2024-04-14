@@ -389,17 +389,125 @@ ipcMain.handle('minimize', (e, w) => {
 })
 // dialog events from render process
 ipcMain.handle('chooseDirectory', async (e, defaultPath) => {
-  let selected
-  await dialog.showOpenDialog(win, {
-    properties: ['openDirectory'],
-    defaultPath: defaultPath || ''
-  }).then(result => {
-    selected = result 
-  })
-  return selected
+  console.log("Event", e);
+  console.log("path", defaultPath);
+  // New channels aren't working, so we're going to hack rename into move.
+  // Rename property exists only on complex object, preserving back-compat behavior.
+  // See also VideoCard.vue
+  if(defaultPath === 'RENAME_MODE_PADOOF') {
+    console.log("Rename mode activated!");
+    console.log(defaultPath);
+    const dlg = require('dialog-node');
+    const filename = ("" + defaultPath).substring('RENAME_MODE_PADOOF'.length -1);
+    dlg.entry(filename, "Enter the new name", 0, (code, retVal, err)=>{
+      console.log("code", code);
+      console.log("Ret", retVal);
+      console.log("err", err);
+    })
+  } else {
+    let selected
+    await dialog.showOpenDialog(win, {
+      properties: ['openDirectory'],
+      defaultPath: defaultPath || ''
+    }).then(result => {
+      selected = result 
+    })
+    return selected
+  }
 })
 
+ipcMain.handle('renameFile', async (e, defaultPath) => {
+  console.log("Event", e);
+  console.log("path", defaultPath);
+  // New channels aren't working, so we're going to hack rename into move.
+  // Rename property exists only on complex object, preserving back-compat behavior.
+  // See also VideoCard.vue
+  // if(defaultPath === 'RENAME_MODE_PADOOF') {
+    console.log("Rename mode activated!");
+    console.log(defaultPath);
+    // const dlg = require('dialog-node');
+    // const filename = ("" + defaultPath).substring('RENAME_MODE_PADOOF'.length -1);
+    // dlg.entry(filename, "Enter the new name", 0, (code, retVal, err)=>{
+    //   console.log("code", code);
+    //   console.log("Ret", retVal);
+    //   console.log("err", err);
+    // })
+
+//     const prompt = require('electron-prompt');
+
+// prompt({
+//     title: 'Prompt example',
+//     label: 'URL:',
+//     value: 'http://example.org',
+//     inputAttrs: {
+//         type: 'url'
+//     },
+//     type: 'input'
+// })
+// .then((r) => {
+//     if(r === null) {
+//         console.log('user cancelled');
+//     } else {
+//         console.log('result', r);
+//     }
+// })
+// .catch(console.error);
+
+
+
+
+
+// const prompt = require('custom-electron-prompt')
+// prompt({
+//   title: 'Prompt example',
+//   label: 'URL:',
+//   value: 'http://example.org',
+//   inputAttrs: {
+//       type: 'url'
+//   },
+//   type: 'input'
+// })
+// .then((r) => {
+//   if(r === null) {
+//       console.log('user cancelled');
+//   } else {
+//       console.log('result', r);
+//   }
+// })
+// .catch(console.error);
+
+
+// const smalltalk = require('smalltalk');
+
+// const smalltalk = require('smalltalk/native');
+// smalltalk
+//     .prompt('Question', 'How old are you?', '10')
+//     .then((value) => {
+//         console.log(value);
+//     })
+//     .catch(() => {
+//         console.log('cancel');
+//     });
+
+
+
+// const prompt = require('native-prompt')
+// prompt("This is a title.", "What would you really like to see next?", { defaultText: "Nothing" }).then(text => {
+//   if (text) {
+//       // Do something with the input
+//   } else {
+//       // The user either clicked cancel or left the space blank
+//   }
+// })
+
+
+})
+
+
+
+
 ipcMain.handle('chooseDirectoryMultiple', async () => { 
+  console.log("Choose directory multiple");
   let selected
   await dialog.showOpenDialog(win, {
     properties: ['openDirectory','multiSelections']
