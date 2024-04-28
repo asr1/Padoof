@@ -32,7 +32,6 @@
     "core-js": "^3.6.4",
     "custom-electron-prompt": "^1.5.7",
     "dialog-node": "^0.2.1",
-    "electron-pdf-window": "^1.0.12",
     "electron-prompt": "^1.7.0",
     "ffmpeg-static": "^4.3.0",
     "ffprobe-static": "^3.0.0",

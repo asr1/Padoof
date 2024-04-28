@@ -72,7 +72,8 @@ export default {
       } else {
         let data = {
           pdfs: this.playlist.pdfs,
-          id: this.playlist.pdfs[0].id,  
+          id: this.playlist.pdfs[0].id,
+          path: this.pdf.path   
         }
         console.log("Sending 4");
         ipcRenderer.send('openPlayer', data)

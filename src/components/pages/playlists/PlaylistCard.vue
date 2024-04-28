@@ -95,7 +95,8 @@ export default {
       } else {
         let data = {
           pdfs: this.pdfs,
-          id: this.pdfs[0].id,  
+          id: this.pdfs[0].id,
+          path: this.pdf.path 
         }
         console.log("Sending 5");
         ipcRenderer.send('openPlayer', data)

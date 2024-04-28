@@ -71,7 +71,7 @@ export default {
       }
       if (this.$store.state.Settings.isopenPDFInSystemPlayer) shell.openPath(pathToVideo)
       else {
-        let data = { pdfs: [pdf], id: pdf.id }
+        let data = { pdfs: [pdf], id: pdf.id, path: this.pdf.path  }
         console.log("Sending 3");
         ipcRenderer.send('openPlayer', data)
       }  
