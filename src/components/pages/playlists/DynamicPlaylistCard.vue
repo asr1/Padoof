@@ -74,6 +74,7 @@ export default {
           pdfs: this.playlist.pdfs,
           id: this.playlist.pdfs[0].id,  
         }
+        console.log("Sending 4");
         ipcRenderer.send('openPlayer', data)
       }
     },

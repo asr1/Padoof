@@ -2,7 +2,7 @@
   <v-card outlined class="pa-4">
     <div class="d-flex">
       <div>
-        <div>Padoof v0.0.1-beta</div>
+        <div>Padoof v0.0.9</div>
         <div class="text--secondary">by Alex Rinehart</div>
       </div>
       <v-spacer></v-spacer>

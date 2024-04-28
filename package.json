@@ -1,7 +1,7 @@
 {
   "name": "padoof",
   "productName": "Padoof",
-  "version": "0.0.3",
+  "version": "0.0.9",
   "author": {
     "name": "Alex Rinehart",
     "email": "alexandersrinehart@gmail.com"
@@ -16,7 +16,8 @@
     "electron:build_portable": "vue-cli-service electron:build --win portable",
     "electron:serve": "vue-cli-service electron:serve",
     "build": "npm run electron:build",
-    "buildwin": "set NODE_OPTIONS=--openssl-legacy-provider && npm run build"
+    "buildwin": "set NODE_OPTIONS=--openssl-legacy-provider && npm run build",
+    "depcheck": "npx depcheck"
   },
   "main": "background.js",
   "dependencies": {
@@ -31,6 +32,7 @@
     "core-js": "^3.6.4",
     "custom-electron-prompt": "^1.5.7",
     "dialog-node": "^0.2.1",
+    "electron-pdf-window": "^1.0.12",
     "electron-prompt": "^1.7.0",
     "ffmpeg-static": "^4.3.0",
     "ffprobe-static": "^3.0.0",

@@ -22,7 +22,7 @@
           <v-divider class="ma-1"></v-divider>
           <v-list-item link @mouseup="isopenPDFInSystemPlayer=!isopenPDFInSystemPlayer">
             <v-list-item-title>
-              <v-icon left size="18">mdi-television-play</v-icon> Read PDF in System Player (TODO)
+              <v-icon left size="18">mdi-television-play</v-icon> Read PDF in System Player
             </v-list-item-title>
             <v-icon size="20" class="ml-6" :color="isopenPDFInSystemPlayer?'':'rgba(0,0,0,0)'">mdi-check</v-icon>
           </v-list-item>

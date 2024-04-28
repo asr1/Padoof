@@ -11,7 +11,7 @@ const shell = require('electron').shell
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win, loading, player
+let win, loading, player, viewer
 
 const remoteMain = require("@electron/remote/main")
 remoteMain.initialize();
@@ -89,6 +89,24 @@ function createPlayerWindow() {
   return window
 }
 
+function createViewer() {
+  const { app } = require('electron')
+  const PDFWindow = require('electron-pdf-window')
+
+  const win = new PDFWindow({
+    width: 700,
+    height: 1200,
+    webPreferences: {
+      webSecurity: false
+    }
+  })
+
+  // TODO handle max / minimize?
+
+  PDFWindow.addSupport(win);
+  return win;
+}
+
 function createMainWindow() {
   // Create the browser window.
   let window = new BrowserWindow({
@@ -116,6 +134,7 @@ function createMainWindow() {
   window.on('closed', () => {
     loading = null 
     player = null 
+    viewer = null
     win = null  
     app.exit()
   })
@@ -152,6 +171,7 @@ app.on('ready', async () => {
   if (!isDevelopment) createProtocol('app')
   win = createMainWindow()
   player = createPlayerWindow()
+  // viewer = createViewer()
   createLoadingWindow()
 })
 
@@ -184,7 +204,7 @@ let systemMenu = Menu.buildFromTemplate([
       },
       { type:'separator' },
       { 
-        label:'Play Video in System Player', 
+        label:'Open PDFs in System Reader', 
         id: 'systemPlayer',
         type: 'checkbox',
         checked: true, 
@@ -375,6 +395,7 @@ ipcMain.on('changeMenuItem', (event, menuId, value) => {
 
 // window events from render process
 ipcMain.on('closeApp', () => { win.close() })
+// TODO I can either remove these or remap them for viewer
 ipcMain.handle('maximize', (e, w) => { 
   if (w === 'player') player.maximize() 
   else win.maximize() 
@@ -529,8 +550,28 @@ ipcMain.handle('chooseFile', async () => {
 ipcMain.handle('getPathToUserData', () => { return app.getPath('userData') })
 ipcMain.handle('getAppVersion', () => { return app.getVersion() })
 ipcMain.on('openPlayer', (event, data) => {
-  player.show()
-  player.webContents.send('getDataForPlayer', data)
+  console.log("Playing", data);
+  // player.show()
+  // player.webContents.send('getDataForPlayer', data)
+  // viewer = createViewer();
+  // // viewer.loadURL("file://" + data.path)
+  // data.path = data.path.replaceAll("\\", "/");
+  // viewer.loadURL("file://" + data.path)
+
+
+    // Create the browser window.
+    const win = new BrowserWindow({
+      width: 800,
+      height: 600,
+      webPreferences: {
+        plugins: true
+      }
+    });
+  
+    // and load the index.html of the app.
+    win.loadFile(data.path);
+
+
 })
 ipcMain.on('closePlayer', () => { player.hide() })
 ipcMain.handle('getDb', async (event, dbType) => {

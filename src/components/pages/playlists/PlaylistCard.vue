@@ -97,6 +97,7 @@ export default {
           pdfs: this.pdfs,
           id: this.pdfs[0].id,  
         }
+        console.log("Sending 5");
         ipcRenderer.send('openPlayer', data)
       }
     },

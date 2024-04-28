@@ -6,24 +6,12 @@ Padoof notes
 
 ## Remove ffmpeg
 
+## Remove player from background.js
+
 ## Total size on disk, total number fo PDFs both showing as 0
 
 ## On video hover it should show a pdf icon instead of a play triangle, and on click should open the pdf in either a pdf reader or a system one.
 
-### PDF viewer
-      https://webdesign.tutsplus.com/how-to-create-a-pdf-viewer-in-javascript--cms-32505t
-      
-      https://stackoverflow.com/questions/43220321/electron-pdf-viewer
-
 ## Rename files, or at least change display name.
 
 ## Page count not showing for every file.
-
-## Thumbnails require Ghostscript, GraphicsMagick
- 
- Does current solution work or do I need imageMagick as well?
-
-      
-## Before Release
-
-* npx depcheck for unused packages
