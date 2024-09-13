@@ -17,6 +17,7 @@
             </v-tooltip>
           </div>
           <v-spacer></v-spacer>
+          <!-- Rename todo. Move videoInfoFalse to a funciton that also sets dialogRename? -->
           <v-btn @click="$store.state.Videos.dialogEditVideoInfo=false" class="mx-4" outlined> <v-icon left>mdi-close</v-icon> close </v-btn>
           <v-btn @click="saveVideoInfo" outlined> <v-icon left>mdi-content-save</v-icon> Save </v-btn>
         </v-toolbar>

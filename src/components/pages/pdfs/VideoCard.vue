@@ -469,6 +469,7 @@ export default {
           { name: `Add to Playlist`, type: 'menu', icon: 'playlist-plus', menu: getPlaylists()},
           { type: 'divider' },
           { name: `Edit Info`, type: 'item', icon: 'pencil', function: ()=>{this.$store.state.Videos.dialogEditVideoInfo=true}},
+          { name: `Rename`, type: 'item', icon: 'file-move', function: ()=>{this.$store.state.Videos.dialogRename=true}},
           { name: `Rating`, type: 'menu', icon: 'star', menu: [
             { name: `5`, type: 'item', icon: 'star', function: ()=>{this.changeRating(5)}},
             { name: `4.5`, type: 'item', icon: 'star-half-full', function: ()=>{this.changeRating(4.5)}},
@@ -498,7 +499,6 @@ export default {
           { type: 'divider' },
           { name: `Reveal in File Explorer`, type: 'item', icon: 'folder-open', function: ()=>{this.revealInFileExplorer()}, disabled: !this.isSelectedSingleVideo},
           { name: `Move File to...`, type: 'item', icon: 'file-move', function: ()=>{this.moveFile()}, disabled: this.$store.state.movingFiles},
-          { name: `Rename File`, type: 'item', icon: 'file-move', function: ()=>{this.renameFile()}, disabled: this.$store.state.movingFiles},
           { type: 'divider' },
           { name: `Remove File`, type: 'item', icon: 'delete', color: 'error', function: ()=>{this.$store.state.Videos.dialogDeleteVideo=true},},
         ]
@@ -531,7 +531,7 @@ export default {
           })
         })
       }
-      console.log("Choose dir 2");
+
       const result = await ipcRenderer.invoke('chooseDirectory', path.dirname(this.pdf.path))
       if (result.filePaths.length === 0) return
       let filePath = result.filePaths[0]
@@ -558,72 +558,7 @@ export default {
       this.$store.commit('removeBackgroundProcess', bpId)
       this.$store.state.movingFiles = false
     },
-    async renameFile() {
-   const move = (oldPath, newPath) => {
-        return new Promise((resolve, reject) => {
-          mv(oldPath, newPath, (err) => {
-            if (err) reject(err)
-            else resolve(null)
-          })
-        })
-      }
-      // Reusing ChooseDirectory because new channels don't seem to be working. This is a hack :)
-      // TODO also pass in the current name as the default
-      const fileName = "oldName" || path.basename(oldPath);
-      console.log("Here we go!");
-      const result = await ipcRenderer.invoke('renameFile', 'RENAME_MODE_PADOOF' + fileName)
 
-
-
-//     const prompt = require('electron-prompt');
-
-// prompt({
-//     title: 'Prompt example',
-//     label: 'URL:',
-//     value: 'http://example.org',
-//     inputAttrs: {
-//         type: 'url'
-//     },
-//     type: 'input'
-// })
-// .then((r) => {
-//     if(r === null) {
-//         console.log('user cancelled');
-//     } else {
-//         console.log('result', r);
-//     }
-// })
-// .catch(console.error);
-
-
-
-
-
-      // if (result.filePaths.length === 0) return
-      // let filePath = result.filePaths[0]
-      // let ids = this.$store.getters.getSelectedVideos
-      // if (ids.length===0) return
-      // let vids = this.$store.getters.pdfs
-      // let bpId = shortid.generate()
-      // let bp = { id: bpId, text: 'Moving files', icon: 'file-move', }
-      // this.$store.commit('addBackgroundProcess', bp)
-      // this.$store.state.movingFiles = true
-      // for (let i of ids) {
-      //   let oldPath = vids.find({id:i}).value().path
-      //   let fileName = path.basename(oldPath)
-      //   let newPath = path.join(filePath, fileName)
-      //   const moveError = await move(oldPath, newPath)
-      //   if (moveError) {
-      //     this.$store.commit('addLog', { type: 'error', text: `Failed to move file "${fileName}".` })
-      //     throw moveError
-      //   } else {
-      //     vids.find({id:i}).assign({ path: newPath, edit: Date.now() }).write()
-      //     this.$store.commit('addLog', { type: 'info', text: `File "${fileName}" successfully moved!` })
-      //   }
-      // }
-      // this.$store.commit('removeBackgroundProcess', bpId)
-      // this.$store.state.movingFiles = false
-    },
     filterVideosBy(metaId, metaCardId) {
       let filter = {
         by: metaId,

@@ -38,6 +38,10 @@
       <DialogEditSingleVideoInfo v-if="isSelectedSingleVideo"/>
       <DialogEditMultipleVideosInfo v-if="selectedVideosLength>1"/>
     </div>
+
+    <div v-if="$store.state.Videos.dialogRename">
+      <DialogRenameSinglePdf v-if="isSelectedSingleVideo"/>
+    </div>
 	</div>
 </template>
 
@@ -53,6 +57,7 @@ export default {
   components: {
     vuescroll,
     DialogEditSingleVideoInfo: () => import('@/components/pages/pdfs/DialogEditSingleVideoInfo.vue'),
+    DialogRenameSinglePdf: () => import('@/components/pages/pdfs/DialogRenameSinglePdf.vue'),
     DialogEditMultipleVideosInfo: () => import('@/components/pages/pdfs/DialogEditMultipleVideosInfo.vue'),
   },
   mounted() {

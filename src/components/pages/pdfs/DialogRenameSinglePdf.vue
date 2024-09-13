@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.state.Videos.dialogEditVideoInfo">
+  <div v-if="$store.state.Videos.dialogRename">
     <v-bottom-sheet v-model="sheet" inset scrollable persistent content-class="pdf-sheet">
       <v-card>
         <v-card-actions class="pa-0">
@@ -62,100 +62,12 @@
         </v-card-actions>
         <vuescroll>
           <v-card-text class="pa-0">
-            <v-row class="mx-2 mt-4">
-              <v-col v-for="(m,i) in metaAssignedToVideos" :key="i+key" cols="12" lg="6" class="pt-0">
-                <v-autocomplete v-if="m.type=='complex'" :items="getCards(m.id)" 
-                  @input="setVal($event,m.id)" :value="values[m.id]"
-                  multiple hide-selected :ref="m.id"
-                  :label="getMeta(m.id).settings.name" item-value="id"
-                  :prepend-inner-icon="showIcons?`mdi-${getMeta(m.id).settings.icon}`:''"
-                  append-outer-icon="mdi-plus" append-icon="mdi-chevron-down" 
-                  @click:append-outer="openDialogAddNewCard(m.id)"
-                  @click:append="listViewMeta=getMeta(m.id),dialogListView=true"
-                  :menu-props="{contentClass:'list-with-preview'}" class="hidden-close"
-                  :filter="filterCards" :hint="getMeta(m.id).settings.hint" persistent-hint
-                > <template v-slot:selection="data">
-                    <v-chip v-bind="data.attrs" class="my-1 px-2" small
-                      @click="data.select" :input-value="data.selected"
-                      @click:close="removeItem(data.item.id,m.id)" close
-                      :color="getColor(m.id,data.item.id)" 
-                      :label="getMeta(m.id).settings.chipLabel"
-                      :outlined="getMeta(m.id).settings.chipOutlined"
-                      @mouseover.stop="showImage($event, data.item.id, 'meta', m.id)" 
-                      @mouseleave.stop="$store.state.hoveredImage=false">
-                      <span>{{ data.item.meta.name }}</span>
-                    </v-chip>
-                  </template>
-                  <template v-slot:item="data">
-                    <div class="list-item" 
-                      @mouseover.stop="showImage($event, data.item.id, 'meta', m.id)" 
-                      @mouseleave.stop="$store.state.hoveredImage=false"
-                    > 
-                      <span v-if="getMeta(m.id).settings.favorite">
-                        <v-icon :color="data.item.meta.favorite? 'pink':''" left size="14">mdi-heart</v-icon>
-                      </span>
-                      <span v-if="getMeta(m.id).settings.color">
-                        <v-icon :color="data.item.meta.color || ''" left small>
-                          mdi-{{getMeta(m.id).settings.icon}}</v-icon>
-                      </span>
-                      <span>{{data.item.meta.name}}</span>
-                      <span v-if="getMeta(m.id).settings.synonyms" class="aliases">
-                        {{getCard(data.item.id).meta.synonyms===undefined? '' : getCard(data.item.id).meta.synonyms.join(', ').slice(0,50)}}
-                      </span>
-                    </div>
-                  </template>
-                </v-autocomplete>
-
-                <v-text-field v-if="m.type=='simple'&&(getMeta(m.id).dataType==='string')" 
-                  @input="setVal($event,m.id)" :value="values[m.id]"
-                  :label="getMeta(m.id).settings.name" :hint="getMeta(m.id).settings.hint" persistent-hint
-                  :prepend-inner-icon="showIcons?`mdi-${getMeta(m.id).settings.icon}`:''"
-                  clearable @click:clear="setVal('', m.id)"/>
-
-                <v-text-field v-if="m.type=='simple'&&(getMeta(m.id).dataType==='number')" 
-                  @input="setVal($event,m.id)" :value="values[m.id]" type="number"
-                  :label="getMeta(m.id).settings.name" :hint="getMeta(m.id).settings.hint" persistent-hint
-                  :prepend-inner-icon="showIcons?`mdi-${getMeta(m.id).settings.icon}`:''"/>
-
-                <v-autocomplete v-if="m.type=='simple'&&getMeta(m.id).dataType==='array'" 
-                  :items="getMeta(m.id).settings.items" item-value="id" item-text="name"
-                  @input="setVal($event,m.id)" :value="values[m.id]" multiple
-                  :label="getMeta(m.id).settings.name" :hint="getMeta(m.id).settings.hint" persistent-hint
-                  :prepend-inner-icon="showIcons?`mdi-${getMeta(m.id).settings.icon}`:''"
-                  append-outer-icon="mdi-plus" @click:append-outer="openDialogAddNewItem(m.id)"/>
-                
-                <v-switch v-if="m.type=='simple'&&getMeta(m.id).dataType==='boolean'" 
-                  :label="getMeta(m.id).settings.name" :hint="getMeta(m.id).settings.hint" persistent-hint
-                  @change="setVal($event,m.id)" :value="values[m.id]" class="ma-0"
-                  :prepend-inner-icon="showIcons?`mdi-${getMeta(m.id).settings.icon}`:''"/>
-                  
-                <v-text-field v-if="m.type=='simple'&&getMeta(m.id).dataType==='date'" 
-                  :value="values[m.id]" @click="calendarId=m.id,calendar=true"
-                  :label="getMeta(m.id).settings.name" :hint="getMeta(m.id).settings.hint"
-                  clearable @click:clear="setVal('', m.id)" readonly persistent-hint
-                  :prepend-inner-icon="showIcons?`mdi-${getMeta(m.id).settings.icon}`:''"/>
-
-                <div v-if="m.type=='simple'&&getMeta(m.id).dataType==='rating'" class="d-flex flex-column">
-                  <div class="text--secondary caption">{{getMeta(m.id).settings.name}}</div>
-                  <div class="d-flex">
-                    <v-icon v-html="showIcons?`mdi-${getMeta(m.id).settings.icon}`:''" left/>
-                    <v-rating :value="values[m.id]" @input="setVal($event,m.id)" :length="getMeta(m.id).settings.ratingMax" hover 
-                      :full-icon="`mdi-${getMeta(m.id).settings.ratingIcon}`" :empty-icon="`mdi-${getMeta(m.id).settings.ratingIconEmpty||getMeta(m.id).settings.ratingIcon}`" 
-                      :color="getMeta(m.id).settings.ratingColor" background-color="grey" class="meta-rating" clearable 
-                      :half-increments="getMeta(m.id).settings.ratingHalf" :half-icon="`mdi-${getMeta(m.id).settings.ratingIconHalf||getMeta(m.id).settings.ratingIcon}`"/>
-                  </div>
-                  <div class="text--secondary caption">{{getMeta(m.id).settings.hint}}</div>
-                </div>
-              </v-col>
+            <v-row class="mx-4 mt-8">
               <v-col cols="12" class="d-flex mt-4">
-                <!-- <div class="overline edit-path-title">
-                  <v-checkbox :value="pathEditable" @change="changePathEditable" hide-details 
-                    class="mt-0 mr-2" off-icon="mdi-pencil" on-icon="mdi-pencil-off"/>
-                </div> -->
                 <v-form ref="form" v-model="valid" style="width: 100%;">
-                  <v-text-field v-model="pathToFile" 
-                    :rules="[value => !!value || 'Path is required']" :disabled="!pathEditable"
-                    placeholder="Write file path here" label="File path" class="pt-0 mt-0" />
+                  <v-text-field v-model="pdfName" 
+                    :rules="[value => !!value || 'Name is required']" 
+                    placeholder="Write file name here" label="File name" class="pt-0 mt-0" />
                 </v-form>
               </v-col>
               <v-col cols="12" class="pt-0">
@@ -243,7 +155,7 @@ import MetaGetters from '@/mixins/MetaGetters'
 import NameRules from '@/mixins/NameRules'
 
 export default {
-  name: "DialogEditSingleVideoInfo",
+  name: "DialogRenameSinglePdf",
   components: {
     vuescroll,
     DialogListView: () => import('@/components/pages/meta/DialogListView.vue'),
@@ -270,6 +182,7 @@ export default {
     rating: 0,
     favorite: false,
     pathToFile: '',
+    pdfName: '',
     edit: '',
     added: '',
     viewed: '',
@@ -316,10 +229,11 @@ export default {
       let pdf = _.cloneDeep(this.pdf)
       
       // get info of pdf
-      this.rating = pdf.rating || 0
-      this.favorite = pdf.favorite || false
       this.pathToFile = pdf.path || ''
-      this.bookmark = pdf.bookmark || ''
+      this.pdfName = this.fileName
+      console.log("Antwerp");
+      console.log(this.pdfName);
+      this.oldName = this.pdfName
 
       // get date added and date of last edit text
       let dateAdded = new Date(pdf.date)
@@ -422,7 +336,7 @@ export default {
     },
     close() {
       this.sheet = false
-      setTimeout(() => { this.$store.state.Videos.dialogEditVideoInfo = false }, 300)
+      setTimeout(() => { this.$store.state.Videos.dialogRename = false }, 300)
     },
     saveVideoInfo() {
       this.$refs.form.validate()
@@ -436,7 +350,26 @@ export default {
         edit: Date.now(),
       }
 
-      let newValues = {...presetValues, ...this.values}
+      console.log("");
+      console.log("Bruges");
+        let newValues = {...presetValues, ...this.values}
+
+      if(this.pdfName !== this.oldName) {
+        const pathWithoutName = this.pathToFile.substring(0, this.pathToFile.lastIndexOf('\\') + 1);
+        const newPath = pathWithoutName + this.pdfName + ".pdf";
+        
+        // Update data
+        fs.rename(this.pathToFile, newPath, (err, data)=>{if(err) console.log(err); console.log(data);});
+        this.pdf.path = newPath;
+        this.pathToFile = newPath;
+
+        this.$store.getters.pdfs.find({id: this.pdf.id }).assign({ path: newPath, edit: Date.now() }).write()
+        this.$store.commit('addLog', { type: 'info', text: `File "${this.fileName}" successfully renamed!` })
+
+        newValues.path = newPath;
+
+      }
+
 
       this.$store.getters.pdfs.find({ id: this.pdf.id }).assign(newValues).write()
 
