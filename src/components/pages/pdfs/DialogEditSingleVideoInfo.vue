@@ -59,6 +59,13 @@
         <vuescroll>
           <v-card-text class="pa-0">
             <v-row class="mx-2 mt-4">
+	    <v-col cols="12" class="d-flex mt-4">
+                <v-form ref="form" v-model="valid" style="width: 100%;">
+                  <v-text-field v-model="pdfName" 
+                    :rules="[value => !!value || 'Name is required']" 
+                    placeholder="Write file name here" label="File name" class="pt-0 mt-0" />
+                </v-form>
+              </v-col>
               <v-col v-for="(m,i) in metaAssignedToVideos" :key="i+key" cols="12" lg="6" class="pt-0">
                 <v-autocomplete v-if="m.type=='complex'" :items="getCards(m.id)" 
                   @input="setVal($event,m.id)" :value="values[m.id]"
@@ -266,13 +273,13 @@ export default {
     rating: 0,
     favorite: false,
     pathToFile: '',
+    pdfName: '',
     edit: '',
     added: '',
     viewed: '',
     bookmark: '',
     // header
     timeouts: {},
-    muted: true,
     sheet: false,
     // meta
     values: {},
@@ -316,6 +323,10 @@ export default {
       this.favorite = pdf.favorite || false
       this.pathToFile = pdf.path || ''
       this.bookmark = pdf.bookmark || ''
+      this.pdfName = this.fileName
+      console.log("Antwerp");
+      console.log(this.pdfName);
+      this.oldName = this.pdfName
 
       // get date added and date of last edit text
       let dateAdded = new Date(pdf.date)
@@ -433,6 +444,21 @@ export default {
       }
 
       let newValues = {...presetValues, ...this.values}
+      if(this.pdfName !== this.oldName) {
+        const pathWithoutName = this.pathToFile.substring(0, this.pathToFile.lastIndexOf('\\') + 1);
+        const newPath = pathWithoutName + this.pdfName + ".pdf";
+        
+        // Update data
+        fs.rename(this.pathToFile, newPath, (err, data)=>{if(err) console.log(err); console.log(data);});
+        this.pdf.path = newPath;
+        this.pathToFile = newPath;
+
+        this.$store.getters.pdfs.find({id: this.pdf.id }).assign({ path: newPath, edit: Date.now() }).write()
+        this.$store.commit('addLog', { type: 'info', text: `File "${this.fileName}" successfully renamed!` })
+
+        newValues.path = newPath;
+
+      }
 
       this.$store.getters.pdfs.find({ id: this.pdf.id }).assign(newValues).write()
 

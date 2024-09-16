@@ -469,7 +469,6 @@ export default {
           { name: `Add to Playlist`, type: 'menu', icon: 'playlist-plus', menu: getPlaylists()},
           { type: 'divider' },
           { name: `Edit Info`, type: 'item', icon: 'pencil', function: ()=>{this.$store.state.Videos.dialogEditVideoInfo=true}},
-          { name: `Rename`, type: 'item', icon: 'file-move', function: ()=>{this.$store.state.Videos.dialogRename=true}},
           { name: `Rating`, type: 'menu', icon: 'star', menu: [
             { name: `5`, type: 'item', icon: 'star', function: ()=>{this.changeRating(5)}},
             { name: `4.5`, type: 'item', icon: 'star-half-full', function: ()=>{this.changeRating(4.5)}},

@@ -20,7 +20,6 @@ const Videos = {
     selectedVideos: [],
     dialogDeleteVideo: false,
     dialogEditVideoInfo: false,
-    dialogRename: false,
     dialogErrorPlayVideo: false,
     dialogFolderTree: false,
     dialogFilterVideos: false,
