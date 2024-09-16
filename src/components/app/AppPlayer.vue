@@ -6,7 +6,6 @@
         @click="paused ? play() : pause()" 
         @dblclick="toggleFullscreen" @click.middle="toggleFullscreen" 
         @mousedown="handleMouseCanvas($event)" @contextmenu="showContextMenu($event)"
-        @wheel="changeVolume" @keydown="handleKey" tabindex="-1">
         <!-- TODO change this to PDF reader -->
         <pdf ref="pdfPlayer" class="pdf-player"></pdf>
         <div v-if="isVideoFormatNotSupported" class="pdf-error">
@@ -132,8 +131,6 @@
             <span class="mx-1">/</span>
             <div class="time-end">{{ msToTime(duration * 1000) }}</div>
           </div>
-          <v-slider v-model="volume" value="1" min="0" step="0.05" max="1" hide-details 
-            :prepend-icon="volumeIcon" @click:prepend="toggleMute" class="volume"/>
         </v-card-actions>
       </v-card>
     </div>
@@ -385,18 +382,6 @@
           </v-list-item-title>
           <v-icon size="22" color="rgba(0,0,0,0)">mdi-menu-right</v-icon>
         </v-list-item>
-        <v-list-item class="pr-1" link @mouseup="increaseVolume">
-          <v-list-item-title>
-            <v-icon left size="18">mdi-volume-plus</v-icon> Increase Volume
-          </v-list-item-title>
-          <v-icon size="22" color="rgba(0,0,0,0)">mdi-menu-right</v-icon>
-        </v-list-item>
-        <v-list-item class="pr-1" link @mouseup="decreaseVolume">
-          <v-list-item-title>
-            <v-icon left size="18">mdi-volume-minus</v-icon> Decrease Volume
-          </v-list-item-title>
-          <v-icon size="22" color="rgba(0,0,0,0)">mdi-menu-right</v-icon>
-        </v-list-item>
       </v-list>
     </v-menu>
   </div>
@@ -463,9 +448,6 @@ export default {
     statusTextTimeout: null,
     // Video element properties //
     duration: 1,
-    volume: 1,
-    muted: false,
-    paused: false,
     currentTime: 0,
     currentTimeTracker: null,
     isVideoFormatNotSupported: null,
@@ -500,12 +482,6 @@ export default {
       set(value) { this.$store.state.fullscreen = value },
     },
     currentSrc() { return this.src; },
-    volumeIcon() {
-      if (this.muted) return 'mdi-volume-mute'
-      if (this.volume > 0.7) return 'mdi-volume-high'
-      if (this.volume > 0.3) return 'mdi-volume-medium'
-      return 'mdi-volume-low'
-    },
     // data from main window
     pathToUserData() { return this.$store.getters.getPathToUserData },
     pdfsDb() { return this.$store.state.pdfsDb },
@@ -712,26 +688,6 @@ export default {
       event.preventDefault()
       event.stopPropagation()
     },
-    toggleMute() {
-      this.player.muted = !this.player.muted
-      this.muted = this.player.muted
-    },
-    increaseVolume() {
-      if (this.player.volume >= 1) return
-      this.player.volume += 0.1
-      this.volume = this.player.volume
-    },
-    decreaseVolume() {
-      if (this.player.volume == 0) return
-      this.player.volume -= 0.1
-      this.volume = this.player.volume
-    },
-    changeVolume(e) {
-      if (e.deltaY>0) { if (this.player.volume == 0) return }
-      else if (this.player.volume >= 1) return
-      this.player.volume = (this.player.volume - e.deltaY / 1000 / 2).toFixed(2)
-      this.volume = this.player.volume
-    },
     jumpToSeconds(e) {
       this.player.currentTime = this.player.currentTime + e
     },
@@ -740,8 +696,6 @@ export default {
         case e.key === ' ': this.player.togglePause(); break
         case e.key === 'ArrowRight': this.player.currentTime += 10; break
         case e.key === 'ArrowLeft': this.player.currentTime -= 10; break
-        case e.key === 'ArrowUp': this.changeVolume({deltaY:-100}); break
-        case e.key === 'ArrowDown': this.changeVolume({deltaY:+100}); break
         case e.key === 'f': this.toggleFullscreen(); break
         case e.key === 'p': this.togglePlaylist(); break
         case e.key === 'm': this.toggleMarkers(); break
@@ -970,7 +924,6 @@ export default {
     },
   },
   watch: {
-    volume(newValue, oldValue) { if (newValue !== oldValue) this.player.volume = newValue },
     playIndex() { this.getMarkers() },
     playlistMode(mode, oldMode) {
       if (!mode.includes('shuffle') && oldMode.includes('shuffle')) return
@@ -1140,11 +1093,6 @@ export default {
   .duration {
     display: flex;
   }
-  .volume {
-    max-width: 100px;
-    .v-input__prepend-outer {
-      margin-right: 0;
-    }
   }
   // .hoverable {
   //   &:hover {

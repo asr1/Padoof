@@ -13,11 +13,7 @@
             <div class="gradient" :style="gradient"></div>
             <v-card-actions class="actions">
               <v-btn @click="playVideo" small outlined fab :disabled="!pdfExists" :color="darkMode?'#ccc':'#777'">
-                <v-icon large>mdi-play</v-icon> </v-btn>
-              <v-btn @click="toggleMuted" small outlined fab class="mr-4" :color="darkMode?'#ccc':'#777'">
-                <v-icon v-if="muted">mdi-volume-off</v-icon>
-                <v-icon v-else>mdi-volume-high</v-icon>
-              </v-btn>
+                <v-icon large>mdi-book-open-variant-outline</v-icon> </v-btn>
               <v-rating v-model="rating" clearable hover half-increments size="30"
                 :color="darkMode?'#ccc':'#777'" :background-color="darkMode?'#ccc':'#777'" 
                 empty-icon="mdi-star-outline" half-icon="mdi-star-half-full"/>
@@ -467,10 +463,6 @@ export default {
         }
         setTimeout(() => { this.pdfExists = true }, 1500)
       } else this.pdfExists = false
-    },
-    toggleMuted() {
-      this.muted = !this.muted
-      this.$refs.pdf.muted = this.muted
     },
     setVal(value, metaId) { 
       let meta = this.getMeta(metaId)
