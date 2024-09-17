@@ -1,7 +1,7 @@
 {
   "name": "padoof",
   "productName": "Padoof",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "author": {
     "name": "Alex Rinehart",
     "email": "alexandersrinehart@gmail.com"
@@ -17,6 +17,7 @@
     "electron:serve": "vue-cli-service electron:serve",
     "build": "npm run electron:build",
     "buildwin": "set NODE_OPTIONS=--openssl-legacy-provider && npm run build",
+    "buildlinux": "set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service electron:build --linux",
     "depcheck": "npx depcheck"
   },
   "main": "background.js",

@@ -53,7 +53,6 @@ export default {
   components: {
     vuescroll,
     DialogEditSingleVideoInfo: () => import('@/components/pages/pdfs/DialogEditSingleVideoInfo.vue'),
-    DialogRenameSinglePdf: () => import('@/components/pages/pdfs/DialogRenameSinglePdf.vue'),
     DialogEditMultipleVideosInfo: () => import('@/components/pages/pdfs/DialogEditMultipleVideosInfo.vue'),
   },
   mounted() {

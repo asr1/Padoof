@@ -1093,7 +1093,6 @@ export default {
   .duration {
     display: flex;
   }
-  }
   // .hoverable {
   //   &:hover {
   //     .hidden {
